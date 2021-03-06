@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "663637989200",
+    "project_id": "storify-55679",
+    "storage_bucket": "storify-55679.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663637989200:android:ea93955dbefa125192fe55",
+        "android_client_info": {
+          "package_name": "com.example.storify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663637989200-apkuph088fak8mtj2b9dts8kr4dbv37r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.storify",
+            "certificate_hash": "2696b32f888384f5b6b4940c5a8b3f8d7914048c"
+          }
+        },
+        {
+          "client_id": "663637989200-b5mpno95eqff0flqhju1i8br942rp6qt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdXESRpoa6mkuXPTkyhKbFk3uXVPmuHW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663637989200-b5mpno95eqff0flqhju1i8br942rp6qt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
