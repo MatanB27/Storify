@@ -29,6 +29,7 @@ flutter:
   assets:
     - assets/images/google_signin_button.png
     - assets/images/continue_with_facebook.png
+    - assets/logo.png
 
 
   uses-material-design: true

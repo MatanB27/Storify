@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:storify/pages/home.dart';
 
+import 'logo.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -20,7 +22,7 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.lightBlue[900],
         accentColor: Colors.teal[900],
       ),
-      home: Home(),
+      home: Logo(),
     );
   }
 }

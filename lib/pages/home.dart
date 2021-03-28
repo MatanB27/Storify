@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:storify/pages/profile.dart';
@@ -14,7 +15,7 @@ import '../user.dart';
 //global variables:
 //variable for signing in
 final GoogleSignIn googleSignIn = GoogleSignIn(); //google variable
-final FacebookLogin facebookLogin = FacebookLogin();
+final FacebookLogin facebookLogin = new FacebookLogin();
 User currentUser; //current user
 final DateTime timestampNow = DateTime.now(); //the time the user was created
 final userRef = Firestore.instance.collection('users'); //Users ref
@@ -107,29 +108,74 @@ class _HomeState extends State<Home> {
       });
     }
   }
-  //TODO: Add facebook log in i can't make it work
-  // handleSignInFacebook(FacebookLogin account) {
-  //   if (account != null) {
-  //     createUserInFirestore();
-  //     print(account);
-  //     setState(() {
-  //       isAuth = true;
-  //     });
-  //   } else {
-  //     isAuth = false;
-  //   }
-  // }
-  //
-  // loginFacebook() async {}
 
-  //log in the user
-  loginGoogle() {
-    googleSignIn.signIn();
+  //TODO: not working!!
+  handleSignInFacebook(FacebookLogin account) {
+    if (account != null) {
+      print(account);
+      setState(() {
+        isAuth = true;
+      });
+    } else {
+      setState(() {
+        isAuth = false;
+      });
+    }
   }
 
-  logout() {
-    googleSignIn.signOut();
-    facebookLogin.logOut();
+  //log in the user
+  loginGoogle() async {
+    await googleSignIn.signIn();
+  }
+
+  logout() async {
+    await googleSignIn.signOut();
+    await facebookLogin.logOut();
+  }
+
+  void loginFacebook() async {
+    final FacebookLoginResult facebookLoginResult =
+        await facebookLogin.logIn(['email']);
+
+    switch (facebookLoginResult.status) {
+      case FacebookLoginStatus.loggedIn:
+        // TODO: Handle this case.
+        FirebaseAuth.instance.signInWithCredential(
+          FacebookAuthProvider.getCredential(
+              accessToken: facebookLoginResult.accessToken.token),
+        );
+        FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+        if (currentUser != null) {
+          print('user is logged in');
+
+          DocumentSnapshot doc = await userRef.document(currentUser.uid).get();
+          //Storing the user data in the firestore database
+
+          //if dosent exist - we create it
+          if (!doc.exists) {
+            userRef.document(currentUser.uid).setData({
+              "id": currentUser.uid,
+              "displayName": currentUser.displayName,
+              "photoUrl": currentUser.photoUrl,
+              "email": currentUser.email,
+              "bio": "",
+              "timestamp": timestampNow,
+            });
+            //now all the set data we are storing in doc
+            doc = await userRef.document(currentUser.uid).get();
+          }
+          //current user is now this data
+          //currentUser = User.fromDocuments();
+        }
+
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print('cancelled by user');
+        break;
+      case FacebookLoginStatus.error:
+        print('login error');
+        break;
+    }
   }
 
   //if the user is logged in he will see this page
@@ -164,7 +210,8 @@ class _HomeState extends State<Home> {
         //when we press on icon, we will move to it page and the icon will
         //change his color
         activeColor: Theme.of(context).accentColor,
-        backgroundColor: Colors.grey[200], //navigator color
+        backgroundColor: Colors.grey[200],
+        //navigator color
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
@@ -235,7 +282,7 @@ class _HomeState extends State<Home> {
               height: 8.0,
             ),
             GestureDetector(
-              onTap: () => print('facebook'), //TODO facebook add log in
+              onTap: loginFacebook,
               child: Container(
                 width: 340.0,
                 height: 50.0,
