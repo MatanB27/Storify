@@ -16,9 +16,9 @@ import '../user.dart';
 //variable for signing in
 final GoogleSignIn googleSignIn = GoogleSignIn(); //google variable
 final FacebookLogin facebookLogin = new FacebookLogin();
-User currentUser; //current user
+UserClass currentUser; //current user
 final DateTime timestampNow = DateTime.now(); //the time the user was created
-final userRef = Firestore.instance.collection('users'); //Users ref
+final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
 
 class Home extends StatefulWidget {
   @override
@@ -75,11 +75,11 @@ class _HomeState extends State<Home> {
     //we are checking if the user exist in the collection according to the id
     final GoogleSignInAccount user = googleSignIn.currentUser;
     //variable that store userid document, we check if it exist or not
-    DocumentSnapshot doc = await userRef.document(user.id).get();
+    DocumentSnapshot doc = await userRef.doc(user.id).get();
 
     //if dosent exist - we create it
     if (!doc.exists) {
-      userRef.document(user.id).setData({
+      userRef.doc(user.id).set({
         "id": user.id,
         "displayName": user.displayName,
         "photoUrl": user.photoUrl,
@@ -88,16 +88,16 @@ class _HomeState extends State<Home> {
         "timestamp": timestampNow,
       });
       //now all the set data we are storing in doc
-      doc = await userRef.document(user.id).get();
+      doc = await userRef.doc(user.id).get();
     }
     //current user is now this data
-    currentUser = User.fromDocuments(doc);
+    currentUser = UserClass.fromDocuments(doc);
   }
 
   //the way we are handling if the user is sign in or not
-  handleSignInGoogle(GoogleSignInAccount account) {
+  handleSignInGoogle(GoogleSignInAccount account) async {
     if (account != null) {
-      createUserInFirestore();
+      await createUserInFirestore();
       print(account);
       setState(() {
         isAuth = true;
@@ -109,19 +109,19 @@ class _HomeState extends State<Home> {
     }
   }
 
-  //TODO: not working!!
-  handleSignInFacebook(FacebookLogin account) {
-    if (account != null) {
-      print(account);
-      setState(() {
-        isAuth = true;
-      });
-    } else {
-      setState(() {
-        isAuth = false;
-      });
-    }
-  }
+  // //TODO: not working!!
+  // handleSignInFacebook(FacebookLogin account) {
+  //   if (account != null) {
+  //     print(account);
+  //     setState(() {
+  //       isAuth = true;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       isAuth = false;
+  //     });
+  //   }
+  // }
 
   //log in the user
   loginGoogle() async {
@@ -131,6 +131,10 @@ class _HomeState extends State<Home> {
   logout() async {
     await googleSignIn.signOut();
     await facebookLogin.logOut();
+    // setState(() {
+    //   isAuth = false;
+    // });
+    print("user is logged out");
   }
 
   void loginFacebook() async {
@@ -140,29 +144,33 @@ class _HomeState extends State<Home> {
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.loggedIn:
         // TODO: Handle this case.
+
         FirebaseAuth.instance.signInWithCredential(
-          FacebookAuthProvider.getCredential(
-              accessToken: facebookLoginResult.accessToken.token),
+          FacebookAuthProvider.credential(
+              facebookLoginResult.accessToken.token),
         );
-        FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+        User currentUser = await FirebaseAuth.instance.currentUser;
         if (currentUser != null) {
           print('user is logged in');
+          // setState(() {
+          //   isAuth = true;
+          // });
 
-          DocumentSnapshot doc = await userRef.document(currentUser.uid).get();
+          DocumentSnapshot doc = await userRef.doc(currentUser.uid).get();
           //Storing the user data in the firestore database
 
           //if dosent exist - we create it
           if (!doc.exists) {
-            userRef.document(currentUser.uid).setData({
+            userRef.doc(currentUser.uid).set({
               "id": currentUser.uid,
               "displayName": currentUser.displayName,
-              "photoUrl": currentUser.photoUrl,
+              "photoUrl": currentUser.photoURL,
               "email": currentUser.email,
               "bio": "",
               "timestamp": timestampNow,
             });
             //now all the set data we are storing in doc
-            doc = await userRef.document(currentUser.uid).get();
+            doc = await userRef.doc(currentUser.uid).get();
           }
           //current user is now this data
           //currentUser = User.fromDocuments();
@@ -176,6 +184,25 @@ class _HomeState extends State<Home> {
         print('login error');
         break;
     }
+  }
+
+  Scaffold Logo() {
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/logo.png',
+            height: 350.0,
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          Loading(),
+        ],
+      ),
+    );
   }
 
   //if the user is logged in he will see this page
