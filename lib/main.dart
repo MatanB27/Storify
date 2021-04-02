@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:storify/pages/home.dart';
+import 'package:provider/provider.dart';
+import 'package:storify/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'logo.dart';
+import 'package:storify/pages/landing.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,14 +18,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Storify',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.lightBlue[900],
-        accentColor: Colors.teal[900],
+    return Provider<AuthService>(
+      create: (context) => AuthService(),
+      child: MaterialApp(
+        title: 'Storify',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Colors.lightBlue[900],
+          accentColor: Colors.teal[900],
+        ),
+        home: Landing(),
       ),
-      home: Logo(),
     );
   }
 }

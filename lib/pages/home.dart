@@ -1,62 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:storify/auth_service.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/pages/search.dart';
 import 'package:storify/pages/uploadStory.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:storify/pages/chat.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:storify/pages/feed.dart';
-import 'package:storify/widgets/loading.dart';
 import '../user.dart';
+import 'chat.dart';
 
-//global variables:
-//variable for signing in
-final GoogleSignIn googleSignIn = GoogleSignIn(); //google variable
-final FacebookLogin facebookLogin = new FacebookLogin();
-UserClass currentUser; //current user
+//user collection database
+final userRef = FirebaseFirestore.instance.collection('users');
 final DateTime timestampNow = DateTime.now(); //the time the user was created
-final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
+UserClass currentUserClass;
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-//TODO: add facebook sign in functions
 class _HomeState extends State<Home> {
-  bool isAuth = false; //if the user is in log in state - show us the homePage
-  //else - show us the log in page
   PageController pageController; //we use it to control our page selection
   int pageIndex = 0; // current page index we are in
 
-  //the state of the app when we are entering it
   @override
   void initState() {
     super.initState();
     pageController = PageController();
-
-    //listen to the change of the signing in with error handeling
-    googleSignIn.onCurrentUserChanged.listen((account) {
-      handleSignInGoogle(account);
-    }, onError: (err) {
-      print('Error signing in: $err');
-    });
-    //Reauthenticate users when app is opened
-    googleSignIn.signInSilently(suppressErrors: false).then((account) {
-      handleSignInGoogle(account);
-    }).catchError((err) {
-      print('Error signing in: $err');
-    });
   }
 
-  //When we leave this page, it will remove the pageController
   @override
-  dispose() {
-    pageController.dispose();
+  void dispose() {
     super.dispose();
+    pageController.dispose();
   }
 
   onPageChange(int pageIndex) {
@@ -70,157 +46,26 @@ class _HomeState extends State<Home> {
         duration: Duration(milliseconds: 300), curve: Curves.elasticOut);
   }
 
-  //we are building the user in the cloud
-  createUserInFirestore() async {
-    //we are checking if the user exist in the collection according to the id
-    final GoogleSignInAccount user = googleSignIn.currentUser;
-    //variable that store userid document, we check if it exist or not
-    DocumentSnapshot doc = await userRef.doc(user.id).get();
-
-    //if dosent exist - we create it
-    if (!doc.exists) {
-      userRef.doc(user.id).set({
-        "id": user.id,
-        "displayName": user.displayName,
-        "photoUrl": user.photoUrl,
-        "email": user.email,
-        "bio": "",
-        "timestamp": timestampNow,
-      });
-      //now all the set data we are storing in doc
-      doc = await userRef.doc(user.id).get();
-    }
-    //current user is now this data
-    currentUser = UserClass.fromDocuments(doc);
-  }
-
-  //the way we are handling if the user is sign in or not
-  handleSignInGoogle(GoogleSignInAccount account) async {
-    if (account != null) {
-      await createUserInFirestore();
-      print(account);
-      setState(() {
-        isAuth = true;
-      });
-    } else {
-      setState(() {
-        isAuth = false;
-      });
+  Future<void> signOut(BuildContext context) async {
+    try {
+      final auth = Provider.of<AuthService>(context, listen: false);
+      await auth.signOut();
+    } catch (e) {
+      print(e.toString());
     }
   }
 
-  // //TODO: not working!!
-  // handleSignInFacebook(FacebookLogin account) {
-  //   if (account != null) {
-  //     print(account);
-  //     setState(() {
-  //       isAuth = true;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       isAuth = false;
-  //     });
-  //   }
-  // }
-
-  //log in the user
-  loginGoogle() async {
-    await googleSignIn.signIn();
-  }
-
-  logout() async {
-    await googleSignIn.signOut();
-    await facebookLogin.logOut();
-    // setState(() {
-    //   isAuth = false;
-    // });
-    print("user is logged out");
-  }
-
-  void loginFacebook() async {
-    final FacebookLoginResult facebookLoginResult =
-        await facebookLogin.logIn(['email']);
-
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.loggedIn:
-        // TODO: Handle this case.
-
-        FirebaseAuth.instance.signInWithCredential(
-          FacebookAuthProvider.credential(
-              facebookLoginResult.accessToken.token),
-        );
-        User currentUser = await FirebaseAuth.instance.currentUser;
-        if (currentUser != null) {
-          print('user is logged in');
-          // setState(() {
-          //   isAuth = true;
-          // });
-
-          DocumentSnapshot doc = await userRef.doc(currentUser.uid).get();
-          //Storing the user data in the firestore database
-
-          //if dosent exist - we create it
-          if (!doc.exists) {
-            userRef.doc(currentUser.uid).set({
-              "id": currentUser.uid,
-              "displayName": currentUser.displayName,
-              "photoUrl": currentUser.photoURL,
-              "email": currentUser.email,
-              "bio": "",
-              "timestamp": timestampNow,
-            });
-            //now all the set data we are storing in doc
-            doc = await userRef.doc(currentUser.uid).get();
-          }
-          //current user is now this data
-          //currentUser = User.fromDocuments();
-        }
-
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        print('cancelled by user');
-        break;
-      case FacebookLoginStatus.error:
-        print('login error');
-        break;
-    }
-  }
-
-  Scaffold Logo() {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/logo.png',
-            height: 350.0,
-          ),
-          SizedBox(
-            height: 30.0,
-          ),
-          Loading(),
-        ],
-      ),
-    );
-  }
-
-  //if the user is logged in he will see this page
-  //in homePage the user is navigating through all the main pages of the app:
-  //feed - where the user can see all the stories
-  //search - where the user can search for other users profile
-  //upload Story - where the user can upload it own story
-  //chat - the user can chat with other people in the app
-  //profile - the user profile page
-  Scaffold homePage() {
-    //TODO: use APPBar
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
         children: [
           RaisedButton(
-            onPressed: logout,
+            //raisebutton but from different version
+            onPressed: () => signOut(context),
             child: Text('Logout'),
           ),
+
           //Feed(), //TODO: is closed temporary so we can use the log out func
           Search(),
           UploadStory(), //TODO: use - currentUser
@@ -261,77 +106,5 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
-  }
-
-  Scaffold loginPage() {
-    //if the user is not logged in he will see this page
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).accentColor,
-            ],
-          ),
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'STORIFY',
-              style: TextStyle(
-                  fontSize: 60.0,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 40.0,
-            ),
-            GestureDetector(
-              onTap: loginGoogle,
-              child: Container(
-                width: 260.0,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/google_signin_button.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            GestureDetector(
-              onTap: loginFacebook,
-              child: Container(
-                width: 340.0,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image:
-                        AssetImage('assets/images/continue_with_facebook.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //check what page the user need to see
-
-    return isAuth ? homePage() : loginPage();
   }
 }
