@@ -9,17 +9,19 @@ import 'package:storify/pages/uploadStory.dart';
 import '../user.dart';
 import 'chat.dart';
 
-//user collection database
-final userRef = FirebaseFirestore.instance.collection('users');
-final DateTime timestampNow = DateTime.now(); //the time the user was created
-UserClass currentUserClass;
+//global variables:
+//variable for signing in
 
-class Home extends StatefulWidget {
+UserClass currentUserHome; //current user
+final DateTime timestampNow = DateTime.now(); //the time the user was created
+final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
+
+class HomePage extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
   PageController pageController; //we use it to control our page selection
   int pageIndex = 0; // current page index we are in
 
@@ -31,8 +33,8 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    super.dispose();
     pageController.dispose();
+    super.dispose();
   }
 
   onPageChange(int pageIndex) {
@@ -46,7 +48,7 @@ class _HomeState extends State<Home> {
         duration: Duration(milliseconds: 300), curve: Curves.elasticOut);
   }
 
-  Future<void> signOut(BuildContext context) async {
+  Future<void> _signOut(BuildContext context) async {
     try {
       final auth = Provider.of<AuthService>(context, listen: false);
       await auth.signOut();
@@ -57,15 +59,21 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    //if the user is logged in he will see this page
+    //in homePage the user is navigating through all the main pages of the app:
+    //feed - where the user can see all the stories
+    //search - where the user can search for other users profile
+    //upload Story - where the user can upload it own story
+    //chat - the user can chat with other people in the app
+    //profile - the user profile page
+    //TODO: use APPBar
     return Scaffold(
       body: PageView(
         children: [
           RaisedButton(
-            //raisebutton but from different version
-            onPressed: () => signOut(context),
-            child: Text('Logout'),
+            onPressed: () => _signOut(context),
+            child: Text("logout"),
           ),
-
           //Feed(), //TODO: is closed temporary so we can use the log out func
           Search(),
           UploadStory(), //TODO: use - currentUser

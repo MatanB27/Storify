@@ -160,13 +160,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_login_facebook:
+  flutter_facebook_login:
     dependency: "direct main"
     description:
-      name: flutter_login_facebook
+      name: flutter_facebook_login
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0+1"
+    version: "3.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -226,13 +226,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
-  list_ext:
-    dependency: transitive
-    description:
-      name: list_ext
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.15"
   matcher:
     dependency: transitive
     description:
@@ -281,7 +274,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.2+2"
+    version: "5.0.0"
   quiver:
     dependency: transitive
     description:

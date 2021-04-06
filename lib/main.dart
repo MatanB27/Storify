@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:storify/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:storify/pages/landing.dart';
+import 'auth_service.dart';
 
-Future<void> main() async {
+void main() async {
+  //this method need to be called before any firebase plugin
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());

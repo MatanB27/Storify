@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Container Loading() {
+Container loading() {
   return Container(
     alignment: Alignment.center,
     padding: EdgeInsets.only(top: 10.0),

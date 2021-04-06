@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/auth_service.dart';
+import '../auth_service.dart';
 
-class SignIn extends StatefulWidget {
+final GoogleSignIn googleSignIn = GoogleSignIn(); //google variable
+
+class SigninPage extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _SigninPageState createState() => _SigninPageState();
 }
 
-Future<void> _signInWithGoogle(BuildContext context) async {
-  try {
-    final auth = Provider.of<AuthService>(context, listen: false);
-    await auth.signInWithGoogle();
-  } catch (e) {
-    print(e.toString());
+class _SigninPageState extends State<SigninPage> {
+  //the function that will sign us in with google account
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    try {
+      final auth = Provider.of<AuthService>(context, listen: false);
+      await auth.signInWithGoogle();
+    } catch (e) {
+      print(e.toString());
+    }
   }
-}
 
-Future<void> _signInWithFacebook(BuildContext context) async {
-  try {
-    final auth = Provider.of<AuthService>(context, listen: false);
-    await auth.signInWithFacebook();
-  } catch (e) {
-    print(e.toString());
+  Future<void> _signInWithFacebook(BuildContext context) async {
+    try {
+      final auth = Provider.of<AuthService>(context, listen: false);
+      await auth.signInWithFacebook();
+    } catch (e) {
+      print(e.toString());
+    }
   }
-}
 
-class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
+    //if the user is not logged in he will see this page
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -89,6 +94,5 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
-    ;
   }
 }
