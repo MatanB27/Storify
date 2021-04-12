@@ -2,10 +2,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/pages/landing.dart';
-import 'package:storify/pages/signin.dart';
 import 'package:storify/user.dart';
-import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
 
 import '../auth_service.dart';
@@ -22,11 +19,44 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   bool isLoading;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   //TODO fix signout
   Future<void> _signOut(BuildContext context) async {
     try {
       final auth = Provider.of<AuthService>(context, listen: false);
       await auth.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
+    Navigator.popUntil(context, ModalRoute.withName("/"));
+  }
+
+  Future<void> _confirmSignOut(BuildContext context) async {
+    try {
+      final didRequestSignOut = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Logout'),
+          content: Text('Are you sure you want to logout?'),
+          actions: [
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'),
+            ),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('Accept'),
+            ),
+          ],
+        ),
+      );
+      if (didRequestSignOut == true) {
+        _signOut(context);
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -186,17 +216,12 @@ class _EditProfileState extends State<EditProfile> {
           backgroundColor: Colors.grey,
           elevation: 1,
           actions: [
-            PopupMenuButton(
+            IconButton(
               icon: Icon(
                 Icons.logout,
                 color: Colors.black,
               ),
-              itemBuilder: (BuildContext ctx) => [
-                PopupMenuItem(
-                  child: Text('Sign out'),
-                  value: _signOut(context),
-                ),
-              ],
+              onPressed: () => _confirmSignOut(context),
             ),
           ],
         ),
