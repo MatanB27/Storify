@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//TODO: this page will be inside the chat page
 class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();

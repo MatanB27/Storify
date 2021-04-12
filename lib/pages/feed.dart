@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storify/widgets/header.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -9,8 +10,11 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Feed'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(55.0),
+        child: Header(
+          title: 'Feed',
+        ),
       ),
       body: Text('feed'),
     );

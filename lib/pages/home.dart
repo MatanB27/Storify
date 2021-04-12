@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/auth_service.dart';
+import 'package:storify/pages/feed.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/pages/search.dart';
 import 'package:storify/pages/uploadStory.dart';
@@ -15,6 +16,7 @@ import 'chat.dart';
 UserClass currentUserHome; //current user
 final DateTime timestampNow = DateTime.now(); //the time the user was created
 final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
+AuthService auth = new AuthService();
 
 class HomePage extends StatefulWidget {
   @override
@@ -48,15 +50,6 @@ class _HomePageState extends State<HomePage> {
         duration: Duration(milliseconds: 300), curve: Curves.elasticOut);
   }
 
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthService>(context, listen: false);
-      await auth.signOut();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     //if the user is logged in he will see this page
@@ -70,15 +63,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: PageView(
         children: [
-          RaisedButton(
-            onPressed: () => _signOut(context),
-            child: Text("logout"),
-          ),
-          //Feed(), //TODO: is closed temporary so we can use the log out func
-          Search(),
+          Feed(), //TODO: is closed temporary so we can use the log out func
           UploadStory(), //TODO: use - currentUser
-          Chat(),
-          Profile(), //TODO: use profileId - currentUser?.id
+          Profile(
+            profileId: auth.currentUser.uid,
+          ), //TODO: use profileId - currentUser?.id
         ],
         controller: pageController,
         onPageChanged: onPageChange,
@@ -97,16 +86,10 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.home_rounded),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search_rounded),
-          ),
-          BottomNavigationBarItem(
             icon: Icon(
               Icons.add_circle,
               size: 42.0,
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),

@@ -20,7 +20,9 @@ dependencies:
   provider: ^5.0.0
   flutter_facebook_login: ^3.0.0
   timeago: 2.0.17 #"last seen 5 minutes ago" example
-
+  flutter_signin_button: ^2.0.0
+  ionicons: ^0.1.2
+  cached_network_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +33,14 @@ flutter:
     - assets/images/google_signin_button.png
     - assets/images/continue_with_facebook.png
     - assets/logo.png
+    - assets/land1.jpg
+    - assets/landing2.jpg
+    - assets/test11.png
 
+  fonts:
+  - family: Pacifico
+    fonts:
+      - asset: fonts/Pacifico-Regular.ttf
 
   uses-material-design: true
 

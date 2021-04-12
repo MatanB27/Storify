@@ -17,11 +17,11 @@ class UserClass {
 
   factory UserClass.fromDocuments(DocumentSnapshot doc) {
     return UserClass(
-      id: doc['id'],
-      email: doc['email'],
-      displayName: doc['displayName'],
-      photoUrl: doc['photoUrl'],
-      bio: doc['bio'],
+      id: doc.data()['id'],
+      email: doc.data()['email'],
+      displayName: doc.data()['displayName'],
+      photoUrl: doc.data()['photoUrl'],
+      bio: doc.data()['bio'],
     );
   }
 }
