@@ -23,6 +23,7 @@ dependencies:
   flutter_signin_button: ^2.0.0
   ionicons: ^0.1.2
   cached_network_image: ^2.0.0
+  lipsum: ^1.0.1
 
 dev_dependencies:
   flutter_test:
