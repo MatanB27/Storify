@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lipsum/lipsum.dart' as lipsum;
-import 'package:storify/story_ticket.dart';
+import 'package:storify/widgets/story_ticket.dart';
 
 //todo: complete this page with all is functions and add comments and rating
 //todo : this class will show the post when we press him from the feed page
@@ -23,8 +23,8 @@ class ReadStory extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
-                    child: Image.network(item.photoURL),
-                    tag: item.photoURL,
+                    child: Image.network(item.storyPhoto),
+                    tag: item.storyPhoto,
                   ),
                   SizedBox(
                     height: 10.0,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class StoryTickets extends StatelessWidget {
-  final String photoURL;
+  final String storyPhoto;
   final String displayName;
   final String title;
   final String categories;
   final String rating;
   final String timestamp;
 
-  StoryTickets(this.photoURL, this.title, this.categories, this.rating,
+  StoryTickets(this.storyPhoto, this.title, this.categories, this.rating,
       this.timestamp, this.displayName);
 
   @override
@@ -27,15 +27,24 @@ class StoryTickets extends StatelessWidget {
                   width: 65.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(this.photoURL),
+                      image: NetworkImage(this.storyPhoto),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
-                Text(
-                  this.displayName,
-                  style: TextStyle(fontSize: 14, color: Colors.black),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      color: Colors.black,
+                      size: 20.0,
+                    ),
+                    Text(
+                      this.displayName,
+                      style: TextStyle(fontSize: 14.0, color: Colors.black),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -66,14 +75,14 @@ class StoryTickets extends StatelessWidget {
                       SizedBox(
                         width: 5.0,
                       ),
-                      Icon(Icons.star),
-                      Text(
-                        this.rating,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      // Icon(Icons.star), //TODO - rating - might delete
+                      // Text(
+                      //   this.rating,
+                      //   style: TextStyle(
+                      //     fontSize: 15,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
                       SizedBox(
                         width: 10.0,
                       ),

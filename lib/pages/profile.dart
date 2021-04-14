@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
+import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/pages/read_story.dart';
+import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/widgets/story_ticket.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
@@ -27,6 +29,31 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   bool isLoading = false;
   final String currentUserId = currentUserHome?.id;
+
+  //TODO: use for each from firebase
+  List<StoryTickets> tickets = [
+    StoryTickets("https://picsum.photos/250?image=9", "Best story ever",
+        "Comedy, Horror", "Raiting : 100", "13.04.2021", "Matan Baruch"),
+    StoryTickets(
+        "https://picsum.photos/250?image=9",
+        "Biggest story ever",
+        "Adventure, Drama, Sci-fi",
+        "Raiting : 100",
+        "14.04.2021",
+        "Shay Ohayon"),
+    StoryTickets("https://picsum.photos/250?image=9", "Coolest story ever",
+        "Action", "Raiting : 100", "14.04.2021", "Shay Ohayon"),
+    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
+        "Raiting : 100", "14.04.2021", "Shay Ohayon"),
+    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
+        "Raiting : 100", "14.04.2021", "Shay Ohayon"),
+    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
+        "Raiting : 100", "13.04.2021", "Matan Baruch"),
+    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
+        "Raiting : 100", "13.04.2021", "Matan Baruch"),
+    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
+        "Raiting : 100", "13.04.2021", "Matan Baruch"),
+  ];
 
   //building the top of the profile
   //will include: photoURL, display name, following, followers,
@@ -153,7 +180,7 @@ class _ProfileState extends State<Profile> {
                 ],
               ),
               SizedBox(
-                height: 25.0,
+                height: 5.0,
               ),
               Row(
                 children: [
@@ -173,7 +200,12 @@ class _ProfileState extends State<Profile> {
                     height: 8.0,
                     width: 12,
                   ),
-                  Text(user.bio), //TODO might be a bug
+                  Expanded(
+                    child: Text(user.bio),
+                  ), //TODO might be a bug
+                  SizedBox(
+                    height: 20.0,
+                  ),
                 ],
               ),
             ],
@@ -212,6 +244,7 @@ class _ProfileState extends State<Profile> {
         body: ListView(
           children: [
             profileHeader(),
+            tickets[0],
           ],
         ),
       ),

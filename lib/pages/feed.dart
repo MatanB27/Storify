@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart'; //the font package
 import 'package:flutter/material.dart';
-import 'package:storify/read_story.dart'; //todo: pleas follow this  class
+import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/pages/read_story.dart'; //todo: pleas follow this  class
 import 'package:storify/pages/chat.dart';
-import 'package:storify/story_ticket.dart'; //todo: pleas follow this  class
+import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/widgets/story_ticket.dart'; //todo: pleas follow this  class
 import 'package:lipsum/lipsum.dart' as lipsuam; //to show stam texts for example
 import 'package:storify/widgets/header.dart';
 
@@ -129,8 +129,11 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                   return InkWell(
                     //this method will show the story tickets
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ReadStory()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReadStory(),
+                          ));
                     },
                     child: tickets[index],
                   );

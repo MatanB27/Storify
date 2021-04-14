@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
-
 import '../auth_service.dart';
 import 'home.dart';
 
+//TODO: let the use change his profile picture
 class EditProfile extends StatefulWidget {
   final String currentUserId;
   EditProfile({this.currentUserId});
@@ -18,13 +18,16 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   bool isLoading;
-
+  //scaffold key
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController displayNameController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
   @override
   void initState() {
     super.initState();
   }
 
-  //TODO fix signout
+  //log out method that will send us back go the signin screen
   Future<void> _signOut(BuildContext context) async {
     try {
       final auth = Provider.of<AuthService>(context, listen: false);
@@ -35,6 +38,7 @@ class _EditProfileState extends State<EditProfile> {
     Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
+  //alert dialog that will ask us if we want to log out
   Future<void> _confirmSignOut(BuildContext context) async {
     try {
       final didRequestSignOut = await showDialog(
@@ -62,6 +66,17 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
+  updateProfileData() {
+    bool displayNameValid;
+    userRef.doc(auth.currentUser.uid).update({
+      "displayName": displayNameController.text,
+      "bio": bioController.text,
+    });
+    // SnackBar snackBar = SnackBar(content: Text("Profile Updated!"));
+    // _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  //TODO: change the hint text
   profileEditPage() {
     return FutureBuilder(
         future: userRef
@@ -122,9 +137,11 @@ class _EditProfileState extends State<EditProfile> {
                       bottom: 35,
                     ),
                     child: TextField(
+                      controller: displayNameController,
+                      maxLength: 20,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(bottom: 3),
-                        labelText: "Your name",
+                        labelText: "Your name:",
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         hintText: user.displayName,
                         hintStyle: TextStyle(
@@ -140,9 +157,11 @@ class _EditProfileState extends State<EditProfile> {
                       bottom: 35,
                     ),
                     child: TextField(
+                      controller: bioController,
+                      maxLength: 150,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(bottom: 3),
-                        labelText: "Tell us about yourself",
+                        labelText: "Tell us about yourself:",
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         hintText: user.bio,
                         hintStyle: TextStyle(
@@ -175,7 +194,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ),
                       OutlineButton(
-                        onPressed: () {},
+                        onPressed: updateProfileData,
                         padding: EdgeInsets.symmetric(horizontal: 50),
                         color: Colors.black,
                         shape: RoundedRectangleBorder(
@@ -203,6 +222,7 @@ class _EditProfileState extends State<EditProfile> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
