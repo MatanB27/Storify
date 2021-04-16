@@ -22,15 +22,18 @@ class StoryTickets extends StatelessWidget {
           children: [
             Column(
               children: [
-                Container(
-                  height: 65.0,
-                  width: 65.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(this.storyPhoto),
-                      fit: BoxFit.cover,
+                Hero(
+                  tag: 'animation',
+                  child: Container(
+                    height: 65.0,
+                    width: 65.0,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(this.storyPhoto),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
                 Row(

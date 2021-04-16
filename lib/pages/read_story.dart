@@ -6,11 +6,6 @@ import 'package:storify/widgets/story_ticket.dart';
 //todo : this class will show the post when we press him from the feed page
 //todo this is will be the read story screen!
 class ReadStory extends StatelessWidget {
-  final String tag;
-  final StoryTickets item;
-
-  ReadStory({@required this.item, @required this.tag});
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,8 +18,8 @@ class ReadStory extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
-                    child: Image.network(item.storyPhoto),
-                    tag: item.storyPhoto,
+                    child: Image.network("https://picsum.photos/250?image=9"),
+                    tag: 'animation',
                   ),
                   SizedBox(
                     height: 10.0,
@@ -34,7 +29,7 @@ class ReadStory extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          item.title,
+                          'Title',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
@@ -47,7 +42,7 @@ class ReadStory extends StatelessWidget {
                           children: [
                             Icon(Icons.person),
                             Text(
-                              item.displayName,
+                              'Display name',
                               style: TextStyle(
                                 fontSize: 12,
                               ),
@@ -57,7 +52,7 @@ class ReadStory extends StatelessWidget {
                             ),
                             Icon(Icons.date_range),
                             Text(
-                              item.displayName,
+                              'Display name',
                               style: TextStyle(
                                 fontSize: 12,
                               ),

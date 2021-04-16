@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:storify/auth_service.dart';
 import 'package:storify/pages/feed.dart';
 import 'package:storify/pages/profile.dart';
-import 'package:storify/pages/search.dart';
 import 'package:storify/pages/uploadStory.dart';
 import '../user.dart';
-import 'chat.dart';
 
 //global variables:
 //variable for signing in
@@ -16,6 +14,7 @@ import 'chat.dart';
 UserClass currentUserHome; //current user
 final DateTime timestampNow = DateTime.now(); //the time the user was created
 final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
+final storageRef = FirebaseStorage.instance.ref(); //storage ref
 AuthService auth = new AuthService();
 
 class HomePage extends StatefulWidget {
@@ -96,8 +95,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
     );
   }
 }
-

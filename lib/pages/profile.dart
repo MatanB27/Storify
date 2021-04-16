@@ -2,14 +2,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
-import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/pages/read_story.dart';
-import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/widgets/story_ticket.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:storify/pages/edit_profile.dart';
 import '../auth_service.dart';
+import 'package:storify/widgets/story_ticket.dart';
 
 //todo: here you need to put the stores list from the fire base
 List<String> imagePost = [
@@ -54,12 +53,6 @@ class _ProfileState extends State<Profile> {
     StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
         "Raiting : 100", "13.04.2021", "Matan Baruch"),
   ];
-
-  //building the top of the profile
-  //will include: photoURL, display name, following, followers,
-  //number of stories, edit profile / follow\unfollow user button,
-  //message (if its not our user) TODO: maybe delete it
-  //and bio!
 
   profileHeader() {
     //future: help us to get the user information base on their id.

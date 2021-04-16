@@ -1,11 +1,14 @@
-import 'dart:ui';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
 import '../auth_service.dart';
 import 'home.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 //TODO: let the use change his profile picture
 class EditProfile extends StatefulWidget {
@@ -17,15 +20,19 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  bool isLoading;
-  //scaffold key
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  //values for editing display name & bio
   TextEditingController displayNameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-  }
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  //values for uploading the image
+  File _image;
+  final ImagePicker _picker = ImagePicker();
+
+  //TODO: uploading photo!!
+  //TODO: uploading photo!!
+  //TODO: uploading photo!!
+  //TODO: uploading photo!!
+  //TODO: save the text of the editing fie
 
   //log out method that will send us back go the signin screen
   Future<void> _signOut(BuildContext context) async {
@@ -67,13 +74,82 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   updateProfileData() {
-    bool displayNameValid;
     userRef.doc(auth.currentUser.uid).update({
       "displayName": displayNameController.text,
       "bio": bioController.text,
     });
-    // SnackBar snackBar = SnackBar(content: Text("Profile Updated!"));
-    // _scaffoldKey.currentState.showSnackBar(snackBar);
+    final snackBar = SnackBar(
+      content: Text('Profile has been update successfully!'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {}, //no need to put anything, just click "Undo"
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  //menu for changning photo
+  bottomSheet() {
+    return Container(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 20.0,
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Choose Profile Photo',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FlatButton.icon(
+                icon: Icon(Icons.camera),
+                onPressed: () => takePhoto(false),
+                label: Text('Camera'),
+              ),
+              FlatButton.icon(
+                onPressed: () => takePhoto(true),
+                icon: Icon(Icons.image),
+                label: Text("Gallery"),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  //taking a photo with the camera or choose from the gallery
+  //depends on the argument value.
+  void takePhoto(bool isGallery) async {
+    ImagePicker picker = ImagePicker();
+    PickedFile pickedFile;
+    if (isGallery) {
+      pickedFile = await picker.getImage(
+        source: ImageSource.gallery,
+      );
+    } else {
+      pickedFile = await picker.getImage(
+        source: ImageSource.camera,
+      );
+    }
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('no image selected');
+      }
+    });
   }
 
   //TODO: change the hint text
@@ -132,6 +208,30 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 18,
+                  ),
+                  GestureDetector(
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: ((builder) => bottomSheet()));
+                        },
+                        child: Text(
+                          'Change Profile Photo',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(
                       bottom: 35,
@@ -159,6 +259,7 @@ class _EditProfileState extends State<EditProfile> {
                     child: TextField(
                       controller: bioController,
                       maxLength: 150,
+                      maxLines: 4,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(bottom: 3),
                         labelText: "Tell us about yourself:",
@@ -182,8 +283,9 @@ class _EditProfileState extends State<EditProfile> {
                         color: Colors.black,
                         padding: EdgeInsets.symmetric(horizontal: 50),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        onPressed: () {},
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        onPressed: () => Navigator.pop(context),
                         child: Text(
                           'cancel',
                           style: TextStyle(
@@ -217,6 +319,32 @@ class _EditProfileState extends State<EditProfile> {
         });
   }
 
+  //the state of the app when we are in its init state
+  @override
+  void initState() {
+    super.initState();
+    getInfo();
+  }
+
+  //getting the info of the display name and bio so we wont have to
+  //write it down all over again
+  void getInfo() async {
+    DocumentSnapshot documentSnapshot =
+        await userRef.doc(auth.currentUser.uid).get();
+    UserClass userInfo = UserClass.fromDocuments(documentSnapshot);
+    displayNameController.text = userInfo.displayName;
+    bioController.text = userInfo.bio;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    displayNameController.dispose();
+    bioController.dispose();
+    super.dispose();
+  }
+
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
