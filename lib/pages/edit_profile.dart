@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../auth_service.dart';
 import 'home.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,9 +25,10 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController displayNameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   //values for uploading the image
   File _image;
-  final ImagePicker _picker = ImagePicker();
+  String _uploadedFileURL;
 
   //TODO: uploading photo!!
   //TODO: uploading photo!!
@@ -89,7 +91,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   //menu for changning photo
-  bottomSheet() {
+  selectImage() {
     return Container(
       height: 100.0,
       width: MediaQuery.of(context).size.width,
@@ -217,7 +219,7 @@ class _EditProfileState extends State<EditProfile> {
                         onTap: () {
                           showModalBottomSheet(
                               context: context,
-                              builder: ((builder) => bottomSheet()));
+                              builder: ((builder) => selectImage()));
                         },
                         child: Text(
                           'Change Profile Photo',
@@ -323,17 +325,6 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    getInfo();
-  }
-
-  //getting the info of the display name and bio so we wont have to
-  //write it down all over again
-  void getInfo() async {
-    DocumentSnapshot documentSnapshot =
-        await userRef.doc(auth.currentUser.uid).get();
-    UserClass userInfo = UserClass.fromDocuments(documentSnapshot);
-    displayNameController.text = userInfo.displayName;
-    bioController.text = userInfo.bio;
   }
 
   @override
@@ -344,7 +335,6 @@ class _EditProfileState extends State<EditProfile> {
     super.dispose();
   }
 
-  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
