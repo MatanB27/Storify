@@ -6,10 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../auth_service.dart';
 import 'home.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 //TODO: let the use change his profile picture
 class EditProfile extends StatefulWidget {
@@ -27,14 +26,9 @@ class _EditProfileState extends State<EditProfile> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   //values for uploading the image
-  File _image;
+  File file;
   String _uploadedFileURL;
-
-  //TODO: uploading photo!!
-  //TODO: uploading photo!!
-  //TODO: uploading photo!!
-  //TODO: uploading photo!!
-  //TODO: save the text of the editing fie
+  bool isUploading = false;
 
   //log out method that will send us back go the signin screen
   Future<void> _signOut(BuildContext context) async {
@@ -132,26 +126,41 @@ class _EditProfileState extends State<EditProfile> {
 
   //taking a photo with the camera or choose from the gallery
   //depends on the argument value.
+  //pick image is still ok, its just from older version
   void takePhoto(bool isGallery) async {
-    ImagePicker picker = ImagePicker();
-    PickedFile pickedFile;
+    Navigator.pop(context);
     if (isGallery) {
-      pickedFile = await picker.getImage(
-        source: ImageSource.gallery,
+      File file = await ImagePicker.pickImage(source: ImageSource.gallery);
+      setState(
+        () => this.file = file,
       );
     } else {
-      pickedFile = await picker.getImage(
+      File file = await ImagePicker.pickImage(
         source: ImageSource.camera,
+        maxHeight: 675,
+        maxWidth: 960,
       );
+      setState(() => this.file = file);
     }
-
     setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('no image selected');
-      }
+      isUploading = true;
     });
+    await uploadImage(this.file);
+    setState(() {
+      isUploading = false;
+    });
+  }
+
+  //Upload the photo
+  Future<String> uploadImage(imageFile) async {
+    firebase_storage.UploadTask uploadTask =
+        storageRef.child("user_${auth.currentUser.uid}.jpg").putFile(imageFile);
+    var imageUrl = await (await uploadTask).ref.getDownloadURL();
+    _uploadedFileURL = imageUrl.toString();
+    userRef.doc(auth.currentUser.uid).update({
+      "photoUrl": _uploadedFileURL,
+    });
+    return _uploadedFileURL;
   }
 
   //TODO: change the hint text
@@ -177,28 +186,31 @@ class _EditProfileState extends State<EditProfile> {
                   Stack(
                     children: [
                       Center(
-                        child: Container(
-                          width: 130,
-                          height: 130,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 4,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 10),
+                        child: isUploading
+                            ? loading()
+                            : Container(
+                                width: 130,
+                                height: 130,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 4,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: Offset(0, 10),
+                                    ),
+                                  ],
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                        user.photoUrl),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                            ],
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(user.photoUrl),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
                       ),
                       SizedBox(
                         height: 35,
@@ -325,6 +337,15 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
+    getUserInfo();
+  }
+
+  getUserInfo() async {
+    DocumentSnapshot documentSnapshot =
+        await userRef.doc(auth.currentUser.uid).get();
+    UserClass user = UserClass.fromDocuments(documentSnapshot);
+    displayNameController.text = user.displayName;
+    bioController.text = user.bio;
   }
 
   @override
