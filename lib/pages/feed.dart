@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart'; //the font package
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/pages/read_story.dart'; //todo: pleas follow this  class
+import 'read_story.dart';
 import 'package:storify/pages/chat.dart';
-import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/widgets/story_ticket.dart'; //todo: pleas follow this  class
+import 'package:storify/widgets/story_ticket.dart'; //todo: pleas follow this  class
 import 'package:lipsum/lipsum.dart' as lipsuam; //to show stam texts for example
 import 'package:storify/widgets/header.dart';
 
@@ -22,8 +22,13 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
   //TODO: use for each from firebase
   List<StoryTickets> tickets = [
-    StoryTickets("https://picsum.photos/250?image=9", "Best story ever",
-        "Comedy, Horror", "Raiting : 100", "13.04.2021", "Matan Baruch"),
+    StoryTickets(
+        "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
+        "Escape from Alcatraz",
+        "Action",
+        "Raiting : 100",
+        "13.04.2021",
+        "nelson mandela"),
     StoryTickets(
         "https://picsum.photos/250?image=9",
         "Biggest story ever",

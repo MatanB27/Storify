@@ -10,7 +10,6 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../auth_service.dart';
 import 'home.dart';
 
-//TODO: let the use change his profile picture
 class EditProfile extends StatefulWidget {
   final String currentUserId;
   EditProfile({this.currentUserId});
