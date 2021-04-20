@@ -47,174 +47,131 @@ class ReadStory extends StatelessWidget {
                   ),
                 ],
               ),
-              Positioned.fill(
-                bottom: 10.0,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RawMaterialButton(
-                    padding: EdgeInsets.all(10.0),
-                    elevation: 12.0,
-                    onPressed: () => print('story voice'),
-                    shape: CircleBorder(),
-                    fillColor: Colors.white,
-                    child: Icon(
-                      LineIcons.headphones,
-                      size: 35,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Positioned(
-                bottom: 0.0,
-                left: 20.0,
-                child: IconButton(
-                  onPressed: () => print('Add to My List'),
-                  icon: Icon(Icons.report_problem),
-                  iconSize: 40.0,
-                  color: Colors.black,
-                ),
-              ),
-              Positioned(
-                bottom: 0.0,
-                right: 25.0,
-                child: IconButton(
-                  onPressed: () => print('Share'),
-                  icon: Icon(Icons.share),
-                  iconSize: 35.0,
-                  color: Colors.black,
-                ),
-              ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Escape from Alcatraz',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Escape from Alcatraz',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                SizedBox(height: 10.0),
-                CircleAvatar(
-                  radius: 56,
-                  backgroundImage: NetworkImage(
-                      'https://i.ytimg.com/vi/NjWJ5iGjhL0/maxresdefault.jpg'),
+                textAlign: TextAlign.center,
+              ),
+              CircleAvatar(
+                radius: 56,
+                backgroundImage: NetworkImage(
+                    'https://i.ytimg.com/vi/NjWJ5iGjhL0/maxresdefault.jpg'),
+              ),
+              Text(
+                'alfonso milan',
+                style: TextStyle(
+                  fontFamily: 'Pacifico',
+                  fontSize: 30,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  'alfonso milan',
-                  style: TextStyle(
-                    fontFamily: 'Pacifico',
-                    fontSize: 30,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              Text(
+                'rating',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16.0,
                 ),
-                Text(
-                  'rating',
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16.0,
-                  ),
-                ),
-                SizedBox(height: 12.0),
-                Text(
-                  '9.3',
-                  style: TextStyle(fontSize: 25.0),
-                ),
-                SizedBox(height: 15.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Text(
-                          'date',
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        SizedBox(height: 2.0),
-                        Text(
-                          '14.04.2021',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Text(
-                          'category',
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        SizedBox(height: 2.0),
-                        Text(
-                          'action',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        SizedBox(height: 2.0),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50.0),
+              ),
 
-                SizedBox(
-                  height: 10,
-                ),
-                //     Container(
-                //     height: 120.0,
-                //    child: SingleChildScrollView(
-                //       child: Text(
-                //     lipsum.createParagraph(numParagraphs: 3),
-                //       style: TextStyle(
-                //       color: Colors.black54,
-                //         fontSize: 25,
-                //         ),
-                //        ),
-                //      ),
-                //     ),
-
-                AnimatedButton(
-                  child: Text(
-                    'go to read',
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
+              Text(
+                '9.3',
+                style: TextStyle(fontSize: 25.0),
+              ),
+              SizedBox(height: 15.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        'date',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.0,
+                      ),
+                      Text(
+                        '14.04.2021',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ReadStoryData()),
-                    );
-                  },
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        'category',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      SizedBox(height: 2.0),
+                      Text(
+                        'action',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      SizedBox(height: 2.0),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 50.0),
+
+              SizedBox(
+                height: 10,
+              ),
+              //     Container(
+              //     height: 120.0,
+              //    child: SingleChildScrollView(
+              //       child: Text(
+              //     lipsum.createParagraph(numParagraphs: 3),
+              //       style: TextStyle(
+              //       color: Colors.black54,
+              //         fontSize: 25,
+              //         ),
+              //        ),
+              //      ),
+              //     ),
+
+              AnimatedButton(
+                child: Text(
+                  'go to read',
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ],
-            ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReadStoryData()),
+                  );
+                },
+              ),
+            ],
           ),
         ],
       ),
