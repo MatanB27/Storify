@@ -29,6 +29,8 @@ dependencies:
   line_icons: ^2.0.1
   slider_button: ^0.6.0
   animated_button: ^0.2.0
+  flutter_tts: ^3.0.0
+
 
 
 dev_dependencies:

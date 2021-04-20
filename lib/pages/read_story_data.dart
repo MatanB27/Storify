@@ -3,13 +3,24 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lipsum/lipsum.dart' as lipsum;
 import 'package:storify/widgets/story_ticket.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class ReadStoryData extends StatefulWidget {
+  final FlutterTts flutterTts = FlutterTts();
   @override
   _ReadStoryDataState createState() => _ReadStoryDataState();
 }
 
 class _ReadStoryDataState extends State<ReadStoryData> {
+  String story =
+      "Longer stories that cannot be called novels are sometimes considered";
+
+  Future Speak(String story) async {
+    print(await FlutterTts().getLanguages);
+    await FlutterTts().setLanguage("en-US");
+    await FlutterTts().speak(story);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +65,7 @@ class _ReadStoryDataState extends State<ReadStoryData> {
                   child: RawMaterialButton(
                     padding: EdgeInsets.all(10.0),
                     elevation: 12.0,
-                    onPressed: () => print('Play Video'),
+                    onPressed: () => Speak(story),
                     shape: CircleBorder(),
                     fillColor: Colors.white,
                     child: Icon(
@@ -125,7 +136,7 @@ class _ReadStoryDataState extends State<ReadStoryData> {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Text(
-              lipsum.createParagraph(numParagraphs: 10),
+              story,
               style: TextStyle(
                 fontSize: 18.0,
               ),
