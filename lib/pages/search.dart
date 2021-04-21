@@ -9,6 +9,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 //TODO: make the search better
 //TODO: when i click on tickets open a menu that ask me if i want to
 //TODO: send a message / go to profile
+
+profileOrMessage() {}
+
 class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
@@ -57,11 +60,6 @@ class _SearchState extends State<Search> {
     );
   }
 
-  //what will happend if we click on the profiles
-  onTap() {
-    print('hey');
-  }
-
   //building the search results
   buildSearchResults() {
     return FutureBuilder(
@@ -76,7 +74,6 @@ class _SearchState extends State<Search> {
           UserTicket searchResult = UserTicket(
             displayName: user.displayName,
             photoUrl: user.photoUrl,
-            onTap: onTap(),
           );
           searchResults.add(searchResult);
         });
