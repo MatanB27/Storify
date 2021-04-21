@@ -30,7 +30,7 @@ dependencies:
   slider_button: ^0.6.0
   animated_button: ^0.2.0
   flutter_tts: ^3.0.0
-
+  animated_text_kit: ^4.2.0
 
 
 dev_dependencies:
@@ -42,7 +42,7 @@ flutter:
     - assets/images/google_signin_button.png
     - assets/images/continue_with_facebook.png
     - assets/images/logo.png
-    - assets/images/land1.jpg
+    - assets/land1.jpg
     - assets/images/landing2.jpg
     - assets/images/test11.png
     - assets/images/search_users.jpg

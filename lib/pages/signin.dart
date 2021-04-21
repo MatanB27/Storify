@@ -4,11 +4,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import '../auth_service.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart'; //import the sign up buttons package
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn(); //google variable
 
 class SigninPage extends StatefulWidget {
   //we are using it so we can quicly navigate to our home page from other pages
+
   static const String id = 'Signin_screen';
   @override
   _SigninPageState createState() => _SigninPageState();
@@ -25,6 +27,17 @@ class _SigninPageState extends State<SigninPage> {
     }
   }
 
+  static const colorizeColors = [
+    Colors.purple,
+    Colors.blue,
+    Colors.yellow,
+    Colors.red,
+  ];
+
+  static const colorizeTextStyle = TextStyle(
+    fontSize: 50.0,
+    fontFamily: 'Pacifico',
+  );
 //this method sign us with the facebook account
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
@@ -77,26 +90,39 @@ class _SigninPageState extends State<SigninPage> {
                     //the custom up container have to children texts widgets
                     children: [
                       //the text style
-                      Text(
-                        'sign in',
-                        //the text
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 46,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+
                       //the space between the texts widgets
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'keep your readers close',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w300,
-                        ),
+
+                      AnimatedTextKit(
+                        animatedTexts: [
+                          FadeAnimatedText(
+                            'welcome',
+                            textStyle: TextStyle(
+                              fontSize: 35.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          FadeAnimatedText(
+                            'sign in',
+                            textStyle: TextStyle(
+                              fontSize: 35.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          FadeAnimatedText(
+                            'keep your readers close',
+                            textStyle: TextStyle(
+                              fontSize: 35.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                        onTap: () {
+                          print("Tap Event");
+                        },
                       ),
                     ],
                   ),
@@ -122,15 +148,26 @@ class _SigninPageState extends State<SigninPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         //texts widget with a custom font
-                        Text(
-                          'storify',
-                          style: TextStyle(
-                            fontFamily: 'Pacifico',
-                            fontSize: 40,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+
+                        AnimatedTextKit(
+                          animatedTexts: [
+                            ColorizeAnimatedText(
+                              'storify',
+                              textStyle: colorizeTextStyle,
+                              colors: colorizeColors,
+                            ),
+                            ColorizeAnimatedText(
+                              'sign in',
+                              textStyle: colorizeTextStyle,
+                              colors: colorizeColors,
+                            ),
+                          ],
+                          isRepeatingAnimation: true,
+                          onTap: () {
+                            print("Tap Event");
+                          },
                         ),
+
                         //the space between the text widget and the buttons
                         SizedBox(
                           height: 70,

@@ -99,7 +99,7 @@ class _SearchState extends State<Search> {
             Center(
               child: Text(
                 'Search users...',
-                style: TextStyle(fontSize: 60.0, color: Colors.grey),
+                style: TextStyle(fontSize: 45.0, color: Colors.grey),
               ),
             ),
           ],
