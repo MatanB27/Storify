@@ -126,28 +126,36 @@ class _EditProfileState extends State<EditProfile> {
   //taking a photo with the camera or choose from the gallery
   //depends on the argument value.
   //pick image is still ok, its just from older version
+  //if we cancel our choice, try catch will catch the error and isUploading
+  //will become false
   void takePhoto(bool isGallery) async {
-    Navigator.pop(context);
-    if (isGallery) {
-      File file = await ImagePicker.pickImage(source: ImageSource.gallery);
-      setState(
-        () => this.file = file,
-      );
-    } else {
-      File file = await ImagePicker.pickImage(
-        source: ImageSource.camera,
-        maxHeight: 675,
-        maxWidth: 960,
-      );
-      setState(() => this.file = file);
+    try {
+      Navigator.pop(context);
+      if (isGallery) {
+        File file = await ImagePicker.pickImage(source: ImageSource.gallery);
+        setState(
+          () => this.file = file,
+        );
+      } else {
+        File file = await ImagePicker.pickImage(
+          source: ImageSource.camera,
+          maxHeight: 675,
+          maxWidth: 960,
+        );
+        setState(() => this.file = file);
+      }
+      setState(() {
+        isUploading = true;
+      });
+      await uploadImage(this.file);
+      setState(() {
+        isUploading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isUploading = false;
+      });
     }
-    setState(() {
-      isUploading = true;
-    });
-    await uploadImage(this.file);
-    setState(() {
-      isUploading = false;
-    });
   }
 
   //Upload the photo
@@ -162,7 +170,6 @@ class _EditProfileState extends State<EditProfile> {
     return _uploadedFileURL;
   }
 
-  //TODO: change the hint text
   profileEditPage() {
     return FutureBuilder(
         future: userRef
@@ -256,7 +263,6 @@ class _EditProfileState extends State<EditProfile> {
                         contentPadding: EdgeInsets.only(bottom: 3),
                         labelText: "Your name:",
                         floatingLabelBehavior: FloatingLabelBehavior.always,
-                        hintText: user.displayName,
                         hintStyle: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -277,7 +283,6 @@ class _EditProfileState extends State<EditProfile> {
                         contentPadding: EdgeInsets.only(bottom: 3),
                         labelText: "Tell us about yourself:",
                         floatingLabelBehavior: FloatingLabelBehavior.always,
-                        hintText: user.bio,
                         hintStyle: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

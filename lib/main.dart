@@ -4,6 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:storify/pages/landing.dart';
 import 'auth_service.dart';
 
+//TODO: repair design
+//TODO: check facebook functionality
+//TODO: login google & facebook with the same email bug
+//TODO: animation text at feed page
+//TODO: make stars functions in rating
 void main() async {
   //this method need to be called before any firebase plugin
   WidgetsFlutterBinding.ensureInitialized();

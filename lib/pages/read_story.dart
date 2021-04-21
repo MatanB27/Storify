@@ -60,6 +60,9 @@ class ReadStory extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+              SizedBox(
+                height: 20,
+              ),
               CircleAvatar(
                 radius: 56,
                 backgroundImage: NetworkImage(
@@ -86,7 +89,9 @@ class ReadStory extends StatelessWidget {
                 '9.3',
                 style: TextStyle(fontSize: 25.0),
               ),
-              SizedBox(height: 15.0),
+              SizedBox(
+                height: 25.0,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
