@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart'; //the font package
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:storify/auth_service.dart';
+import 'package:storify/pages/home.dart';
 import 'read_story.dart';
 import 'package:storify/pages/chat.dart';
-import 'package:storify/widgets/story_ticket.dart'; //todo: pleas follow this  class
+import 'package:storify/widgets/story_ticket.dart';
 import 'package:lipsum/lipsum.dart' as lipsuam; //to show stam texts for example
 import 'package:storify/widgets/header.dart';
 
@@ -84,88 +87,80 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //the app bar code with the title, the tab menu and the chat button
-      appBar: AppBar(
-        toolbarHeight: 110.0,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Text(
-          'storify',
-          style: TextStyle(
-            fontFamily: 'Pacifico',
-            fontSize: 30,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(30.0),
-          child: TabBar(
-            indicatorColor: Colors.black,
-            isScrollable: true,
-            controller: tabController,
-            tabs: tabList,
-            labelColor: Colors.black,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.chat),
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Chat()));
-            },
-            color: Colors.black,
-          ),
-        ],
-      ),
-      //-------------------the end of the app bar----------//
-      //now we use the lists to show them
-      body: TabBarView(
-        controller: tabController,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(
-              child: ListView.builder(
-                itemCount: tickets.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    //this method will show the story tickets
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReadStory(),
-                          ));
-                    },
-                    child: tickets[index],
-                  );
-                },
-              ),
+    return Provider<AuthService>(
+      create: (context) => AuthService(),
+      child: Scaffold(
+        //the app bar code with the title, the tab menu and the chat button
+        appBar: AppBar(
+          toolbarHeight: 110.0,
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Text(
+            'storify',
+            style: TextStyle(
+              fontFamily: 'Pacifico',
+              fontSize: 30,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(30.0),
+            child: TabBar(
+              indicatorColor: Colors.black,
+              isScrollable: true,
+              controller: tabController,
+              tabs: tabList,
+              labelColor: Colors.black,
+            ),
+          ),
+        ),
+        //-------------------the end of the app bar----------//
+        //now we use the lists to show them
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(
+                child: ListView.builder(
+                  itemCount: tickets.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReadStory(),
+                            ));
+                      },
+                      child: tickets[index],
+                    );
+                  },
+                ),
+              ),
+            ),
 
-          //if you want to put list in other category put it inside the containers
-          //each container include other category - those are the tabs
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(),
-          ),
-        ],
+            //if you want to put list in other category put it inside the containers
+            //each container include other category - those are the tabs
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(),
+            ),
+          ],
+        ),
       ),
     );
   }

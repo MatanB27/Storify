@@ -100,6 +100,5 @@ class StoryTickets extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

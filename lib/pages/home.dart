@@ -3,9 +3,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:storify/auth_service.dart';
+import 'package:storify/pages/chat.dart';
 import 'package:storify/pages/feed.dart';
 import 'package:storify/pages/profile.dart';
-import 'package:storify/pages/uploadStory.dart';
+import 'package:storify/pages/search.dart';
+import 'package:storify/pages/upload_story.dart';
 import '../user.dart';
 
 //global variables:
@@ -58,15 +60,16 @@ class _HomePageState extends State<HomePage> {
     //upload Story - where the user can upload it own story
     //chat - the user can chat with other people in the app
     //profile - the user profile page
-    //TODO: use APPBar
     return Scaffold(
       body: PageView(
         children: [
-          Feed(), //TODO: is closed temporary so we can use the log out func
+          Feed(),
+          Search(),
           UploadStory(), //TODO: use - currentUser
+          Chat(chatId: auth.currentUser?.uid), // ? ignores null
           Profile(
-            profileId: auth.currentUser.uid,
-          ), //TODO: use profileId - currentUser?.id
+            profileId: auth.currentUser?.uid, // ? ignores null
+          ),
         ],
         controller: pageController,
         onPageChanged: onPageChange,
@@ -85,10 +88,16 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.home_rounded),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(
               Icons.add_circle,
               size: 42.0,
             ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_rounded),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),

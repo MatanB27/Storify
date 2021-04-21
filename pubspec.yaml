@@ -41,10 +41,11 @@ flutter:
   assets:
     - assets/images/google_signin_button.png
     - assets/images/continue_with_facebook.png
-    - assets/logo.png
-    - assets/land1.jpg
-    - assets/landing2.jpg
-    - assets/test11.png
+    - assets/images/logo.png
+    - assets/images/land1.jpg
+    - assets/images/landing2.jpg
+    - assets/images/test11.png
+    - assets/images/search_users.jpg
 
   fonts:
   - family: Pacifico

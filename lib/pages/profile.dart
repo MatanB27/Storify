@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/pages/chat.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/header.dart';
@@ -9,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:storify/pages/edit_profile.dart';
 import '../auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
+import 'package:storify/widgets/user_ticket.dart';
 
 //todo: here you need to put the stores list from the fire base
 List<String> imagePost = [
