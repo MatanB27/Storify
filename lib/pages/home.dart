@@ -9,6 +9,7 @@ import 'package:storify/pages/profile.dart';
 import 'package:storify/pages/search.dart';
 import 'package:storify/pages/upload_story.dart';
 import '../user.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 //global variables:
 //variable for signing in
@@ -53,20 +54,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //if the user is logged in he will see this page
-    //in homePage the user is navigating through all the main pages of the app:
-    //feed - where the user can see all the stories
-    //search - where the user can search for other users profile
-    //upload Story - where the user can upload it own story
-    //chat - the user can chat with other people in the app
-    //profile - the user profile page
     return Scaffold(
       body: PageView(
         children: [
           Feed(),
           Search(),
           UploadStory(), //TODO: use - currentUser
-          Chat(chatId: auth.currentUser?.uid), // ? ignores null
+          Chat(chatId: auth.currentUser?.uid), // ? ignores nullu
           Profile(
             profileId: auth.currentUser?.uid, // ? ignores null
           ),
@@ -75,33 +69,19 @@ class _HomePageState extends State<HomePage> {
         onPageChanged: onPageChange,
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar: CupertinoTabBar(
-        currentIndex: pageIndex,
+      bottomNavigationBar: CurvedNavigationBar(
+        index: pageIndex,
         onTap: onClick,
         //when we press on icon, we will move to it page and the icon will
         //change his color
-        activeColor: Theme.of(context).accentColor,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.blueAccent,
         //navigator color
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle,
-              size: 42.0,
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_rounded),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-          ),
+          Icon(Icons.home, size: 30),
+          Icon(Icons.search_rounded, size: 30),
+          Icon(Icons.add_circle, size: 30),
+          Icon(Icons.chat, size: 30),
+          Icon(Icons.person_rounded, size: 30),
         ],
       ),
     );

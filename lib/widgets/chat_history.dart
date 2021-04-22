@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:storify/pages/search.dart';
-import 'package:storify/pages/profile.dart';
-import 'package:storify/user.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-//this class will show us the user tickets
-//TODO: when we will have the database of the stories, add stories here!!
-class UserTicket extends StatelessWidget {
+//we are seeing the chat history tickets.
+class ChatHistory extends StatelessWidget {
   final String id;
   final String displayName;
   final String photoUrl;
-  //int stories; //TODO
+  final String lastMessage;
+  final DateTime timestamp;
 
-  UserTicket({
+  ChatHistory({
+    this.id,
     this.displayName,
     this.photoUrl,
-    this.id,
-    // this.stories, //TODO
+    this.lastMessage,
+    this.timestamp,
   });
 
   @override
@@ -30,11 +30,16 @@ class UserTicket extends StatelessWidget {
           this.displayName,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        //subtitle: Text('Stories: ${this.stories}'), //TODO
+        subtitle: Expanded(
+          child: Text(this.lastMessage),
+        ),
+        trailing: Text(
+          timeago.format(timestamp),
+        ), //TODO: check if its true
         dense: true,
       ),
       onPressed: () {
-        showProfile(context, profileId: this.id);
+        //TODO: go to private convo
       },
     );
   }

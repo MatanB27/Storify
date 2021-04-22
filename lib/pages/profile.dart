@@ -246,3 +246,15 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
+
+//todo: if not good delete
+showProfile(BuildContext context, {String profileId}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Profile(
+        profileId: profileId,
+      ),
+    ),
+  );
+}

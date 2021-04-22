@@ -10,14 +10,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 //TODO: when i click on tickets open a menu that ask me if i want to
 //TODO: send a message / go to profile
 
-profileOrMessage() {}
-
 class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchState extends State<Search>
+    with AutomaticKeepAliveClientMixin<Search> {
+  //mixin - //help us save he state of this page when we move to another page
   //text editor variable
   TextEditingController searchController = TextEditingController();
   //query variable
@@ -74,6 +74,7 @@ class _SearchState extends State<Search> {
           UserTicket searchResult = UserTicket(
             displayName: user.displayName,
             photoUrl: user.photoUrl,
+            id: user.id,
           );
           searchResults.add(searchResult);
         });
@@ -105,8 +106,13 @@ class _SearchState extends State<Search> {
     );
   }
 
+  //this variable is to keep the state of the screen alive,
+  //even if we move to another screen.
+  //super.build(context) is also part of that.
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: searchBar(),
       body: searchResults == null ? noContent() : buildSearchResults(),
