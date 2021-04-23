@@ -55,6 +55,7 @@ class StoryTickets extends StatelessWidget {
               width: 5.0,
             ),
             Expanded(
+              flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

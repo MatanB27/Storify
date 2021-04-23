@@ -11,6 +11,7 @@ import 'package:storify/pages/edit_profile.dart';
 import '../auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
 import 'package:storify/widgets/user_ticket.dart';
+import 'package:storify/pages/private_message.dart';
 
 //todo: here you need to put the stores list from the fire base
 List<String> imagePost = [
@@ -28,8 +29,10 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  //loading boolean
   bool isLoading = false;
-  final String currentUserId = currentUserHome?.id;
+  //the current user who is logged in
+  final String currentUserId = auth.currentUser?.uid;
 
   //TODO: use for each from firebase
   List<StoryTickets> tickets = [
@@ -153,25 +156,50 @@ class _ProfileState extends State<Profile> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FlatButton(
-                    splashColor: Colors.white10,
-                    onPressed: editProfile,
-                    color: Colors.black,
-                    child: Text(
-                      'Edit profile',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
+                    //this button is change depends if it us or not
+                    onPressed: currentUserId == widget.profileId
+                        ? editProfile
+                        : handleFollow,
+                    color: currentUserId == widget.profileId
+                        ? Colors.black
+                        : Colors.lightBlue,
+                    child: currentUserId == widget.profileId
+                        ? Text(
+                            'Edit Profile',
+                            style: TextStyle(color: Colors.white),
+                          )
+                        : Text(
+                            'Follow',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                    padding: currentUserId == widget.profileId
+                        ? EdgeInsets.symmetric(horizontal: 85.0, vertical: 8.0)
+                        : EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
                   ),
                   SizedBox(
                     width: 12.0,
                   ),
-                  OutlineButton(
-                    onPressed: () {},
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
-                    child: Text('message'),
-                  ),
+                  currentUserId == widget.profileId
+                      ? Container() //empty container
+                      : FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PrivateMessage(
+                                  privateId: widget.profileId,
+                                ),
+                              ),
+                            );
+                          },
+                          color: Colors.black,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 50.0, vertical: 8.0),
+                          child: Text(
+                            'Message',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                 ],
               ),
               SizedBox(
@@ -214,6 +242,7 @@ class _ProfileState extends State<Profile> {
     //TODO: build the stories tickets
   }
 
+  //when we are in our own profile - we can click this button
   void editProfile() {
     Navigator.push(
       context,
@@ -223,6 +252,17 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     );
+  }
+
+  void handleFollow() {
+    //TODO: handle following
+    print(auth.currentUser.uid);
+    print(widget.profileId);
+    print(currentUserHome);
+  }
+
+  void handleUnfollow() {
+    //TODO: handle unfollowing
   }
 
   @override

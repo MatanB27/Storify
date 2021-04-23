@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/user.dart';
+import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/user.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../auth_service.dart';

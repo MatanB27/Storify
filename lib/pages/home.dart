@@ -8,7 +8,7 @@ import 'package:storify/pages/feed.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/pages/search.dart';
 import 'package:storify/pages/upload_story.dart';
-import '../user.dart';
+import 'package:storify/user.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 //global variables:
@@ -18,6 +18,7 @@ UserClass currentUserHome; //current user
 final DateTime timestampNow = DateTime.now(); //the time the user was created
 final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
 final storageRef = FirebaseStorage.instance.ref(); //storage ref
+final chatRef = FirebaseFirestore.instance.collection('chat'); //Chat ref
 AuthService auth = new AuthService();
 
 class HomePage extends StatefulWidget {
