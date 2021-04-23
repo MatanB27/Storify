@@ -20,6 +20,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
   bool isLoading = false;
   //the current user who is logged in
   final String currentUserId = auth.currentUser?.uid;
+  TextEditingController message = TextEditingController();
 
   header() {
     return FutureBuilder(
@@ -77,8 +78,30 @@ class _PrivateMessageState extends State<PrivateMessage> {
     );
   }
 
-  sendMessage() {
-    return TextField();
+  sendMessageBlock() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: TextField(
+        controller: message,
+        decoration: InputDecoration(
+          hintText: 'Write your message...',
+          suffixIcon: IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () {
+              //TODO: send a message
+              print('hey');
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  //disposing the text editor variable when we close the page
+  @override
+  void dispose() {
+    super.dispose();
+    message.dispose();
   }
 
   @override
@@ -91,10 +114,16 @@ class _PrivateMessageState extends State<PrivateMessage> {
           preferredSize: Size.fromHeight(55.0),
           child: header(),
         ),
-        body: ListView(
+        body: Column(
           children: [
-            messageBubbleStream(),
-            sendMessage(),
+            Flexible(
+              child: ListView(
+                children: [
+                  messageBubbleStream(),
+                ],
+              ),
+            ),
+            sendMessageBlock(),
           ],
         ),
       ),
