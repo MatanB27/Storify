@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/auth_service.dart';
+import 'package:storify/chat_class.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/pages/private_message.dart';
 import 'package:storify/widgets/chat_history.dart';
@@ -21,32 +22,43 @@ class _ChatState extends State<Chat> {
   final String currentUserId = auth.currentUser?.uid;
   //loading state
   bool isLoading = false;
+  //query variable
+  Future<QuerySnapshot> chatHistoryResults;
 
-  //TODO: delete
-  List<ChatHistory> chatTickets = [
+  List<ChatHistory> buildChatHistoryTickets = [
     ChatHistory(
-      id: '123',
       displayName: 'matan',
-      timestamp: timestampNow,
       photoUrl: 'https://picsum.photos/250?image=9',
-      message: 'my last message.',
+      timestamp: timestampNow,
+      message: 'This is hard coded',
+      uid: '123',
+      rid: 'wow',
     ),
     ChatHistory(
-      id: '123',
-      displayName: 'abcd',
-      timestamp: timestampNow,
+      displayName: 'matan',
       photoUrl: 'https://picsum.photos/250?image=9',
-      message: 'my last message.',
+      timestamp: timestampNow,
+      message: 'This is hard coded',
+      uid: '123',
+      rid: 'wow',
     ),
     ChatHistory(
-      id: '123',
-      displayName: 'efgh',
-      timestamp: timestampNow,
+      displayName: 'matan',
       photoUrl: 'https://picsum.photos/250?image=9',
-      message: 'my message.',
+      timestamp: timestampNow,
+      message: 'This is hard coded',
+      uid: '123',
+      rid: 'wow',
+    ),
+    ChatHistory(
+      displayName: 'matan',
+      photoUrl: 'https://picsum.photos/250?image=9',
+      timestamp: timestampNow,
+      message: 'This is hard coded',
+      uid: '123',
+      rid: 'wow',
     ),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
@@ -60,7 +72,7 @@ class _ChatState extends State<Chat> {
             ),
           ),
           body: ListView(
-            children: chatTickets,
+            children: buildChatHistoryTickets,
           )),
     );
   }

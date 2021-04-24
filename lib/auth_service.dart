@@ -32,6 +32,9 @@ class AuthService {
           FacebookAuthProvider.credential(accessToken.token),
         );
         DocumentSnapshot doc = await userRef.doc(currentUser.uid).get();
+        Map<String, String> messageMap = {
+          // for chat
+        };
         //Storing the user data in the firestore database
         //if dosent exist - we create it
         if (!doc.exists) {
@@ -41,6 +44,7 @@ class AuthService {
             "photoUrl": currentUser.photoURL,
             "email": currentUser.email,
             "bio": "",
+            "messages": messageMap,
             "timestamp": timestampNow,
           });
           //now all the set data we are storing in doc
@@ -78,6 +82,9 @@ class AuthService {
         DocumentSnapshot doc = await userRef.doc(currentUser.uid).get();
         //Storing the user data in the firestore database
         //if dosent exist - we create it
+        Map<String, String> messageMap = {
+          // for chat
+        };
         if (!doc.exists) {
           userRef.doc(currentUser.uid).set({
             "id": currentUser.uid,
@@ -86,6 +93,7 @@ class AuthService {
             "email": currentUser.email,
             "bio": "",
             "timestamp": timestampNow,
+            "messages": messageMap,
           });
           //now all the set data we are storing in doc
           doc = await userRef.doc(currentUser.uid).get();

@@ -32,6 +32,7 @@ dependencies:
   flutter_tts: ^3.0.0
   animated_text_kit: ^4.2.0
   curved_navigation_bar: ^0.3.7 #latest version
+  uuid: ^2.0.0 #creating id
 
 
 dev_dependencies:

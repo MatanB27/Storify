@@ -6,14 +6,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 //we are seeing the chat history tickets.
 class ChatHistory extends StatelessWidget {
-  final String id;
+  final String rid; //room id
+  final String uid; //user id
   final String displayName;
   final String photoUrl;
   final String message;
   final DateTime timestamp;
 
   ChatHistory({
-    this.id,
+    this.rid,
+    this.uid,
     this.displayName,
     this.photoUrl,
     this.message,
@@ -32,9 +34,7 @@ class ChatHistory extends StatelessWidget {
           this.displayName,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Expanded(
-          child: Text(this.message),
-        ),
+        subtitle: Text(this.message),
         trailing: Text(
           timeago.format(timestamp),
         ), //TODO: check if its true
