@@ -15,7 +15,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 //variable for signing in
 
 UserClass currentUserHome; //current user
-final DateTime timestampNow = DateTime.now(); //the time the user was created
+DateTime timestampNow = DateTime.now(); //the time the user was created
 final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
 final storageRef = FirebaseStorage.instance.ref(); //storage ref
 final chatRef = FirebaseFirestore.instance.collection('chatRoom'); //Chat ref
