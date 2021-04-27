@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/chat.dart';
@@ -8,6 +9,7 @@ import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:storify/pages/edit_profile.dart';
+import 'package:uuid/uuid.dart';
 import '../auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
 import 'package:storify/widgets/user_ticket.dart';
@@ -34,6 +36,9 @@ class _ProfileState extends State<Profile> {
   //the current user who is logged in
   final String currentUserId = auth.currentUser?.uid;
 
+  // The current room we are entering
+  String currentRoomId = '';
+
   //TODO: use for each from firebase
   List<StoryTickets> tickets = [
     StoryTickets("https://picsum.photos/250?image=9", "Best story ever",
@@ -58,6 +63,40 @@ class _ProfileState extends State<Profile> {
     StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
         "Raiting : 100", "13.04.2021", "Matan Baruch"),
   ];
+
+  // Getting the current room
+  createRoomInFirebase() async {
+    // Creating message map (otherId, roomId) in userRef
+    // Creating for both current user && other user
+    String chatRoomId = Uuid().v4();
+
+    DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
+    Map<dynamic, dynamic> myMapCheck = await myDocUser.get('messages');
+
+    if (!myMapCheck.containsKey(widget.profileId) || myMapCheck.isEmpty) {
+      await userRef.doc(currentUserId).set({
+        'messages': {
+          widget.profileId: chatRoomId,
+        },
+      }, SetOptions(merge: true));
+    }
+    DocumentSnapshot otherDocUser = await userRef.doc(widget.profileId).get();
+    Map<dynamic, dynamic> otherMapCheck = await otherDocUser.get('messages');
+
+    if (!otherMapCheck.containsKey(currentUserId) || otherMapCheck.isEmpty) {
+      userRef.doc(widget.profileId).set({
+        'messages': {
+          currentUserId: chatRoomId,
+        },
+      }, SetOptions(merge: true));
+    }
+    currentRoomId = chatRoomId;
+    myMapCheck.forEach((key, value) {
+      if (key == widget.profileId) {
+        currentRoomId = value;
+      }
+    });
+  }
 
   profileHeader() {
     //future: help us to get the user information base on their id.
@@ -182,12 +221,14 @@ class _ProfileState extends State<Profile> {
                   currentUserId == widget.profileId
                       ? Container() //empty container
                       : FlatButton(
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            await createRoomInFirebase();
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => PrivateMessage(
                                   privateId: widget.profileId,
+                                  currentRoomId: currentRoomId,
                                 ),
                               ),
                             );

@@ -1,24 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/chat_class.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/auth_service.dart';
+import 'package:storify/pages/profile.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:uuid/uuid.dart';
 import '../widgets/loading.dart';
 import 'home.dart';
 import 'package:timeago/timeago.dart' as timeago;
-// Global variables:
 
 class PrivateMessage extends StatefulWidget {
   final String privateId;
-
-  PrivateMessage({this.privateId});
+  final String currentRoomId;
+  PrivateMessage({this.privateId, this.currentRoomId});
 
   @override
   _PrivateMessageState createState() => _PrivateMessageState();
@@ -35,8 +33,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
   String chatRoomId;
   // Message Id generator
   String messageId;
-  // Current room
-  String currentRoomId;
 
   header() {
     return FutureBuilder(
@@ -57,7 +53,14 @@ class _PrivateMessageState extends State<PrivateMessage> {
           ),
           title: GestureDetector(
             onTap: () {
-              //TODO: go to profile
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Profile(
+                    profileId: widget.privateId,
+                  ),
+                ),
+              );
             },
             child: Row(
               children: [
@@ -85,7 +88,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
                 ),
                 onPressed: () {
                   //TODO : do something
-                  print(currentRoomId);
+                  print(widget.currentRoomId);
                 }),
           ],
         );
@@ -93,19 +96,22 @@ class _PrivateMessageState extends State<PrivateMessage> {
     );
   }
 
-  // If we send a message and it the first message -
-  // It will be created in firebase
+  // When we click send - it will send the data to the Firebase.
   sendMessage() async {
     if (messageText.text.toString() != '') {
       //text must have words
-      print(currentRoomId);
-      DocumentSnapshot docRoom = await chatRef.doc(currentRoomId).get();
+      print(widget.currentRoomId);
+      DocumentSnapshot docRoom = await chatRef.doc(widget.currentRoomId).get();
       DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
       String senderId = myDocUser.get('id').toString();
       String senderName = myDocUser.get('displayName').toString();
 
       if (!docRoom.exists) {
-        chatRef.doc(currentRoomId).collection('messageId').doc(messageId).set({
+        chatRef
+            .doc(widget.currentRoomId)
+            .collection('messageId')
+            .doc(messageId)
+            .set({
           'id': senderId,
           'sender': senderName,
           'message': messageText.text.toString(),
@@ -115,41 +121,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
     }
     //clearing the message after sending it
     messageText.clear();
-  }
-
-  // Getting the current room
-  createRoomInFirebase() async {
-    // Creating message map (otherId, roomId) in userRef
-    // Creating for both current user && other user
-    chatRoomId = Uuid().v4();
-
-    DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
-    Map<dynamic, dynamic> myMapCheck = await myDocUser.get('messages');
-
-    if (!myMapCheck.containsKey(widget.privateId) || myMapCheck.isEmpty) {
-      await userRef.doc(currentUserId).set({
-        'messages': {
-          widget.privateId: chatRoomId,
-        },
-      }, SetOptions(merge: true));
-    }
-    DocumentSnapshot otherDocUser = await userRef.doc(widget.privateId).get();
-    Map<dynamic, dynamic> otherMapCheck = await otherDocUser.get('messages');
-
-    if (!otherMapCheck.containsKey(currentUserId) || otherMapCheck.isEmpty) {
-      userRef.doc(widget.privateId).set({
-        'messages': {
-          currentUserId: chatRoomId,
-        },
-      }, SetOptions(merge: true));
-    }
-    currentRoomId = chatRoomId;
-    myMapCheck.forEach((key, value) {
-      if (key == widget.privateId) {
-        currentRoomId = value;
-      }
-    });
-    print(otherMapCheck);
   }
 
   sendMessageBlock() {
@@ -177,14 +148,12 @@ class _PrivateMessageState extends State<PrivateMessage> {
     messageText.dispose();
   }
 
-  // Initstate - get the current room.
+  // Initstate - creating a room in firebase.
   @override
   void initState() {
     super.initState();
-    createRoomInFirebase();
+    print(widget.currentRoomId);
   }
-
-  // Streaming all the messages from the firebase
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +172,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
               children: [
                 MessageStream(
                   currentUserId: currentUserId,
-                  currentRoomId: currentRoomId,
+                  currentRoomId: widget.currentRoomId,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -305,7 +274,6 @@ class MessageStream extends StatelessWidget {
           final messageSender = message.data()['sender'];
           final time = message.data()['timeStamp'];
           final currentUser = message.data()['id'];
-
           final messageBubble = MessageBubbles(
             sender: messageSender,
             message: messageText,
@@ -323,6 +291,5 @@ class MessageStream extends StatelessWidget {
         );
       },
     );
-    ;
   }
 }
