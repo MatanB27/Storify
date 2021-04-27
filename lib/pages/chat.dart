@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/auth_service.dart';
 import 'package:storify/chat_class.dart';
@@ -18,62 +19,76 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  //our own id
+  // Our own id
   final String currentUserId = auth.currentUser?.uid;
-  //loading state
+
+  // Loading state
   bool isLoading = false;
-  //query variable
+
+  // Query variable
   Future<QuerySnapshot> chatHistoryResults;
 
-  List<ChatHistory> buildChatHistoryTickets = [
-    ChatHistory(
-      displayName: 'matan',
-      photoUrl: 'https://picsum.photos/250?image=9',
-      timestamp: timestampNow,
-      message: 'This is hard coded',
-      uid: '123',
-      rid: 'wow',
-    ),
-    ChatHistory(
-      displayName: 'matan',
-      photoUrl: 'https://picsum.photos/250?image=9',
-      timestamp: timestampNow,
-      message: 'This is hard coded',
-      uid: '123',
-      rid: 'wow',
-    ),
-    ChatHistory(
-      displayName: 'matan',
-      photoUrl: 'https://picsum.photos/250?image=9',
-      timestamp: timestampNow,
-      message: 'This is hard coded',
-      uid: '123',
-      rid: 'wow',
-    ),
-    ChatHistory(
-      displayName: 'matan',
-      photoUrl: 'https://picsum.photos/250?image=9',
-      timestamp: timestampNow,
-      message: 'This is hard coded',
-      uid: '123',
-      rid: 'wow',
-    ),
-  ];
+  // All the user rooms will be in this variable
+  List<String> roomsUserList = [];
+
+  // All the chat rooms will be in this variable
+  List<String> roomsChatList = [];
+
+  // All the history chat tickets will be here.
+  List<QuerySnapshot> tickets = [];
+
+  // Getting all the current user rooms in a list of Id rooms.
+  //TODO: fix the chat history
+  getRooms() async {
+    roomsUserList = [];
+    //roomsChatList = [];
+    DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
+    Map<dynamic, dynamic> userRoomsMap = await myDocUser.get('messages');
+    userRoomsMap.forEach((key, value) {
+      roomsUserList.add(value);
+    });
+    print(roomsUserList);
+    roomsUserList.forEach((element) async {
+      String chatDoc = await chatRef.doc(element).get();
+      roomsChatList.add(chatDoc.toString());
+    });
+    print(roomsChatList);
+  }
+
+  // Build the story tickets here
+  buildStoryTickets() {
+    return FutureBuilder(
+      future: chatRef.get().then((snapshot) {
+        snapshot.docs.forEach((element) {});
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-          backgroundColor: Colors.grey[350],
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(55.0),
-            child: Header(
-              title: 'Chat',
-            ),
+        backgroundColor: Colors.grey[350],
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(55.0),
+          child: Header(
+            title: 'Chat',
           ),
-          body: ListView(
-            children: buildChatHistoryTickets,
-          )),
+        ),
+        body: ListView(
+          children: [
+            //buildStoryTickets(),
+            Container(
+              height: 100,
+              width: 100,
+              child: FlatButton(onPressed: () {
+                getRooms();
+              }),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

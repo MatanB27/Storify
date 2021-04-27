@@ -8,7 +8,6 @@ import 'package:storify/auth_service.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
-import 'package:uuid/uuid.dart';
 import '../widgets/loading.dart';
 import 'home.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -23,7 +22,7 @@ class PrivateMessage extends StatefulWidget {
 }
 
 class _PrivateMessageState extends State<PrivateMessage> {
-  //loading boolean
+  // Loading boolean
   bool isLoading = false;
   //the current user who is logged in
   final String currentUserId = auth.currentUser?.uid;
