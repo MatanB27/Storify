@@ -52,7 +52,6 @@ class _SigninPageState extends State<SigninPage> {
   Widget build(BuildContext context) {
     //if the user is not logged in he will see this page
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         //this is the up container design
         child: Container(
@@ -70,8 +69,8 @@ class _SigninPageState extends State<SigninPage> {
               end: Alignment.centerRight,
             ),
             image: DecorationImage(
-              image: AssetImage(
-                  'assets/land1.jpg'), //the image that we see in the up container
+              image: NetworkImage(
+                  'https://images.unsplash.com/photo-1497704628914-8772bb97f450?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80'), //the image that we see in the up container
               fit: BoxFit.cover,
             ),
           ),
@@ -80,20 +79,16 @@ class _SigninPageState extends State<SigninPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 2,
+                flex: 4,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    //the custom up container have to children texts widgets
                     children: [
-                      //the text style
-
-                      //the space between the texts widgets
-
                       AnimatedTextKit(
+                        repeatForever: true,
                         animatedTexts: [
                           FadeAnimatedText(
                             'welcome',
@@ -120,19 +115,17 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                           ),
                         ],
-                        onTap: () {
-                          print("Tap Event");
-                        },
                       ),
                     ],
                   ),
                 ),
               ),
               Expanded(
-                flex: 5,
+                flex: 3,
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
+                    //  color: Color(0xffC5DE),
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
@@ -150,6 +143,7 @@ class _SigninPageState extends State<SigninPage> {
                         //texts widget with a custom font
 
                         AnimatedTextKit(
+                          isRepeatingAnimation: true,
                           animatedTexts: [
                             ColorizeAnimatedText(
                               'storify',
@@ -162,15 +156,15 @@ class _SigninPageState extends State<SigninPage> {
                               colors: colorizeColors,
                             ),
                           ],
-                          isRepeatingAnimation: true,
                           onTap: () {
                             print("Tap Event");
                           },
+                          repeatForever: true,
                         ),
 
                         //the space between the text widget and the buttons
                         SizedBox(
-                          height: 70,
+                          height: 10,
                         ),
                         //sign in button
                         SignInButton(
@@ -204,23 +198,12 @@ class _SigninPageState extends State<SigninPage> {
                                 decoration: TextDecoration.underline,
                               ),
                             ),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            Container(
-                              child: Row(
-                                children: [],
-                              ),
-                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10,
               ),
             ],
           ),

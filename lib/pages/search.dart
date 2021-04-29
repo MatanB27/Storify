@@ -7,8 +7,6 @@ import 'package:storify/widgets/user_ticket.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 //TODO: make the search better
-//TODO: when i click on tickets open a menu that ask me if i want to
-//TODO: send a message / go to profile
 
 class Search extends StatefulWidget {
   @override

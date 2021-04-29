@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/chat_class.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/auth_service.dart';
 import 'package:storify/pages/profile.dart';
@@ -24,14 +27,32 @@ class PrivateMessage extends StatefulWidget {
 class _PrivateMessageState extends State<PrivateMessage> {
   // Loading boolean
   bool isLoading = false;
+
   //the current user who is logged in
   final String currentUserId = auth.currentUser?.uid;
+
   // TextEditingController variable for sending a message
   TextEditingController messageText = TextEditingController();
+
   // Current chat room id
   String chatRoomId;
+
   // Message Id generator
   String messageId;
+
+  // Variable to get the photo Url from the user database.
+  String otherUserPhotoUrl;
+
+  // Variable to get the display name from the user database.
+  String otherUserDisplayName;
+
+  getOtherUserPhotoAndName() async {
+    DocumentSnapshot photoUrlDoc = await userRef.doc(widget.privateId).get();
+    DocumentSnapshot displayNameDoc = await userRef.doc(widget.privateId).get();
+
+    otherUserPhotoUrl = photoUrlDoc.get('photoUrl');
+    otherUserDisplayName = displayNameDoc.get('displayName');
+  }
 
   header() {
     return FutureBuilder(
@@ -86,8 +107,10 @@ class _PrivateMessageState extends State<PrivateMessage> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  //TODO : do something
+                  //TODO : do something, might delete this icon
                   print(widget.currentRoomId);
+                  print(currentUserId);
+                  print(widget.privateId);
                 }),
           ],
         );
@@ -96,6 +119,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
   }
 
   // When we click send - it will send the data to the Firebase.
+  //TODO: check URL and getter sender name.
   sendMessage() async {
     if (messageText.text.toString() != '') {
       //text must have words
@@ -103,7 +127,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
       DocumentSnapshot docRoom = await chatRef.doc(widget.currentRoomId).get();
       DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
       String senderId = myDocUser.get('id').toString();
-      String senderName = myDocUser.get('displayName').toString();
 
       if (!docRoom.exists) {
         chatRef
@@ -112,11 +135,14 @@ class _PrivateMessageState extends State<PrivateMessage> {
             .doc(messageId)
             .set({
           'id': senderId,
-          'sender': senderName,
+          'otherUserId': widget.privateId,
+          'rid': widget.currentRoomId,
           'message': messageText.text.toString(),
           'timeStamp': DateTime.now(),
         });
+        //docRoom = await chatRef.doc(widget.currentRoomId).get();
       }
+      //ChatClass chat = ChatClass.fromDocuments(docRoom);
     }
     //clearing the message after sending it
     messageText.clear();
@@ -151,7 +177,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
   @override
   void initState() {
     super.initState();
-    print(widget.currentRoomId);
+    getOtherUserPhotoAndName();
   }
 
   @override

@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/auth_service.dart';
-import 'package:storify/chat_class.dart';
 import 'package:storify/pages/home.dart';
-import 'package:storify/pages/private_message.dart';
 import 'package:storify/widgets/chat_history.dart';
 import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
-import 'package:storify/widgets/user_ticket.dart';
 
 class Chat extends StatefulWidget {
   final String chatId;
@@ -25,9 +21,6 @@ class _ChatState extends State<Chat> {
   // Loading state
   bool isLoading = false;
 
-  // Query variable
-  Future<QuerySnapshot> chatHistoryResults;
-
   // All the user rooms will be in this variable
   List<String> roomsUserList = [];
 
@@ -39,29 +32,74 @@ class _ChatState extends State<Chat> {
 
   // Getting all the current user rooms in a list of Id rooms.
   //TODO: fix the chat history
-  getRooms() async {
-    roomsUserList = [];
-    //roomsChatList = [];
+  getUserRooms() async {
     DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
     Map<dynamic, dynamic> userRoomsMap = await myDocUser.get('messages');
-    userRoomsMap.forEach((key, value) {
+
+    userRoomsMap.forEach((key, value) async {
       roomsUserList.add(value);
     });
-    print(roomsUserList);
-    roomsUserList.forEach((element) async {
-      String chatDoc = await chatRef.doc(element).get();
-      roomsChatList.add(chatDoc.toString());
-    });
     print(roomsChatList);
+    print(roomsUserList);
+    roomsChatList = [];
+    roomsUserList = [];
+  }
+
+  // Getting a stream of the chat
+  getChatStream() {
+    return chatRef
+        .doc('ae3f209f-3497-417e-92dd-5815d06e3762')
+        .collection('messageId')
+        .orderBy('timeStamp', descending: true)
+        .limit(1)
+        .snapshots();
   }
 
   // Build the story tickets here
   buildStoryTickets() {
-    return FutureBuilder(
-      future: chatRef.get().then((snapshot) {
-        snapshot.docs.forEach((element) {});
-      }),
+    return StreamBuilder(
+      stream: getChatStream(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return loading();
+        }
+        List<ChatHistory> tickets = [];
+        snapshot.data.docs.forEach((doc) {
+          ChatHistory ticket = ChatHistory(
+            id: doc.data()['senderId'],
+            otherUserId: doc.data()['getterId'],
+            message: doc.data()['message'],
+            photoUrl: 'image',
+            displayName: 'other user name',
+            rid: doc.data()['rid'],
+            timeStamp: doc.data()['timeStamp'],
+          );
+          tickets.add(ticket);
+        });
+        return ListView(
+          children: tickets,
+        );
+      },
     );
+  }
+
+  // Container(
+  // //TODO: delete it, just to check
+  // height: 50,
+  // width: 50,
+  // child: FlatButton(
+  // child: Text(element),
+  // onPressed: () {
+  // //getUserRooms();
+  // print(element);
+  // },
+  // ),
+  // ),
+  // tickets,
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -76,18 +114,7 @@ class _ChatState extends State<Chat> {
             title: 'Chat',
           ),
         ),
-        body: ListView(
-          children: [
-            //buildStoryTickets(),
-            Container(
-              height: 100,
-              width: 100,
-              child: FlatButton(onPressed: () {
-                getRooms();
-              }),
-            ),
-          ],
-        ),
+        body: buildStoryTickets(),
       ),
     );
   }
