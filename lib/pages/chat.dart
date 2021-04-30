@@ -8,9 +8,7 @@ import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
 
 import 'home.dart';
-import 'home.dart';
-import 'home.dart';
-import 'home.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Chat extends StatefulWidget {
   final String chatId;
@@ -32,33 +30,14 @@ class _ChatState extends State<Chat> {
   // All the history chat tickets will be here.
   List<QuerySnapshot> tickets = [];
 
-  // // Getting all the current user rooms in a list of Id rooms.
-  // //TODO: fix the chat history
-  getUserRooms() async {
-    currentUserRoomList.clear();
-    DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
-    Map<dynamic, dynamic> userRoomsMap = await myDocUser.get('messages');
-
-    userRoomsMap.forEach((key, value) async {
-      currentUserRoomList.add(value);
-    });
-    print(currentUserRoomList);
-  }
-
-  // Getting a stream of the chat
-  getChatStream() {
-    return chatRef
-        .doc()
-        .collection('messageId')
-        .orderBy('timeStamp', descending: true)
-        .limit(1)
-        .snapshots();
-  }
-
   // Build the story tickets here
+  //TODO: OR query
   buildStoryTickets() {
     return StreamBuilder(
-      stream: getChatStream(),
+      stream: chatRef
+          .where('id', isEqualTo: this.currentUserId)
+          .orderBy('timeStamp', descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return loading();
@@ -68,7 +47,7 @@ class _ChatState extends State<Chat> {
           ChatHistory ticket = ChatHistory(
             id: doc.data()['id'],
             otherUserId: doc.data()['otherId'],
-            message: doc.data()['message'],
+            message: doc.data()['recentMessage'],
             photoUrl: currentUserId == doc.data()['id']
                 ? doc.data()['photos'][1]
                 : doc.data()['photos'][0],
@@ -104,13 +83,6 @@ class _ChatState extends State<Chat> {
   void dispose() {
     super.dispose();
     currentUserRoomList.clear();
-  }
-
-  // Init state of the app
-  @override
-  void initState() {
-    super.initState();
-    getUserRooms();
   }
 
   @override
