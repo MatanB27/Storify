@@ -36,7 +36,10 @@ class ChatHistory extends StatelessWidget {
           this.displayName,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(this.message),
+        subtitle: Text(
+          this.message,
+          overflow: TextOverflow.ellipsis,
+        ),
         trailing: Text(
           timeago.format(this.timeStamp.toDate()),
         ), //TODO: check if its true

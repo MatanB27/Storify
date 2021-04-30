@@ -65,29 +65,10 @@ class _ProfileState extends State<Profile> {
         "Raiting : 100", "13.04.2021", "Matan Baruch"),
   ];
 
-  // Getting the current room
+  // Create room in chatRef and also
   createRoomInFirebase() async {
-    // Creating message map (otherId, roomId) in userRef
-    // Creating for both current user && other user
-
-    // also working
-    // DocumentReference chatRoomIdRef = chatRef.doc();
-    // String chatRoomId = chatRoomIdRef.toString();
-    // chatRoomId = chatRoomId.substring(29, chatRoomId.length - 1);
-
-    // We are getting the docs into a value, if it doesnt exist it will
-    // Create it
-
     DocumentReference doc;
-    // //doc = await chatRef.add({});
-    // roomStr = doc.id;
-    // // DocumentSnapshot docCheck = await chatRef.doc(roomStr).get();
-    //
-    // // chatRef.get().then((value) {
-    // //   value.docs.forEach((element) {
-    // //     if(roomStr == element)
-    // //   });
-    // // });
+
     DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
     Map<dynamic, dynamic> myMapCheck = await myDocUser.get('messages');
 
@@ -97,9 +78,9 @@ class _ProfileState extends State<Profile> {
         'messages': {
           widget.profileId: doc.id,
         },
-        'groups': FieldValue.arrayUnion([doc.id]),
       }, SetOptions(merge: true));
     }
+
     DocumentSnapshot otherDocUser = await userRef.doc(widget.profileId).get();
     Map<dynamic, dynamic> otherMapCheck = await otherDocUser.get('messages');
 
@@ -108,7 +89,6 @@ class _ProfileState extends State<Profile> {
         'messages': {
           currentUserId: doc.id,
         },
-        'groups': FieldValue.arrayUnion([doc.id]),
       }, SetOptions(merge: true));
     }
     currentRoomId = doc?.id; // Ignores null

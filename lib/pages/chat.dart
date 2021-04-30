@@ -48,7 +48,7 @@ class _ChatState extends State<Chat> {
   // Getting a stream of the chat
   getChatStream() {
     return chatRef
-        .doc(currentUserRoomList.first)
+        .doc()
         .collection('messageId')
         .orderBy('timeStamp', descending: true)
         .limit(1)

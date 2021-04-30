@@ -1,16 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/chat_class.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/auth_service.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
-import 'package:uuid/uuid.dart';
 import '../widgets/loading.dart';
 import 'home.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -37,9 +34,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
   // Current chat room id
   String chatRoomId;
 
-  // Message Id generator
-  String messageId;
-
   // Variable to get the photo Url from the user database.
   String otherUserPhotoUrl;
 
@@ -51,6 +45,9 @@ class _PrivateMessageState extends State<PrivateMessage> {
 
   // Variable to get the display name from the user database.
   String thisUserDisplayName;
+
+  // Variable that contain all the currentroom messages
+  List<String> messagesRoom = [];
 
   getOtherUserPhotoAndName() async {
     DocumentSnapshot otherDoc = await userRef.doc(widget.privateId).get();
@@ -133,19 +130,30 @@ class _PrivateMessageState extends State<PrivateMessage> {
       DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
       String senderId = myDocUser.get('id').toString();
 
-      await chatRef
+      DocumentSnapshot doc = await userRef.doc().get();
+
+      await messageRef
           .doc(widget.currentRoomId)
-          .collection('messageId')
-          .doc(messageId)
+          .collection('messagesId')
+          .doc(doc.id)
           .set({
+        'message': messageText.text.toString(),
+        'timeStamp': DateTime.now(),
+        'sender': thisUserDisplayName,
+        'messageId': doc.id,
+        'senderId': senderId,
+      });
+
+      await chatRef.doc(widget.currentRoomId).set({
         'id': senderId,
         'otherId': widget.privateId,
         'rid': widget.currentRoomId,
         'names': [thisUserDisplayName, otherUserDisplayName],
         'photos': [thisUserPhotoUrl, otherUserPhotoUrl],
-        'message': messageText.text.toString(),
+        'recentMessage': messageText.text.toString(),
         'timeStamp': DateTime.now(),
-      });
+        'messages': FieldValue.arrayUnion([doc.id]),
+      }, SetOptions(merge: true));
       //docRoom = await chatRef.doc(widget.currentRoomId).get();
 
       //currentChat = ChatClass.fromDocuments(docRoom);
@@ -172,6 +180,15 @@ class _PrivateMessageState extends State<PrivateMessage> {
     );
   }
 
+  // Getting all the message id's of the current room
+  // getMessagesId() async {
+  //   messagesRoom.clear();
+  //   var doc = await chatRef.doc(widget.currentRoomId).get();
+  //   if (doc.exists) {
+  //     messagesRoom = List.from(doc.get('messages'));
+  //   }
+  // }
+
   // Disposing the text editor variable when we close the page
   @override
   void dispose() {
@@ -184,6 +201,8 @@ class _PrivateMessageState extends State<PrivateMessage> {
   void initState() {
     super.initState();
     getOtherUserPhotoAndName();
+    // getMessagesId();
+    print(widget.currentRoomId);
   }
 
   @override
@@ -284,14 +303,16 @@ class MessageBubbles extends StatelessWidget {
 class MessageStream extends StatelessWidget {
   final String currentRoomId;
   final String currentUserId;
-
-  MessageStream({this.currentRoomId, this.currentUserId});
+  MessageStream({
+    this.currentRoomId,
+    this.currentUserId,
+  });
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: chatRef
-          .doc(this.currentRoomId)
-          .collection('messageId')
+    return StreamBuilder(
+      stream: messageRef
+          .doc(currentRoomId)
+          .collection('messagesId')
           .orderBy('timeStamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -299,12 +320,13 @@ class MessageStream extends StatelessWidget {
           return loading();
         }
         final messages = snapshot.data.docs;
+        var currentUser;
         List<MessageBubbles> messageBubbles = [];
         for (var message in messages) {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
           final time = message.data()['timeStamp'];
-          final currentUser = message.data()['id'];
+          currentUser = message.data()['senderId'];
           final messageBubble = MessageBubbles(
             sender: messageSender,
             message: messageText,
@@ -315,10 +337,9 @@ class MessageStream extends StatelessWidget {
         }
         return Expanded(
           child: ListView(
-            reverse: true,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            children: messageBubbles,
-          ),
+              reverse: true,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              children: messageBubbles),
         );
       },
     );
