@@ -12,7 +12,6 @@ import 'package:storify/pages/edit_profile.dart';
 import 'package:uuid/uuid.dart';
 import '../auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
-import 'package:storify/widgets/user_ticket.dart';
 import 'package:storify/pages/private_message.dart';
 
 //todo: here you need to put the stores list from the fire base
@@ -37,7 +36,9 @@ class _ProfileState extends State<Profile> {
   final String currentUserId = auth.currentUser?.uid;
 
   // The current room we are entering
-  String currentRoomId = '';
+  var currentRoomId;
+
+  var roomStr;
 
   //TODO: use for each from firebase
   List<StoryTickets> tickets = [
@@ -68,16 +69,35 @@ class _ProfileState extends State<Profile> {
   createRoomInFirebase() async {
     // Creating message map (otherId, roomId) in userRef
     // Creating for both current user && other user
-    String chatRoomId = Uuid().v4();
 
+    // also working
+    // DocumentReference chatRoomIdRef = chatRef.doc();
+    // String chatRoomId = chatRoomIdRef.toString();
+    // chatRoomId = chatRoomId.substring(29, chatRoomId.length - 1);
+
+    // We are getting the docs into a value, if it doesnt exist it will
+    // Create it
+
+    DocumentReference doc;
+    // //doc = await chatRef.add({});
+    // roomStr = doc.id;
+    // // DocumentSnapshot docCheck = await chatRef.doc(roomStr).get();
+    //
+    // // chatRef.get().then((value) {
+    // //   value.docs.forEach((element) {
+    // //     if(roomStr == element)
+    // //   });
+    // // });
     DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
     Map<dynamic, dynamic> myMapCheck = await myDocUser.get('messages');
 
     if (!myMapCheck.containsKey(widget.profileId) || myMapCheck.isEmpty) {
+      doc = await chatRef.add({}); // Creating the room
       await userRef.doc(currentUserId).set({
         'messages': {
-          widget.profileId: chatRoomId,
+          widget.profileId: doc.id,
         },
+        'groups': FieldValue.arrayUnion([doc.id]),
       }, SetOptions(merge: true));
     }
     DocumentSnapshot otherDocUser = await userRef.doc(widget.profileId).get();
@@ -86,11 +106,12 @@ class _ProfileState extends State<Profile> {
     if (!otherMapCheck.containsKey(currentUserId) || otherMapCheck.isEmpty) {
       userRef.doc(widget.profileId).set({
         'messages': {
-          currentUserId: chatRoomId,
+          currentUserId: doc.id,
         },
+        'groups': FieldValue.arrayUnion([doc.id]),
       }, SetOptions(merge: true));
     }
-    currentRoomId = chatRoomId;
+    currentRoomId = doc?.id; // Ignores null
     myMapCheck.forEach((key, value) {
       if (key == widget.profileId) {
         currentRoomId = value;

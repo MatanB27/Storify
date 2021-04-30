@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +10,7 @@ import 'package:storify/auth_service.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
+import 'package:uuid/uuid.dart';
 import '../widgets/loading.dart';
 import 'home.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -46,12 +46,20 @@ class _PrivateMessageState extends State<PrivateMessage> {
   // Variable to get the display name from the user database.
   String otherUserDisplayName;
 
-  getOtherUserPhotoAndName() async {
-    DocumentSnapshot photoUrlDoc = await userRef.doc(widget.privateId).get();
-    DocumentSnapshot displayNameDoc = await userRef.doc(widget.privateId).get();
+  // Variable to get the photo Url from the user database.
+  String thisUserPhotoUrl;
 
-    otherUserPhotoUrl = photoUrlDoc.get('photoUrl');
-    otherUserDisplayName = displayNameDoc.get('displayName');
+  // Variable to get the display name from the user database.
+  String thisUserDisplayName;
+
+  getOtherUserPhotoAndName() async {
+    DocumentSnapshot otherDoc = await userRef.doc(widget.privateId).get();
+    otherUserPhotoUrl = otherDoc.get('photoUrl');
+    otherUserDisplayName = otherDoc.get('displayName');
+
+    DocumentSnapshot thisDoc = await userRef.doc(currentUserId).get();
+    thisUserDisplayName = thisDoc.get('displayName');
+    thisUserPhotoUrl = thisDoc.get('photoUrl');
   }
 
   header() {
@@ -109,8 +117,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
                 onPressed: () {
                   //TODO : do something, might delete this icon
                   print(widget.currentRoomId);
-                  print(currentUserId);
-                  print(widget.privateId);
                 }),
           ],
         );
@@ -119,30 +125,30 @@ class _PrivateMessageState extends State<PrivateMessage> {
   }
 
   // When we click send - it will send the data to the Firebase.
-  //TODO: check URL and getter sender name.
   sendMessage() async {
+    // Text must have words
     if (messageText.text.toString() != '') {
-      //text must have words
       print(widget.currentRoomId);
-      DocumentSnapshot docRoom = await chatRef.doc(widget.currentRoomId).get();
+
       DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
       String senderId = myDocUser.get('id').toString();
 
-      if (!docRoom.exists) {
-        chatRef
-            .doc(widget.currentRoomId)
-            .collection('messageId')
-            .doc(messageId)
-            .set({
-          'id': senderId,
-          'otherUserId': widget.privateId,
-          'rid': widget.currentRoomId,
-          'message': messageText.text.toString(),
-          'timeStamp': DateTime.now(),
-        });
-        //docRoom = await chatRef.doc(widget.currentRoomId).get();
-      }
-      //ChatClass chat = ChatClass.fromDocuments(docRoom);
+      await chatRef
+          .doc(widget.currentRoomId)
+          .collection('messageId')
+          .doc(messageId)
+          .set({
+        'id': senderId,
+        'otherId': widget.privateId,
+        'rid': widget.currentRoomId,
+        'names': [thisUserDisplayName, otherUserDisplayName],
+        'photos': [thisUserPhotoUrl, otherUserPhotoUrl],
+        'message': messageText.text.toString(),
+        'timeStamp': DateTime.now(),
+      });
+      //docRoom = await chatRef.doc(widget.currentRoomId).get();
+
+      //currentChat = ChatClass.fromDocuments(docRoom);
     }
     //clearing the message after sending it
     messageText.clear();

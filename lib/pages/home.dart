@@ -18,7 +18,7 @@ UserClass currentUserHome; //current user
 DateTime timestampNow = DateTime.now(); //the time the user was created
 final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
 final storageRef = FirebaseStorage.instance.ref(); //storage ref
-final chatRef = FirebaseFirestore.instance.collection('chatRoom'); //Chat ref
+final chatRef = FirebaseFirestore.instance.collection('chatrooms'); //Chat ref
 AuthService auth = new AuthService();
 
 class HomePage extends StatefulWidget {

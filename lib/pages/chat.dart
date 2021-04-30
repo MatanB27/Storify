@@ -7,6 +7,11 @@ import 'package:storify/widgets/chat_history.dart';
 import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
 
+import 'home.dart';
+import 'home.dart';
+import 'home.dart';
+import 'home.dart';
+
 class Chat extends StatefulWidget {
   final String chatId;
   Chat({this.chatId});
@@ -22,33 +27,28 @@ class _ChatState extends State<Chat> {
   bool isLoading = false;
 
   // All the user rooms will be in this variable
-  List<String> roomsUserList = [];
-
-  // All the chat rooms will be in this variable
-  List<String> roomsChatList = [];
+  List<String> currentUserRoomList = [];
 
   // All the history chat tickets will be here.
   List<QuerySnapshot> tickets = [];
 
-  // Getting all the current user rooms in a list of Id rooms.
-  //TODO: fix the chat history
+  // // Getting all the current user rooms in a list of Id rooms.
+  // //TODO: fix the chat history
   getUserRooms() async {
+    currentUserRoomList.clear();
     DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
     Map<dynamic, dynamic> userRoomsMap = await myDocUser.get('messages');
 
     userRoomsMap.forEach((key, value) async {
-      roomsUserList.add(value);
+      currentUserRoomList.add(value);
     });
-    print(roomsChatList);
-    print(roomsUserList);
-    roomsChatList = [];
-    roomsUserList = [];
+    print(currentUserRoomList);
   }
 
   // Getting a stream of the chat
   getChatStream() {
     return chatRef
-        .doc('ae3f209f-3497-417e-92dd-5815d06e3762')
+        .doc(currentUserRoomList.first)
         .collection('messageId')
         .orderBy('timeStamp', descending: true)
         .limit(1)
@@ -66,40 +66,51 @@ class _ChatState extends State<Chat> {
         List<ChatHistory> tickets = [];
         snapshot.data.docs.forEach((doc) {
           ChatHistory ticket = ChatHistory(
-            id: doc.data()['senderId'],
-            otherUserId: doc.data()['getterId'],
+            id: doc.data()['id'],
+            otherUserId: doc.data()['otherId'],
             message: doc.data()['message'],
-            photoUrl: 'image',
-            displayName: 'other user name',
+            photoUrl: currentUserId == doc.data()['id']
+                ? doc.data()['photos'][1]
+                : doc.data()['photos'][0],
+            displayName: currentUserId == doc.data()['id']
+                ? doc.data()['names'][1]
+                : doc.data()['names'][0],
             rid: doc.data()['rid'],
             timeStamp: doc.data()['timeStamp'],
           );
           tickets.add(ticket);
         });
-        return ListView(
-          children: tickets,
-        );
+        return ListView(children: tickets);
       },
     );
   }
 
+  // [
   // Container(
   // //TODO: delete it, just to check
   // height: 50,
   // width: 50,
   // child: FlatButton(
-  // child: Text(element),
+  // child: Text('hey'),
   // onPressed: () {
   // //getUserRooms();
-  // print(element);
+  // getDocs();
   // },
   // ),
   // ),
-  // tickets,
+  // ],
+  // When we are leaving the page it will make the lists empty
+  @override
+  void dispose() {
+    super.dispose();
+    currentUserRoomList.clear();
+  }
 
+  // Init state of the app
   @override
   void initState() {
     super.initState();
+    getUserRooms();
   }
 
   @override
