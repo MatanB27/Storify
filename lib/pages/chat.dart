@@ -7,7 +7,6 @@ import 'package:storify/widgets/chat_history.dart';
 import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
 import 'home.dart';
-import 'package:rxdart/rxdart.dart';
 
 class Chat extends StatefulWidget {
   final String chatId;
@@ -41,7 +40,9 @@ class _ChatState extends State<Chat> {
         snapshot.data.docs.forEach((doc) {
           ChatHistory ticket = ChatHistory(
             id: doc.data()['ids'][0],
-            otherUserId: doc.data()['ids'][1],
+            otherUserId: currentUserId == doc.data()['ids'][0]
+                ? doc.data()['ids'][1]
+                : doc.data()['ids'][0],
             message: doc.data()['recentMessage'],
             photoUrl: currentUserId == doc.data()['ids'][0]
                 ? doc.data()['photos'][1]
