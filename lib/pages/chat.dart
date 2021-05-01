@@ -6,7 +6,6 @@ import 'package:storify/pages/home.dart';
 import 'package:storify/widgets/chat_history.dart';
 import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
-
 import 'home.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -24,18 +23,14 @@ class _ChatState extends State<Chat> {
   // Loading state
   bool isLoading = false;
 
-  // All the user rooms will be in this variable
-  List<String> currentUserRoomList = [];
-
   // All the history chat tickets will be here.
   List<QuerySnapshot> tickets = [];
 
   // Build the story tickets here
-  //TODO: OR query
   buildStoryTickets() {
     return StreamBuilder(
       stream: chatRef
-          .where('id', isEqualTo: this.currentUserId)
+          .where('ids', arrayContainsAny: [this.currentUserId])
           .orderBy('timeStamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -45,13 +40,13 @@ class _ChatState extends State<Chat> {
         List<ChatHistory> tickets = [];
         snapshot.data.docs.forEach((doc) {
           ChatHistory ticket = ChatHistory(
-            id: doc.data()['id'],
-            otherUserId: doc.data()['otherId'],
+            id: doc.data()['ids'][0],
+            otherUserId: doc.data()['ids'][1],
             message: doc.data()['recentMessage'],
-            photoUrl: currentUserId == doc.data()['id']
+            photoUrl: currentUserId == doc.data()['ids'][0]
                 ? doc.data()['photos'][1]
                 : doc.data()['photos'][0],
-            displayName: currentUserId == doc.data()['id']
+            displayName: currentUserId == doc.data()['ids'][0]
                 ? doc.data()['names'][1]
                 : doc.data()['names'][0],
             rid: doc.data()['rid'],
@@ -62,27 +57,6 @@ class _ChatState extends State<Chat> {
         return ListView(children: tickets);
       },
     );
-  }
-
-  // [
-  // Container(
-  // //TODO: delete it, just to check
-  // height: 50,
-  // width: 50,
-  // child: FlatButton(
-  // child: Text('hey'),
-  // onPressed: () {
-  // //getUserRooms();
-  // getDocs();
-  // },
-  // ),
-  // ),
-  // ],
-  // When we are leaving the page it will make the lists empty
-  @override
-  void dispose() {
-    super.dispose();
-    currentUserRoomList.clear();
   }
 
   @override

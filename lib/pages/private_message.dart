@@ -145,8 +145,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
       });
 
       await chatRef.doc(widget.currentRoomId).set({
-        'id': senderId,
-        'otherId': widget.privateId,
+        'ids': [senderId, widget.privateId],
         'rid': widget.currentRoomId,
         'names': [thisUserDisplayName, otherUserDisplayName],
         'photos': [thisUserPhotoUrl, otherUserPhotoUrl],
@@ -179,15 +178,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
       ),
     );
   }
-
-  // Getting all the message id's of the current room
-  // getMessagesId() async {
-  //   messagesRoom.clear();
-  //   var doc = await chatRef.doc(widget.currentRoomId).get();
-  //   if (doc.exists) {
-  //     messagesRoom = List.from(doc.get('messages'));
-  //   }
-  // }
 
   // Disposing the text editor variable when we close the page
   @override
@@ -326,7 +316,7 @@ class MessageStream extends StatelessWidget {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
           final time = message.data()['timeStamp'];
-          currentUser = message.data()['senderId'];
+          final currentUser = message.data()['senderId'];
           final messageBubble = MessageBubbles(
             sender: messageSender,
             message: messageText,
@@ -344,4 +334,18 @@ class MessageStream extends StatelessWidget {
       },
     );
   }
+}
+
+// When we click on the chat history tickets - it will send us to the
+//Private message page, We are using this method in chat_history widget
+showPrivateMessage(BuildContext context, {String privateId, String roomId}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PrivateMessage(
+        privateId: privateId,
+        currentRoomId: roomId,
+      ),
+    ),
+  );
 }

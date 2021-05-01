@@ -329,6 +329,8 @@ class _ProfileState extends State<Profile> {
   }
 }
 
+// When we click on the user tickets - it will send us to the profile page
+// We are using this method in user_ticket widget
 showProfile(BuildContext context, {String profileId}) {
   Navigator.push(
     context,

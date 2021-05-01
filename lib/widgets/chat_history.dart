@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:storify/pages/home.dart';
+import 'package:storify/pages/private_message.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -45,7 +45,8 @@ class ChatHistory extends StatelessWidget {
         ), //TODO: check if its true
         dense: true,
         onTap: () {
-          print('hello');
+          showPrivateMessage(context,
+              privateId: this.otherUserId, roomId: this.rid);
         },
       ),
     );

@@ -4,7 +4,6 @@ import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:storify/widgets/user_ticket.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 //TODO: make the search better
 
