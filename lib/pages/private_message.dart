@@ -159,6 +159,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
       padding: EdgeInsets.all(8.0),
       child: TextField(
         controller: messageText,
+        obscureText: false,
         decoration: InputDecoration(
           hintText: 'Write your message...',
           suffixIcon: IconButton(
