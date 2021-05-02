@@ -5,7 +5,6 @@ import 'package:storify/pages/landing.dart';
 import 'auth_service.dart';
 
 //TODO: repair design
-//TODO: check facebook functionality
 //TODO: login google & facebook with the same email bug
 //TODO: animation text at feed page
 //TODO: make stars functions in rating

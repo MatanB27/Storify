@@ -42,7 +42,7 @@ class ChatHistory extends StatelessWidget {
         ),
         trailing: Text(
           timeago.format(this.timeStamp.toDate()),
-        ), //TODO: check if its true
+        ),
         dense: true,
         onTap: () {
           showPrivateMessage(context,

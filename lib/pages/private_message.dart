@@ -22,9 +22,6 @@ class PrivateMessage extends StatefulWidget {
 }
 
 class _PrivateMessageState extends State<PrivateMessage> {
-  // Loading boolean
-  bool isLoading = false;
-
   //the current user who is logged in
   final String currentUserId = auth.currentUser?.uid;
 
@@ -45,9 +42,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
 
   // Variable to get the display name from the user database.
   String thisUserDisplayName;
-
-  // Variable that contain all the currentroom messages
-  List<String> messagesRoom = [];
 
   getOtherUserPhotoAndName() async {
     DocumentSnapshot otherDoc = await userRef.doc(widget.privateId).get();
@@ -127,38 +121,37 @@ class _PrivateMessageState extends State<PrivateMessage> {
     if (messageText.text.toString() != '') {
       print(widget.currentRoomId);
 
-      DocumentSnapshot myDocUser = await userRef.doc(currentUserId).get();
-      String senderId = myDocUser.get('id').toString();
-
       DocumentSnapshot doc = await userRef.doc().get();
 
+      String messageTXT = messageText.text.toString();
+
+      //clearing the message after sending it
+      messageText.clear();
+
+      // Building the message document
       await messageRef
           .doc(widget.currentRoomId)
           .collection('messagesId')
           .doc(doc.id)
           .set({
-        'message': messageText.text.toString(),
+        'message': messageTXT,
         'timeStamp': DateTime.now(),
         'sender': thisUserDisplayName,
         'messageId': doc.id,
-        'senderId': senderId,
+        'senderId': currentUserId,
       });
 
+      // Building the chatRef room
       await chatRef.doc(widget.currentRoomId).set({
-        'ids': [senderId, widget.privateId],
+        'ids': [currentUserId, widget.privateId],
         'rid': widget.currentRoomId,
         'names': [thisUserDisplayName, otherUserDisplayName],
         'photos': [thisUserPhotoUrl, otherUserPhotoUrl],
-        'recentMessage': messageText.text.toString(),
+        'recentMessage': messageTXT,
         'timeStamp': DateTime.now(),
         'messages': FieldValue.arrayUnion([doc.id]),
       }, SetOptions(merge: true));
-      //docRoom = await chatRef.doc(widget.currentRoomId).get();
-
-      //currentChat = ChatClass.fromDocuments(docRoom);
     }
-    //clearing the message after sending it
-    messageText.clear();
   }
 
   sendMessageBlock() {

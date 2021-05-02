@@ -121,14 +121,14 @@ class _ProfileState extends State<Profile> {
               ),
               CircleAvatar(
                 radius: 56,
-                //TODO CHECK BUGS
+
                 backgroundImage: CachedNetworkImageProvider(user.photoUrl),
               ),
               SizedBox(
                 height: 8.0,
               ),
               Text(
-                //TODO CHECK BUGS
+
                 user.displayName,
                 style: TextStyle(
                     color: Colors.black,
@@ -267,7 +267,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   Expanded(
                     child: Text(user.bio),
-                  ), //TODO might be a bug
+                  ),
                   SizedBox(
                     height: 20.0,
                   ),

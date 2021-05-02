@@ -19,8 +19,6 @@ class _ChatState extends State<Chat> {
   // Our own id
   final String currentUserId = auth.currentUser?.uid;
 
-  // Loading state
-  bool isLoading = false;
 
   // All the history chat tickets will be here.
   List<QuerySnapshot> tickets = [];
