@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +69,46 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  updateProfileData() {
+  // This function will help us update the data inside the chat Ref
+  updateNameInChatRef() async {
+    // x will get all the data from the currentUser id
+    DocumentSnapshot x = await userRef.doc(auth.currentUser.uid).get();
+
+    // Here we are inserting all of the user rooms id in userRef.
+    Map<dynamic, dynamic> map = x.get('messages');
+    List<dynamic> userRooms = [];
+    map.forEach((key, value) {
+      userRooms.add(value);
+    });
+    print(userRooms);
+
+    // We are filtering the chatRef with the user ids that we got
+    var y = chatRef.where('rid', whereIn: userRooms).get();
+
+    // The new name
+    String newName = displayNameController.text.toString();
+
+    // The update itself, we are checking who is the user and according to
+    // The result we decide in which index we are changing the name
+    y.then((value) => {
+          value.docs.forEach((element) {
+            //We are only doing it if the element exist.
+            if (element.exists) {
+              print('element ' + element.id);
+              String currentName = element.data()['names'][0];
+              String otherName = element.data()['names'][1];
+              chatRef.doc(element.id).update({
+                'names': auth.currentUser.uid == element.data()['ids'][0]
+                    ? [newName, otherName]
+                    : [currentName, newName],
+              });
+            }
+          }),
+        });
+  }
+
+  updateProfileData() async {
+    await updateNameInChatRef();
     userRef.doc(auth.currentUser.uid).update({
       "displayName": displayNameController.text,
       "bio": bioController.text,
@@ -123,11 +163,11 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  //taking a photo with the camera or choose from the gallery
-  //depends on the argument value.
-  //pick image is still ok, its just from older version
-  //if we cancel our choice, try catch will catch the error and isUploading
-  //will become false
+  // Taking a photo with the camera or choose from the gallery
+  // Depends on the argument value.
+  // Pick image is still ok, its just from older version
+  // If we cancel our choice, try catch will catch the error and isUploading
+  // Will become false
   void takePhoto(bool isGallery) async {
     try {
       Navigator.pop(context);
@@ -167,7 +207,47 @@ class _EditProfileState extends State<EditProfile> {
     userRef.doc(auth.currentUser.uid).update({
       "photoUrl": _uploadedFileURL,
     });
+    await updatePhotoInChatRef();
     return _uploadedFileURL;
+  }
+
+  // This function will help us update the data inside the chat Ref
+  updatePhotoInChatRef() async {
+    // x will get all the data from the currentUser id
+    DocumentSnapshot x = await userRef.doc(auth.currentUser.uid).get();
+
+    // Here we are inserting all of the user rooms id in userRef.
+    Map<dynamic, dynamic> map = x.get('messages');
+    List<dynamic> userRooms = [];
+    map.forEach((key, value) {
+      userRooms.add(value);
+    });
+    print(userRooms);
+
+    // We are filtering the chatRef with the user ids that we got
+    var y = chatRef.where('rid', whereIn: userRooms).get();
+
+    // The new name
+    String newPhoto = _uploadedFileURL;
+
+    // The update itself, we are checking who is the user and according to
+    // The result we decide in which index we are changing the photo
+
+    y.then((value) => {
+          value.docs.forEach((element) {
+            //We are only doing it if the element exist.
+            if (element.exists) {
+              print('element ' + element.id);
+              String currentPhoto = element.data()['photos'][0];
+              String otherPhoto = element.data()['photos'][1];
+              chatRef.doc(element.id).update({
+                'photos': auth.currentUser.uid == element.data()['ids'][0]
+                    ? [newPhoto, otherPhoto]
+                    : [currentPhoto, newPhoto],
+              });
+            }
+          }),
+        });
   }
 
   profileEditPage() {
@@ -234,7 +314,7 @@ class _EditProfileState extends State<EditProfile> {
                   GestureDetector(
                     child: Center(
                       child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           showModalBottomSheet(
                               context: context,
                               builder: ((builder) => selectImage()));
@@ -342,6 +422,7 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     getUserInfo();
+    //updateNameInChatRef();
   }
 
   getUserInfo() async {
