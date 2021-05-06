@@ -24,7 +24,7 @@ dependencies:
   image_picker: ^0.6.0+2 #uploading pictures from gallery or camera
   ionicons: ^0.1.2
   cached_network_image: ^2.0.0
-  lipsum: ^1.0.1
+  lipsum: ^1.0.1 # maybe delete
   flutter_custom_clippers: ^1.1.2
   line_icons: ^2.0.1
   slider_button: ^0.6.0
@@ -32,7 +32,7 @@ dependencies:
   flutter_tts: ^3.0.0
   animated_text_kit: ^4.2.0
   curved_navigation_bar: ^0.3.7 #latest version
-  uuid: ^2.0.0 #creating id
+  uuid: ^2.0.0 #maybe delete
 
 
 dev_dependencies:

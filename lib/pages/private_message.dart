@@ -149,7 +149,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
         'photos': [thisUserPhotoUrl, otherUserPhotoUrl],
         'recentMessage': messageTXT,
         'timeStamp': DateTime.now(),
-        'messages': FieldValue.arrayUnion([doc.id]),
       }, SetOptions(merge: true));
     }
   }

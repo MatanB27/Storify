@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
@@ -19,6 +20,7 @@ class _SearchState extends State<Search>
   TextEditingController searchController = TextEditingController();
   //query variable
   Future<QuerySnapshot> searchResults;
+  bool _folded = true;
 
   //handeling the query with the firebase
   handleSearch(String query) {
@@ -36,23 +38,63 @@ class _SearchState extends State<Search>
   }
 
   //building the search bar at the app bar position
-  AppBar searchBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      title: TextFormField(
-        controller: searchController,
-        decoration: InputDecoration(
-          hintText: "Search for a user...",
-          prefixIcon: Icon(
-            Icons.account_circle,
-            size: 30.0,
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(Icons.clear),
-            onPressed: clearSearch,
-          ),
+  Widget searchBar() {
+    return Center(
+      child: AnimatedContainer(
+        duration: Duration(microseconds: 400),
+        width: _folded ? 56 : 200,
+        height: 56,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          color: Colors.white,
+          boxShadow: kElevationToShadow[6],
         ),
-        onFieldSubmitted: handleSearch,
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                  padding: EdgeInsets.only(left: 16),
+                  child: !_folded
+                      ? TextFormField(
+                          decoration: InputDecoration(
+                            hintText: 'search',
+                            hintStyle: TextStyle(
+                              color: Colors.blue[300],
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          onFieldSubmitted: handleSearch,
+                        )
+                      : null),
+            ),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 400),
+              child: Material(
+                type: MaterialType.transparency,
+                child: InkWell(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(_folded ? 32 : 0),
+                    topRight: Radius.circular(32),
+                    bottomLeft: Radius.circular(_folded ? 32 : 0),
+                    bottomRight: Radius.circular(32),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Icon(
+                      _folded ? Icons.search : Icons.close,
+                      color: Colors.blue[900],
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _folded = !_folded;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -76,8 +118,10 @@ class _SearchState extends State<Search>
           searchResults.add(searchResult);
         });
 
-        return ListView(
-          children: searchResults,
+        return Expanded(
+          child: ListView(
+            children: searchResults,
+          ),
         );
       },
     );
@@ -111,8 +155,18 @@ class _SearchState extends State<Search>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: searchBar(),
-      body: searchResults == null ? noContent() : buildSearchResults(),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 50,
+          ),
+          searchBar(),
+          SizedBox(
+            height: 15.0,
+          ),
+          searchResults == null ? noContent() : buildSearchResults(),
+        ],
+      ),
     );
   }
 }
