@@ -24,14 +24,16 @@ class _SearchState extends State<Search>
   // Handling the query with the firebase
   // It will show us in real-time the people we are searching
   handleSearch(String query) async {
+    List docList = [];
     var y = userRef.where('keywords', arrayContains: query).get();
     Future<QuerySnapshot> users;
     y.then(
       (value) => value.docs.forEach((element) {
         if (element.exists) {
           dynamic doc = element.data()['displayNameSearch'];
+          docList.add(doc);
           print(doc);
-          users = userRef.where("displayNameSearch", isGreaterThanOrEqualTo: doc).get();
+          users = userRef.where("displayNameSearch", whereIn: docList).get();
           setState(() {
             searchResults = users;
           });
