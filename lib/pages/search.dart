@@ -31,7 +31,7 @@ class _SearchState extends State<Search>
         if (element.exists) {
           dynamic doc = element.data()['displayNameSearch'];
           print(doc);
-          users = userRef.where("displayNameSearch", isEqualTo: doc).get();
+          users = userRef.where("displayNameSearch", isGreaterThanOrEqualTo: doc).get();
           setState(() {
             searchResults = users;
           });
