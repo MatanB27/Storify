@@ -33,6 +33,7 @@ dependencies:
   animated_text_kit: ^4.2.0
   curved_navigation_bar: ^0.3.7 #latest version
   uuid: ^2.0.0 #maybe delete
+  salomon_bottom_bar: ^3.0.0
 
 
 dev_dependencies:

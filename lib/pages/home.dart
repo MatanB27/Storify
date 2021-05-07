@@ -10,6 +10,7 @@ import 'package:storify/pages/search.dart';
 import 'package:storify/pages/upload_story.dart';
 import 'package:storify/user.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 //global variables:
 //variable for signing in
@@ -72,19 +73,42 @@ class _HomePageState extends State<HomePage> {
         onPageChanged: onPageChange,
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        index: pageIndex,
+      bottomNavigationBar: SalomonBottomBar(
+        currentIndex: pageIndex,
         onTap: onClick,
-        //when we press on icon, we will move to it page and the icon will
-        //change his color
-        backgroundColor: Colors.blueAccent,
-        //navigator color
         items: [
-          Icon(Icons.home, size: 30),
-          Icon(Icons.search_rounded, size: 30),
-          Icon(Icons.add_circle, size: 30),
-          Icon(Icons.chat, size: 30),
-          Icon(Icons.person_rounded, size: 30),
+          /// Home
+          SalomonBottomBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Home"),
+            selectedColor: Colors.purple,
+          ),
+
+          /// Search
+          SalomonBottomBarItem(
+            icon: Icon(Icons.search),
+            title: Text("Search"),
+            selectedColor: Colors.pink,
+          ),
+
+          /// Add
+          SalomonBottomBarItem(
+            icon: Icon(Icons.add),
+            title: Text("Add"),
+            selectedColor: Colors.orange,
+          ),
+
+          /// Chat
+          SalomonBottomBarItem(
+            icon: Icon(Icons.chat),
+            title: Text("Chat"),
+            selectedColor: Colors.teal,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.person),
+            title: Text("Profile"),
+            selectedColor: Colors.teal,
+          ),
         ],
       ),
     );

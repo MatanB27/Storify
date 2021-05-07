@@ -4,6 +4,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
+import 'package:storify/widgets/keywords.dart';
 
 class AuthService {
   final _firebaseAuth = FirebaseAuth.instance; //instance of firebase auth
@@ -41,9 +42,11 @@ class AuthService {
           userRef.doc(currentUser.uid).set({
             "id": currentUser.uid,
             "displayName": currentUser.displayName,
+            "displayNameSearch": currentUser.displayName.toLowerCase(),
             "photoUrl": currentUser.photoURL,
             "email": currentUser.email,
             "bio": "",
+            "keywords": setSearchParam(currentUser.displayName),
             "messages": messageMap,
             "timestamp": timestampNow,
           });
@@ -89,7 +92,9 @@ class AuthService {
           userRef.doc(currentUser.uid).set({
             "id": currentUser.uid,
             "displayName": currentUser.displayName,
+            "displayNameSearch": currentUser.displayName.toLowerCase(),
             "photoUrl": currentUser.photoURL,
+            "keywords": setSearchParam(currentUser.displayName),
             "email": currentUser.email,
             "bio": "",
             "timestamp": timestampNow,

@@ -6,8 +6,6 @@ import 'package:storify/user.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:storify/widgets/user_ticket.dart';
 
-//TODO: make the search better
-
 class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
@@ -22,22 +20,32 @@ class _SearchState extends State<Search>
   Future<QuerySnapshot> searchResults;
   bool _folded = true;
 
-  //handeling the query with the firebase
-  handleSearch(String query) {
-    //query variable
-    Future<QuerySnapshot> users =
-        userRef.where("displayName", isGreaterThanOrEqualTo: query).get();
-    setState(() {
-      searchResults = users;
-    });
+  //TODO: maybe change the query
+  // Handling the query with the firebase
+  // It will show us in real-time the people we are searching
+  handleSearch(String query) async {
+    var y = userRef.where('keywords', arrayContains: query).get();
+    Future<QuerySnapshot> users;
+    y.then(
+      (value) => value.docs.forEach((element) {
+        if (element.exists) {
+          dynamic doc = element.data()['displayNameSearch'];
+          print(doc);
+          users = userRef.where("displayNameSearch", isEqualTo: doc).get();
+          setState(() {
+            searchResults = users;
+          });
+        }
+      }),
+    );
   }
 
-  //clear the results
+  // Clear the results
   clearSearch() {
     searchController.clear();
   }
 
-  //building the search bar at the app bar position
+  // Building the search bar at the app bar position
   Widget searchBar() {
     return Center(
       child: AnimatedContainer(
@@ -56,14 +64,17 @@ class _SearchState extends State<Search>
                   padding: EdgeInsets.only(left: 16),
                   child: !_folded
                       ? TextFormField(
+                          onChanged: (query) {
+                            handleSearch(query.toLowerCase());
+                            print(query);
+                          },
                           decoration: InputDecoration(
-                            hintText: 'search',
+                            hintText: 'Search',
                             hintStyle: TextStyle(
                               color: Colors.blue[300],
                             ),
                             border: InputBorder.none,
                           ),
-                          onFieldSubmitted: handleSearch,
                         )
                       : null),
             ),
@@ -131,18 +142,20 @@ class _SearchState extends State<Search>
   //what will happend before we see the user results
   Container noContent() {
     return Container(
-      child: Center(
+      child: Expanded(
         child: ListView(
           shrinkWrap: true,
           children: [
             SizedBox(
-              height: 200.0,
+              height: 160.0,
             ),
-            Center(
-              child: Text(
-                'Search users...',
-                style: TextStyle(fontSize: 45.0, color: Colors.black54),
+            Text(
+              'Search users...',
+              style: TextStyle(
+                fontSize: 38.0,
+                color: Colors.black54,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -150,9 +163,9 @@ class _SearchState extends State<Search>
     );
   }
 
-  //this variable is to keep the state of the screen alive,
-  //even if we move to another screen.
-  //super.build(context) is also part of that.
+  // This variable is to keep the state of the screen alive,
+  // Even if we move to another screen.
+  // Super.build(context) is also part of that.
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {

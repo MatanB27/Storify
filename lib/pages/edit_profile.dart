@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/widgets/keywords.dart';
 import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/user.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -111,7 +112,9 @@ class _EditProfileState extends State<EditProfile> {
     await updateNameInChatRef();
     userRef.doc(auth.currentUser.uid).update({
       "displayName": displayNameController.text,
+      "displayNameSearch": displayNameController.text.toLowerCase(),
       "bio": bioController.text,
+      "keywords": setSearchParam(displayNameController.text.toString()),
     });
     final snackBar = SnackBar(
       content: Text('Profile has been update successfully!'),
