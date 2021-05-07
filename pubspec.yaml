@@ -47,7 +47,7 @@ flutter:
     - assets/land1.jpg
     - assets/images/landing2.jpg
     - assets/images/test11.png
-    - assets/images/search_users.jpg
+    - assets/images/search_background.jpg
 
   fonts:
   - family: Pacifico

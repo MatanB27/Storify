@@ -88,6 +88,7 @@ class _SearchState extends State<Search>
                   onTap: () {
                     setState(() {
                       _folded = !_folded;
+                      searchResults = null;
                     });
                   },
                 ),
@@ -127,7 +128,6 @@ class _SearchState extends State<Search>
     );
   }
 
-  //TODO: maybe add a picture
   //what will happend before we see the user results
   Container noContent() {
     return Container(
@@ -135,10 +135,13 @@ class _SearchState extends State<Search>
         child: ListView(
           shrinkWrap: true,
           children: [
+            SizedBox(
+              height: 200.0,
+            ),
             Center(
               child: Text(
                 'Search users...',
-                style: TextStyle(fontSize: 45.0, color: Colors.grey),
+                style: TextStyle(fontSize: 45.0, color: Colors.black54),
               ),
             ),
           ],
@@ -155,17 +158,25 @@ class _SearchState extends State<Search>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: 50,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/search_background.jpg"),
+            fit: BoxFit.cover,
           ),
-          searchBar(),
-          SizedBox(
-            height: 15.0,
-          ),
-          searchResults == null ? noContent() : buildSearchResults(),
-        ],
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            searchBar(),
+            SizedBox(
+              height: 15.0,
+            ),
+            searchResults == null ? noContent() : buildSearchResults(),
+          ],
+        ),
       ),
     );
   }
