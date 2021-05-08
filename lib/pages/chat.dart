@@ -23,6 +23,8 @@ class _ChatState extends State<Chat> {
   List<QuerySnapshot> tickets = [];
 
   // Build the story tickets here
+  // We are also using short if command to know which photo or name
+  // We are going to display.
   buildStoryTickets() {
     return StreamBuilder(
       stream: chatRef

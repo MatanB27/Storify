@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:storify/pages/chat.dart';
+
+// The Appbar in most of our pages
 
 class Header extends StatelessWidget {
   String title;

@@ -21,17 +21,17 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  //values for editing display name & bio
+  // Values for editing display name & bio
   TextEditingController displayNameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  //values for uploading the image
+  // Values for uploading the image
   File file;
   String _uploadedFileURL;
   bool isUploading = false;
 
-  //log out method that will send us back go the signin screen
+  // Logout method that will send us back go the signin screen
   Future<void> _signOut(BuildContext context) async {
     try {
       final auth = Provider.of<AuthService>(context, listen: false);
@@ -42,7 +42,7 @@ class _EditProfileState extends State<EditProfile> {
     Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
-  //alert dialog that will ask us if we want to log out
+  // Alert dialog that will ask us if we want to log out
   Future<void> _confirmSignOut(BuildContext context) async {
     try {
       final didRequestSignOut = await showDialog(
@@ -108,6 +108,7 @@ class _EditProfileState extends State<EditProfile> {
         });
   }
 
+  // Will update the profile photo in the user database and in chat database
   updateProfileData() async {
     await updateNameInChatRef();
     userRef.doc(auth.currentUser.uid).update({
@@ -120,13 +121,13 @@ class _EditProfileState extends State<EditProfile> {
       content: Text('Profile has been update successfully!'),
       action: SnackBarAction(
         label: 'Undo',
-        onPressed: () {}, //no need to put anything, just click "Undo"
+        onPressed: () {}, // No need to put anything, just click "Undo"
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  //menu for changning photo
+  // Menu for changing photo from camera or gallery
   selectImage() {
     return Container(
       height: 100.0,
@@ -201,7 +202,7 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  //Upload the photo
+  // Upload the photo
   Future<String> uploadImage(imageFile) async {
     firebase_storage.UploadTask uploadTask =
         storageRef.child("user_${auth.currentUser.uid}.jpg").putFile(imageFile);
@@ -253,6 +254,7 @@ class _EditProfileState extends State<EditProfile> {
         });
   }
 
+  // All of the header of the app (Everything expect story tickets).
   profileEditPage() {
     return FutureBuilder(
         future: userRef
@@ -420,7 +422,7 @@ class _EditProfileState extends State<EditProfile> {
         });
   }
 
-  //the state of the app when we are in its init state
+  // The state of the app when we are in its init state
   @override
   void initState() {
     super.initState();
@@ -428,6 +430,7 @@ class _EditProfileState extends State<EditProfile> {
     //updateNameInChatRef();
   }
 
+  // Getting the user info from the database
   getUserInfo() async {
     DocumentSnapshot documentSnapshot =
         await userRef.doc(auth.currentUser.uid).get();

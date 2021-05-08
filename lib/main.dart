@@ -6,10 +6,12 @@ import 'auth_service.dart';
 
 //TODO: repair design
 //TODO: login google & facebook with the same email bug
-//TODO: animation text at feed page
 //TODO: make stars functions in rating
+
+// This is the main page.
+// From this page we are reaching all of the other pages and widgets in the app.
 void main() async {
-  //this method need to be called before any firebase plugin
+  // This method need to be called before any firebase plugin
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());

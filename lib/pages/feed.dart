@@ -19,9 +19,9 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
-  //we work with the class list_item
-  //and her constractor
-  //to create a story ticket
+  // We work with the class list_item
+  // And her constractor
+  // To create a story ticket
 
   //TODO: use for each from firebase
   List<StoryTickets> tickets = [
@@ -52,8 +52,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
         "Raiting : 100", "13.04.2021", "Matan Baruch"),
   ];
-//this is a part of the up menu
-  //with all the tabs : all,top,popular...... 5 tabs
+  // This is a part of the top menu
+  // With all the tabs : all,top,popular...... 5 tabs
   List<Tab> tabList = [
     Tab(
       child: Text('all'),

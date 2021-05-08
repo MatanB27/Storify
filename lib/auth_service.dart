@@ -7,13 +7,16 @@ import 'package:storify/user.dart';
 import 'package:storify/widgets/keywords.dart';
 
 class AuthService {
-  final _firebaseAuth = FirebaseAuth.instance; //instance of firebase auth
-  User get currentUser =>
-      _firebaseAuth.currentUser; //current user from firebase
+  // Instance of firebase auth
+  final _firebaseAuth = FirebaseAuth.instance;
 
-  //notify about changes to the user sign in state(sign in or sign out)
+  // Current user from firebase
+  User get currentUser => _firebaseAuth.currentUser;
+
+  // Notify about changes to the user sign in state(sign in or sign out)
   Stream<User> authStateChanges() => _firebaseAuth.authStateChanges();
 
+  // Signout method
   Future<void> signOut() async {
     final googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
@@ -22,7 +25,7 @@ class AuthService {
     await _firebaseAuth.signOut();
   }
 
-  //login with facebook
+  // Login with facebook
   Future<User> signInWithFacebook() async {
     final fb = FacebookLogin();
     final response = await fb.logIn(['email']);
@@ -36,8 +39,8 @@ class AuthService {
         Map<String, String> messageMap = {
           // for chat
         };
-        //Storing the user data in the firestore database
-        //if dosent exist - we create it
+        // Storing the user data in the firestore database
+        // If doesnt exist - we create it
         if (!doc.exists) {
           userRef.doc(currentUser.uid).set({
             "id": currentUser.uid,
@@ -50,10 +53,10 @@ class AuthService {
             "messages": messageMap,
             "timestamp": timestampNow,
           });
-          //now all the set data we are storing in doc
+          // Now all the set data we are storing in doc
           doc = await userRef.doc(currentUser.uid).get();
         }
-        //current user is now this data
+        // Current user is now this data
         currentUserHome = UserClass.fromDocuments(doc);
         return userCredential.user;
       case FacebookLoginStatus.cancelledByUser:
@@ -69,7 +72,7 @@ class AuthService {
     }
   }
 
-  //sign in with google
+  // Sign in with google
   Future<User> signInWithGoogle() async {
     final googleSignIn = GoogleSignIn();
     final googleUser = await googleSignIn.signIn();
@@ -83,8 +86,8 @@ class AuthService {
           ),
         );
         DocumentSnapshot doc = await userRef.doc(currentUser.uid).get();
-        //Storing the user data in the firestore database
-        //if dosent exist - we create it
+        // Storing the user data in the firestore database
+        // If doesnt exist - we create it
         Map<String, String> messageMap = {
           // for chat
         };

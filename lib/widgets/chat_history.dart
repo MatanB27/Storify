@@ -4,7 +4,8 @@ import 'package:storify/pages/private_message.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//we are seeing the chat history tickets.
+// Here we are building all of the chat history tickets
+// According to the attributes
 class ChatHistory extends StatelessWidget {
   final String rid; // Room ID
   final String id; // User ID

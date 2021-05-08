@@ -30,17 +30,104 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  //loading boolean
+  // Loading boolean
   bool isLoading = false;
-  //the current user who is logged in
+
+  // The current user who is logged in
   final String currentUserId = auth.currentUser?.uid;
 
   // The current room we are entering
   var currentRoomId;
 
-  var roomStr;
+  // Following / Followers variables.
+  bool isFollowing = false;
+  int followingCount = 0;
+  int followerCount = 0;
 
-  //TODO: use for each from firebase
+  // Will give us the number of the followers
+  // We will use it at the init state
+  getFollowers() async {
+    QuerySnapshot snap = await followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .get();
+    setState(() {
+      followerCount = snap.docs.length;
+    });
+  }
+
+  // Will give us the number of the following
+  // We will use it at the init state
+  getFollowing() async {
+    QuerySnapshot snap = await followingRef
+        .doc(widget.profileId)
+        .collection('userFollowing')
+        .get();
+    setState(() {
+      followingCount = snap.docs.length;
+    });
+  }
+
+  // Will make the user follow the other user.
+  // It will be updated in firebase, We are updating both followingRef
+  // And followersRef
+  void handleFollow() {
+    setState(() {
+      isFollowing = true;
+    });
+
+    followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId)
+        .set({});
+
+    followingRef
+        .doc(currentUserId)
+        .collection('userFollowing')
+        .doc(widget.profileId)
+        .set({});
+  }
+
+  // Will remove the follow from the other user.
+  // It will delete the data from both following and followers database.
+  void handleUnfollow() {
+    setState(() {
+      isFollowing = false;
+    });
+
+    followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId)
+        .get()
+        .then((value) => {
+              if (value.exists) {value.reference.delete()}
+            });
+    followingRef
+        .doc(currentUserId)
+        .collection('userFollowers')
+        .doc(widget.profileId)
+        .get()
+        .then((value) => {
+              if (value.exists) {value.reference.delete()}
+            });
+  }
+
+  // This method will remember if we are following the other user or not
+  // We will use it in the init state
+  checkIfFollowing() async {
+    DocumentSnapshot doc = await followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId)
+        .get();
+    setState(() {
+      isFollowing = doc.exists;
+    });
+  }
+
+  //TODO: use for each from firebase, its just an example. delete later
   List<StoryTickets> tickets = [
     StoryTickets("https://picsum.photos/250?image=9", "Best story ever",
         "Comedy, Horror", "Raiting : 100", "13.04.2021", "Matan Baruch"),
@@ -121,14 +208,12 @@ class _ProfileState extends State<Profile> {
               ),
               CircleAvatar(
                 radius: 56,
-
                 backgroundImage: CachedNetworkImageProvider(user.photoUrl),
               ),
               SizedBox(
                 height: 8.0,
               ),
               Text(
-
                 user.displayName,
                 style: TextStyle(
                     color: Colors.black,
@@ -146,7 +231,7 @@ class _ProfileState extends State<Profile> {
                     child: Column(
                       children: [
                         Text(
-                          "Following",
+                          'Stories',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18.0),
                         ),
@@ -166,7 +251,7 @@ class _ProfileState extends State<Profile> {
                               fontWeight: FontWeight.bold, fontSize: 18.0),
                         ),
                         Text(
-                          '255k',
+                          followerCount.toString(),
                           style: TextStyle(fontSize: 16.0),
                         ),
                       ],
@@ -176,12 +261,12 @@ class _ProfileState extends State<Profile> {
                     child: Column(
                       children: [
                         Text(
-                          'Stories',
+                          "Following",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18.0),
                         ),
                         Text(
-                          '255k',
+                          followingCount.toString(),
                           style: TextStyle(fontSize: 16.0),
                         ),
                       ],
@@ -199,7 +284,9 @@ class _ProfileState extends State<Profile> {
                     //this button is change depends if it us or not
                     onPressed: currentUserId == widget.profileId
                         ? editProfile
-                        : handleFollow,
+                        : !isFollowing
+                            ? handleFollow
+                            : handleUnfollow,
                     color: currentUserId == widget.profileId
                         ? Colors.black
                         : Colors.lightBlue,
@@ -209,7 +296,7 @@ class _ProfileState extends State<Profile> {
                             style: TextStyle(color: Colors.white),
                           )
                         : Text(
-                            'Follow',
+                            !isFollowing ? 'Follow' : 'Unfollow',
                             style: TextStyle(color: Colors.white),
                           ),
                     padding: currentUserId == widget.profileId
@@ -296,15 +383,13 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void handleFollow() {
-    //TODO: handle following
-    print(auth.currentUser.uid);
-    print(widget.profileId);
-    print(currentUserHome);
-  }
-
-  void handleUnfollow() {
-    //TODO: handle unfollowing
+  // Init state of the app
+  @override
+  void initState() {
+    super.initState();
+    getFollowers();
+    getFollowing();
+    checkIfFollowing();
   }
 
   @override

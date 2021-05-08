@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// Here we are building all of the story tickets.
+// Each story will have his own ticket, in the profile page or feed page
 class StoryTickets extends StatelessWidget {
   final String storyPhoto;
   final String displayName;

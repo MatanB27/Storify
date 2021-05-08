@@ -9,19 +9,22 @@ import 'package:storify/pages/profile.dart';
 import 'package:storify/pages/search.dart';
 import 'package:storify/pages/upload_story.dart';
 import 'package:storify/user.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-//global variables:
-//variable for signing in
+// Global variables:
 
 UserClass currentUserHome; //current user
-DateTime timestampNow = DateTime.now(); //the time the user was created
-final userRef = FirebaseFirestore.instance.collection('users'); //Users ref
-final storageRef = FirebaseStorage.instance.ref(); //storage ref
-final chatRef = FirebaseFirestore.instance.collection('chatrooms'); //Chat ref
+DateTime timestampNow = DateTime.now(); // The time the user was created
+final userRef = FirebaseFirestore.instance.collection('users'); // Users ref
+final storageRef = FirebaseStorage.instance.ref(); // Storage ref
+final chatRef = FirebaseFirestore.instance.collection('chatrooms'); // Chat ref
 final messageRef =
     FirebaseFirestore.instance.collection('messages'); // MessageRef
+final followingRef =
+    FirebaseFirestore.instance.collection('following'); // Following ref
+final followersRef =
+    FirebaseFirestore.instance.collection('followers'); // Followers ref
+
 AuthService auth = new AuthService();
 
 class HomePage extends StatefulWidget {
