@@ -2,17 +2,17 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/pages/chat.dart';
+import 'package:storify/pages/following.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/header.dart';
 import 'package:storify/widgets/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:storify/pages/edit_profile.dart';
-import 'package:uuid/uuid.dart';
 import '../auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
 import 'package:storify/pages/private_message.dart';
+import 'package:storify/pages/followers.dart';
 
 //todo: here you need to put the stores list from the fire base
 List<String> imagePost = [
@@ -43,29 +43,38 @@ class _ProfileState extends State<Profile> {
   bool isFollowing = false;
   int followingCount = 0;
   int followerCount = 0;
-
-  // Will give us the number of the followers
+  List<String> followingList = [];
+  List<String> followersList = [];
+  // Will give us the number of the followers and a list of all the followers ids
   // We will use it at the init state
   getFollowers() async {
-    QuerySnapshot snap = await followersRef
+    await followersRef
         .doc(widget.profileId)
         .collection('userFollowers')
-        .get();
-    setState(() {
-      followerCount = snap.docs.length;
-    });
+        .get()
+        .then((value) => {
+              value.docs.forEach((element) {
+                followersList.add(element.id);
+              }),
+              followerCount = value.docs.length,
+            });
+    return followersList;
   }
 
-  // Will give us the number of the following
+  // Will give us the number of the following and a list of all the followers ids
   // We will use it at the init state
   getFollowing() async {
-    QuerySnapshot snap = await followingRef
+    await followingRef
         .doc(widget.profileId)
         .collection('userFollowing')
-        .get();
-    setState(() {
-      followingCount = snap.docs.length;
-    });
+        .get()
+        .then((value) => {
+              value.docs.forEach((element) {
+                followingList.add(element.id);
+              }),
+              followingCount = value.docs.length,
+            });
+    return followingList;
   }
 
   // Will make the user follow the other user.
@@ -96,22 +105,17 @@ class _ProfileState extends State<Profile> {
       isFollowing = false;
     });
 
+    //TODO: not working well
     followersRef
         .doc(widget.profileId)
         .collection('userFollowers')
         .doc(currentUserId)
-        .get()
-        .then((value) => {
-              if (value.exists) {value.reference.delete()}
-            });
+        .delete();
     followingRef
         .doc(currentUserId)
-        .collection('userFollowers')
+        .collection('userFollowing')
         .doc(widget.profileId)
-        .get()
-        .then((value) => {
-              if (value.exists) {value.reference.delete()}
-            });
+        .delete();
   }
 
   // This method will remember if we are following the other user or not
@@ -122,9 +126,8 @@ class _ProfileState extends State<Profile> {
         .collection('userFollowers')
         .doc(currentUserId)
         .get();
-    setState(() {
-      isFollowing = doc.exists;
-    });
+    //TODO: if bugs, add setstate
+    isFollowing = doc.exists;
   }
 
   //TODO: use for each from firebase, its just an example. delete later
@@ -243,33 +246,59 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Followers',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0),
-                        ),
-                        Text(
-                          followerCount.toString(),
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                      ],
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Followers(
+                              followersId: widget.profileId,
+                              followersList: followersList,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            'Followers',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0),
+                          ),
+                          Text(
+                            followerCount.toString(),
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          "Following",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0),
-                        ),
-                        Text(
-                          followingCount.toString(),
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                      ],
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Following(
+                              followingId: widget.profileId,
+                              followingList: followingList,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            "Following",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0),
+                          ),
+                          Text(
+                            followingCount.toString(),
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

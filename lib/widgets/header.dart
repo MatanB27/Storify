@@ -11,6 +11,9 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      iconTheme: IconThemeData(
+        color: Colors.black, //change your color here
+      ),
       backgroundColor: Colors.white,
       title: Text(
         title,
