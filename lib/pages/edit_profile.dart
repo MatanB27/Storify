@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/widgets/keywords.dart';
-import 'file:///C:/Users/Lokos/Desktop/UdemyProjects/Storify/lib/user.dart';
-import 'package:storify/widgets/loading.dart';
+import 'package:storify/services/keywords.dart';
+import 'package:storify/user.dart';
+import 'package:storify/services/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import '../auth_service.dart';
+import '../services/auth_service.dart';
 import 'home.dart';
 
 class EditProfile extends StatefulWidget {

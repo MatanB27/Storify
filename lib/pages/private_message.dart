@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
-import 'package:storify/auth_service.dart';
+import 'package:storify/services/auth_service.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/user.dart';
-import 'package:storify/widgets/loading.dart';
-import '../widgets/loading.dart';
+import 'package:storify/services/loading.dart';
+import '../services/loading.dart';
 import 'home.dart';
 import 'package:timeago/timeago.dart' as timeago;
 

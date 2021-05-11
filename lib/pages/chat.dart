@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/auth_service.dart';
+import 'package:storify/services/auth_service.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/widgets/chat_history.dart';
 import 'package:storify/widgets/header.dart';
-import 'package:storify/widgets/loading.dart';
+import 'package:storify/services/loading.dart';
 import 'home.dart';
 
 class Chat extends StatefulWidget {
@@ -21,6 +21,15 @@ class _ChatState extends State<Chat> {
 
   // All the history chat tickets will be here.
   List<QuerySnapshot> tickets = [];
+
+  // When we pull the page, it will refresh it and fetch the new data.
+  Future<Null> pullToRefresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      buildStoryTickets();
+    });
+    return null;
+  }
 
   // Build the story tickets here
   // We are also using short if command to know which photo or name
@@ -54,7 +63,10 @@ class _ChatState extends State<Chat> {
           );
           tickets.add(ticket);
         });
-        return ListView(children: tickets);
+        return RefreshIndicator(
+          onRefresh: pullToRefresh,
+          child: ListView(children: tickets),
+        );
       },
     );
   }

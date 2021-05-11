@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/pages/signin.dart';
-import 'package:storify/widgets/loading.dart';
+import 'package:storify/services/loading.dart';
 
-import '../auth_service.dart';
+import '../services/auth_service.dart';
 
 class Landing extends StatefulWidget {
   @override

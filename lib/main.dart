@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/landing.dart';
-import 'auth_service.dart';
+import 'services/auth_service.dart';
 
 //TODO: repair design
 //TODO: login google & facebook with the same email bug

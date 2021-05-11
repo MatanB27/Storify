@@ -6,10 +6,10 @@ import 'package:storify/pages/following.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
 import 'package:storify/widgets/header.dart';
-import 'package:storify/widgets/loading.dart';
+import 'package:storify/services/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:storify/pages/edit_profile.dart';
-import '../auth_service.dart';
+import '../services/auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
 import 'package:storify/pages/private_message.dart';
 import 'package:storify/pages/followers.dart';
@@ -105,7 +105,6 @@ class _ProfileState extends State<Profile> {
       isFollowing = false;
     });
 
-    //TODO: not working well
     followersRef
         .doc(widget.profileId)
         .collection('userFollowers')
@@ -126,7 +125,6 @@ class _ProfileState extends State<Profile> {
         .collection('userFollowers')
         .doc(currentUserId)
         .get();
-    //TODO: if bugs, add setstate
     isFollowing = doc.exists;
   }
 
@@ -221,7 +219,7 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18.0),
+                    fontSize: 22.0),
               ),
               SizedBox(
                 height: 16.0,
@@ -310,14 +308,16 @@ class _ProfileState extends State<Profile> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FlatButton(
-                    //this button is change depends if it us or not
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    // This button is change depends if it us or not
                     onPressed: currentUserId == widget.profileId
                         ? editProfile
                         : !isFollowing
                             ? handleFollow
                             : handleUnfollow,
                     color: currentUserId == widget.profileId
-                        ? Colors.black
+                        ? Colors.green
                         : Colors.lightBlue,
                     child: currentUserId == widget.profileId
                         ? Text(
@@ -338,6 +338,8 @@ class _ProfileState extends State<Profile> {
                   currentUserId == widget.profileId
                       ? Container() //empty container
                       : FlatButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
                           onPressed: () async {
                             await createRoomInFirebase();
                             await Navigator.push(
@@ -350,7 +352,7 @@ class _ProfileState extends State<Profile> {
                               ),
                             );
                           },
-                          color: Colors.black,
+                          color: Colors.orangeAccent,
                           padding: EdgeInsets.symmetric(
                               horizontal: 50.0, vertical: 8.0),
                           child: Text(
@@ -369,9 +371,8 @@ class _ProfileState extends State<Profile> {
                     width: 12.0,
                   ),
                   Text(
-                    "Biography",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                    'Biography',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ],
               ),
@@ -382,10 +383,15 @@ class _ProfileState extends State<Profile> {
                     width: 12,
                   ),
                   Expanded(
-                    child: Text(user.bio),
+                    child: Center(
+                      child: Text(
+                        user.bio,
+                        style: TextStyle(color: Colors.grey[800], fontSize: 18),
+                      ),
+                    ),
                   ),
                   SizedBox(
-                    height: 20.0,
+                    height: 60.0,
                   ),
                 ],
               ),
@@ -421,6 +427,17 @@ class _ProfileState extends State<Profile> {
     checkIfFollowing();
   }
 
+  // When we pull the page, it will refresh it and fetch the new data.
+  Future<Null> pullToRefresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      profileHeader();
+      getFollowing();
+      getFollowers();
+    });
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
@@ -432,11 +449,14 @@ class _ProfileState extends State<Profile> {
             title: 'Profile',
           ),
         ),
-        body: ListView(
-          children: [
-            profileHeader(),
-            tickets[0],
-          ],
+        body: RefreshIndicator(
+          onRefresh: pullToRefresh,
+          child: ListView(
+            children: [
+              profileHeader(),
+              tickets[0],
+            ],
+          ),
         ),
       ),
     );

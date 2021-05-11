@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart'; //import the fonts package
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import '../auth_service.dart';
+import '../services/auth_service.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart'; //import the sign up buttons package
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn(); //google variable
 
 class SigninPage extends StatefulWidget {
-  //we are using it so we can quicly navigate to our home page from other pages
+  // We are using it so we can quickly navigate to our home page from other pages
 
   static const String id = 'Signin_screen';
   @override

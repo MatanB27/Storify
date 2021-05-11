@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
-import 'package:storify/widgets/loading.dart';
+import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/user_ticket.dart';
 
 class Search extends StatefulWidget {
@@ -140,7 +140,7 @@ class _SearchState extends State<Search>
     );
   }
 
-  //what will happend before we see the user results
+  // What will happen before we see the user results
   Container noContent() {
     return Container(
       child: Expanded(

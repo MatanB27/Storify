@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/widgets/header.dart';
-import 'package:storify/widgets/loading.dart';
+import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/user_ticket.dart';
 
 // Followers page where we will show the user tickets of the followers

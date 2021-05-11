@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart'; //the font package
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/auth_service.dart';
+import 'package:storify/services/auth_service.dart';
 import 'package:storify/pages/home.dart';
 import 'read_story.dart';
 import 'package:storify/pages/chat.dart';
@@ -85,6 +85,15 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  // When we pull the page, it will refresh it and fetch the new data.
+  Future<Null> pullToRefresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      //TODO: Updating the stories on refresh.
+    });
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
@@ -123,20 +132,23 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Container(
-                child: ListView.builder(
-                  itemCount: tickets.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ReadStory(),
-                            ));
-                      },
-                      child: tickets[index],
-                    );
-                  },
+                child: RefreshIndicator(
+                  onRefresh: pullToRefresh,
+                  child: ListView.builder(
+                    itemCount: tickets.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReadStory(),
+                              ));
+                        },
+                        child: tickets[index],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
