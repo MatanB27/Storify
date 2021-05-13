@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Feed(),
           Search(),
-          UploadStory(), //TODO: use - currentUser
+          UploadStory(userId: auth.currentUser?.uid),
           Chat(chatId: auth.currentUser?.uid), // ? ignores null
           Profile(
             profileId: auth.currentUser?.uid, // ? ignores null

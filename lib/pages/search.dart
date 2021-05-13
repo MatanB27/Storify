@@ -5,6 +5,7 @@ import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/user_ticket.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -13,8 +14,8 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search>
     with AutomaticKeepAliveClientMixin<Search> {
-  //mixin - //help us save he state of this page when we move to another page
-  //text editor variable
+  // Mixin - help us save he state of this page when we move to another page
+  // Text editor variable
   TextEditingController searchController = TextEditingController();
   //query variable
   Future<QuerySnapshot> searchResults;
@@ -150,13 +151,21 @@ class _SearchState extends State<Search>
             SizedBox(
               height: 160.0,
             ),
-            Text(
-              'Search users...',
-              style: TextStyle(
-                fontSize: 38.0,
-                color: Colors.black54,
+            Center(
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    'Search users ...',
+                    textStyle: TextStyle(
+                      fontSize: 33,
+                      color: Colors.white,
+                      fontFamily: 'Pacifico',
+                    ),
+                    speed: const Duration(milliseconds: 150),
+                  ),
+                ],
+                repeatForever: true,
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -189,6 +198,7 @@ class _SearchState extends State<Search>
               height: 15.0,
             ),
             searchResults == null ? noContent() : buildSearchResults(),
+            Row(),
           ],
         ),
       ),

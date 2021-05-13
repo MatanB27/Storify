@@ -18,9 +18,18 @@ class Followers extends StatefulWidget {
 }
 
 class _FollowersState extends State<Followers> {
+  // When we pull the page, it will refresh it and fetch the new data.
+  Future<Null> pullToRefresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      buildFollowersTickets();
+    });
+    return null;
+  }
+
   // Here we are building the followers tickets according to who are
   // Following us, and it will build a user ticket to each one!
-  buildFollowerTickets() {
+  buildFollowersTickets() {
     if (!widget.followersList.isEmpty) {
       return FutureBuilder(
         future: userRef.where('id', whereIn: widget.followersList).get(),
@@ -57,15 +66,18 @@ class _FollowersState extends State<Followers> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(55.0),
-        child: Header(
-          title: 'Followers',
+    return RefreshIndicator(
+      onRefresh: pullToRefresh,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(55.0),
+          child: Header(
+            title: 'Followers',
+          ),
         ),
-      ),
-      body: Container(
-        child: buildFollowerTickets(),
+        body: Container(
+          child: buildFollowersTickets(),
+        ),
       ),
     );
   }

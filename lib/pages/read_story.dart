@@ -1,12 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:lipsum/lipsum.dart' as lipsum;
-import 'package:storify/widgets/story_ticket.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:storify/user.dart';
-import 'package:slider_button/slider_button.dart';
-import 'package:storify/pages/read_story_data.dart';
+import 'package:lipsum/lipsum.dart' as lipsuam;
+import 'package:flutter_read_more_text/flutter_read_more_text.dart';
 import 'package:animated_button/animated_button.dart';
 
 class ReadStory extends StatelessWidget {
@@ -14,167 +8,159 @@ class ReadStory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Container(
-                transform: Matrix4.translationValues(0.0, -50.0, 0.0),
-                child: Hero(
-                  tag: 'animation',
-                  child: ClipPath(
-                    clipper: OvalBottomBorderClipper(),
-                    child: Image(
-                      height: 400.0,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        'https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg',
-                      ),
-                    ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        actions: <Widget>[
+          Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: Text(
+                  'shay ohayon',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                    padding: EdgeInsets.only(left: 30.0),
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 30.0,
-                    color: Colors.white,
-                  ),
-                ],
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                'post author',
+                style: TextStyle(
+                  color: Color(0xffE0E0E1),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
               ),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              radius: 27,
+              backgroundImage: NetworkImage(
+                  'https://www.pandasecurity.com/en/mediacenter/src/uploads/2013/11/pandasecurity-facebook-photo-privacy.jpg'),
+            ),
+          ),
+        ],
+        toolbarHeight: 60,
+        elevation: 0,
+      ),
+      body: ListView(
+        children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Escape from Alcatraz',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Science Fiction',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color(0xffC3C3E0),
+                      ),
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'how to make you smile ?',
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                height: 250,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'https://im.rediff.com/getahead/2015/nov/25smile.jpg?w=670&h=900'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
               SizedBox(
                 height: 20,
               ),
-              CircleAvatar(
-                radius: 56,
-                backgroundImage: NetworkImage(
-                    'https://i.ytimg.com/vi/NjWJ5iGjhL0/maxresdefault.jpg'),
-              ),
-              Text(
-                'alfonso milan',
-                style: TextStyle(
-                  fontFamily: 'Pacifico',
-                  fontSize: 30,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'rating',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16.0,
-                ),
-              ),
-
-              Text(
-                '9.3',
-                style: TextStyle(fontSize: 25.0),
-              ),
-              SizedBox(
-                height: 25.0,
-              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        'date',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16.0,
-                        ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '" hello test test "',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color(0xffC3C3E0),
                       ),
-                      SizedBox(
-                        height: 2.0,
-                      ),
-                      Text(
-                        '14.04.2021',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        'category',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      SizedBox(height: 2.0),
-                      Text(
-                        'action',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      SizedBox(height: 2.0),
-                    ],
+                    ),
                   ),
                 ],
               ),
-              SizedBox(height: 50.0),
-
               SizedBox(
                 height: 10,
               ),
-              //     Container(
-              //     height: 120.0,
-              //    child: SingleChildScrollView(
-              //       child: Text(
-              //     lipsum.createParagraph(numParagraphs: 3),
-              //       style: TextStyle(
-              //       color: Colors.black54,
-              //         fontSize: 25,
-              //         ),
-              //        ),
-              //      ),
-              //     ),
-
-              AnimatedButton(
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'go to read',
+                  lipsuam.createParagraph(),
                   style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 18,
                   ),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ReadStoryData()),
-                  );
-                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                height: 100,
+              ),
+              AnimatedButton(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Comments',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: Icon(
+                        Icons.chat_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                onPressed: () {},
+                height: 40,
+                shadowDegree: ShadowDegree.dark,
+                color: Colors.white,
               ),
             ],
           ),

@@ -19,6 +19,15 @@ class Following extends StatefulWidget {
 }
 
 class _FollowingState extends State<Following> {
+  // When we pull the page, it will refresh it and fetch the new data.
+  Future<Null> pullToRefresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      buildFollowingTickets();
+    });
+    return null;
+  }
+
   // Here we are building the following tickets according to who are
   // We following, and it will build a user ticket to each one!
   buildFollowingTickets() {
@@ -58,15 +67,18 @@ class _FollowingState extends State<Following> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(55.0),
-        child: Header(
-          title: 'Following',
+    return RefreshIndicator(
+      onRefresh: pullToRefresh,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(55.0),
+          child: Header(
+            title: 'Following',
+          ),
         ),
-      ),
-      body: Container(
-        child: buildFollowingTickets(),
+        body: Container(
+          child: buildFollowingTickets(),
+        ),
       ),
     );
   }

@@ -153,8 +153,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               ),
             ),
 
-            //if you want to put list in other category put it inside the containers
-            //each container include other category - those are the tabs
+            // If you want to put list in other category put it inside the containers
+            // Each container include other category - those are the tabs
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Container(),
