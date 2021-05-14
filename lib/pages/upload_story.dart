@@ -49,14 +49,7 @@ class _UploadStoryState extends State<UploadStory>
       String category = allCategories.removeAt(index);
       chosenCategories.add(category);
     } else {
-      final snackBar = SnackBar(
-        content: Text('You already have 3 genres'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {}, // No need to put anything, just click "Undo"
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      message('You already have 3 genres');
     }
   }
 
@@ -76,11 +69,41 @@ class _UploadStoryState extends State<UploadStory>
     super.dispose();
   }
 
+  // Will give some kind of a message at the bottom of the screen
+  message(String text) {
+    final snackBar = SnackBar(
+      content: Text(text),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {}, // No need to put anything, just click "Undo"
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  // Publish story method, it will only work if the user have story title,
+  // Categories or the story itself
+  // It will all add to the firebase.
+  //TODO: use database
+  publishStory() {
+    print(story.text.toString().trim().length);
+    print(titleStory.text.toString().trim().length);
+    print(chosenCategories);
+    if (story.text.toString().trim().length < 20 ||
+        titleStory.text.toString().trim().length < 3 ||
+        chosenCategories.length == 0) {
+      message('Make sure you fill everything correctly.');
+    } else {
+      message('Congratulations, You posted a new story!');
+    }
+  }
+
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -93,19 +116,32 @@ class _UploadStoryState extends State<UploadStory>
         child: ListView(
           shrinkWrap: true,
           children: [
-            TextField(
+            TextFormField(
               controller: titleStory,
               decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                fillColor: Colors.white,
+                filled: true,
                 icon: Icon(
-                  Icons.menu_book,
+                  Icons.title,
                   color: Colors.black,
                 ),
-                hintText: 'Write your title here...',
+                hintText: 'Write your title...',
+                helperText: 'at least 3 characters',
               ),
               maxLength: 30,
             ),
+            SizedBox(
+              height: 10,
+            ),
             Text(
-              'Pick the story genre - up to 3 genres:',
+              'Pick the story genres - up to 3 genres:',
               style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),
               textAlign: TextAlign.center,
             ),
@@ -115,6 +151,7 @@ class _UploadStoryState extends State<UploadStory>
             GridView.builder(
                 // All categories
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 120,
                     childAspectRatio: 8 / 2,
@@ -133,7 +170,7 @@ class _UploadStoryState extends State<UploadStory>
                         borderRadius: BorderRadius.all(
                           Radius.circular(20),
                         ),
-                        color: Colors.greenAccent,
+                        color: Colors.red[300],
                       ),
                       child: Center(child: Text(allCategories[index])),
                       height: 25,
@@ -144,7 +181,7 @@ class _UploadStoryState extends State<UploadStory>
               height: 12,
             ),
             Text(
-              'Your categories:',
+              'Your genres:',
               style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),
               textAlign: TextAlign.center,
             ),
@@ -154,6 +191,7 @@ class _UploadStoryState extends State<UploadStory>
             GridView.builder(
                 // All categories
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 120,
                     childAspectRatio: 8 / 2,
@@ -179,6 +217,45 @@ class _UploadStoryState extends State<UploadStory>
                     ),
                   );
                 }),
+            Divider(
+              color: Colors.black,
+              thickness: 4.0,
+            ),
+            TextField(
+              controller: story,
+              maxLength: 5000,
+              maxLines: 30,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                hintText: 'Tell us your story here...',
+                fillColor: Colors.white,
+                filled: true,
+              ),
+            ),
+            FloatingActionButton(
+                child: Icon(
+                  Icons.add,
+                  size: 35,
+                ),
+                backgroundColor: Colors.lightBlueAccent,
+                onPressed: () {
+                  publishStory();
+                }),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'By clicking the publish button - you are agreeing '
+              'that you are the owner of the story and you didnt stole it from other places.'
+              ' Breaking those rules will result in deleting your story or deleting your account',
+              style: TextStyle(color: Colors.grey),
+            ),
           ],
         ),
       ),
