@@ -39,6 +39,7 @@ class _EditProfileState extends State<EditProfile> {
     } catch (e) {
       print(e.toString());
     }
+    Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
   //TODO: edit in comment name or photo!!!!!
