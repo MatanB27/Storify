@@ -40,12 +40,16 @@ class _ProfileState extends State<Profile> {
   // The current room we are entering
   var currentRoomId;
 
+  //Story count variable
+  int storyCount = 0;
+
   // Following / Followers variables.
   bool isFollowing = false;
   int followingCount = 0;
   int followerCount = 0;
   List<String> followingList = [];
   List<String> followersList = [];
+
   // Will give us the number of the followers and a list of all the followers ids
   // We will use it at the init state
   getFollowers() async {
@@ -213,7 +217,7 @@ class _ProfileState extends State<Profile> {
                               fontWeight: FontWeight.bold, fontSize: 18.0),
                         ),
                         Text(
-                          '255k',
+                          storyCount.toString(),
                           style: TextStyle(fontSize: 16.0),
                         ),
                       ],
@@ -381,6 +385,7 @@ class _ProfileState extends State<Profile> {
   // Building the stories tickets according to two queries,
   // One is the userRef and the other storiesRef
   buildProfileStories() {
+    //storyCount = 0;
     return FutureBuilder(
       future: storiesRef
           .doc(widget.profileId)
@@ -404,6 +409,7 @@ class _ProfileState extends State<Profile> {
             title: doc.data()['title'],
           );
           tickets.add(ticket);
+          storyCount = tickets.length;
         });
         return ListView(
           shrinkWrap: true,
@@ -433,6 +439,7 @@ class _ProfileState extends State<Profile> {
     getFollowers();
     getFollowing();
     checkIfFollowing();
+    buildProfileStories();
   }
 
   // When we pull the page, it will refresh it and fetch the new data.
