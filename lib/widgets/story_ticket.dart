@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 // Here we are building all of the story tickets.
 // Each story will have his own ticket, in the profile page or feed page
@@ -6,12 +8,27 @@ class StoryTickets extends StatelessWidget {
   final String storyPhoto;
   final String displayName;
   final String title;
-  final String categories;
-  final String rating;
-  final String timestamp;
+  final List<String> categories;
+  final String rating; //TODO: might delete
+  final Timestamp timestamp;
 
-  StoryTickets(this.storyPhoto, this.title, this.categories, this.rating,
-      this.timestamp, this.displayName);
+  StoryTickets(
+      {this.storyPhoto,
+      this.title,
+      this.categories,
+      this.rating, //TODO: might delete
+      this.timestamp,
+      this.displayName});
+
+  // Let us see all of the categories in the List
+  getCategories() {
+    List<Text> list = [];
+    for (var category in categories) {
+      list.add(
+        new Text(category),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +86,15 @@ class StoryTickets extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    this.categories,
-                    style: TextStyle(color: Colors.grey[800]),
+                  Container(
+                    child: Row(children: <Widget>[
+                      // This code is fine, its not a bug!
+                      for (var category in categories)
+                        Text(
+                          category + ', ',
+                          style: TextStyle(color: Colors.grey[600]),
+                        )
+                    ]),
                   ),
                   SizedBox(
                     height: 12.0,
@@ -93,7 +116,9 @@ class StoryTickets extends StatelessWidget {
                         width: 10.0,
                       ),
                       Icon(Icons.date_range),
-                      Text(this.timestamp),
+                      Text(
+                        timeago.format(this.timestamp.toDate()),
+                      ),
                     ],
                   ),
                 ],

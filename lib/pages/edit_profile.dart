@@ -39,9 +39,9 @@ class _EditProfileState extends State<EditProfile> {
     } catch (e) {
       print(e.toString());
     }
-    Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
+  //TODO: edit in story && comment name or bio!!!!!
   // Alert dialog that will ask us if we want to log out
   Future<void> _confirmSignOut(BuildContext context) async {
     try {
@@ -259,9 +259,9 @@ class _EditProfileState extends State<EditProfile> {
     return FutureBuilder(
         future: userRef
             .doc(auth.currentUser.uid)
-            .get(), //we are taking the profile id that we passed
+            .get(), // We are taking the profile id that we passed
         builder: (context, snapshot) {
-          //reload untill all the data will gather up
+          // Reload until all the data will gather up
           if (!snapshot.hasData) {
             return loading();
           }

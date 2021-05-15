@@ -1,5 +1,12 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:storify/services/categories.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:storify/pages/home.dart';
+import 'package:storify/pages/read_story.dart';
+import 'package:storify/services/loading.dart';
+import 'package:uuid/uuid.dart';
 
 // The page where we uploading the story to the data base.
 class UploadStory extends StatefulWidget {
@@ -9,15 +16,8 @@ class UploadStory extends StatefulWidget {
   @override
   _UploadStoryState createState() => _UploadStoryState();
 }
-// TODO: If the user wont pick any photo, he will get a default photo
 
-// Mixin - help us save he state of this page when we move to another page
-class _UploadStoryState extends State<UploadStory>
-    with AutomaticKeepAliveClientMixin<UploadStory> {
-  // This variable is to keep the state of the screen alive,
-  // Even if we move to another screen.
-  // Super.build(context) is also part of that.
-
+class _UploadStoryState extends State<UploadStory> {
   // Text fields variables
   TextEditingController titleStory = TextEditingController();
   TextEditingController story = TextEditingController();
@@ -41,6 +41,21 @@ class _UploadStoryState extends State<UploadStory>
   // User will have to pick at least 1 category
   List<String> chosenCategories = [];
 
+  // Variable for uploading an image
+  File file;
+  String _uploadedFileURL;
+  bool isUploading = false;
+
+  // Getting doc id for the storyID
+  String storyId = Uuid().v4();
+
+  // Getting doc id for the commentsID - every story will have his own
+  // Comments page
+  String commentsId = Uuid().v4();
+
+  // Variables to fetch the name and photo from the user ref
+  String name;
+  String photo;
   // We are picking a category, removing it from the AllCategories
   // And adding it to chosenCategories, if chosenCategories length is 3,
   // We will get an error message that we cant take more categories
@@ -81,27 +96,162 @@ class _UploadStoryState extends State<UploadStory>
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  getDisplayNameAndPhoto() async {
+    DocumentSnapshot docName = await userRef.doc(widget.userId).get();
+    DocumentSnapshot docPhoto = await userRef.doc(widget.userId).get();
+    name = docName.get('displayName');
+    photo = docPhoto.get('photoUrl');
+  }
+
+  // Init state of the app
+  @override
+  void initState() {
+    super.initState();
+    getDisplayNameAndPhoto();
+  }
+
   // Publish story method, it will only work if the user have story title,
   // Categories or the story itself
   // It will all add to the firebase.
-  //TODO: use database
-  publishStory() {
-    print(story.text.toString().trim().length);
-    print(titleStory.text.toString().trim().length);
-    print(chosenCategories);
+  publishStory() async {
     if (story.text.toString().trim().length < 20 ||
         titleStory.text.toString().trim().length < 3 ||
-        chosenCategories.length == 0) {
+        chosenCategories.length == 0 ||
+        _uploadedFileURL == null) {
       message('Make sure you fill everything correctly.');
     } else {
+      print(storyId);
+      await storiesRef
+          .doc(widget.userId)
+          .collection('storyId')
+          .doc(storyId)
+          .set({
+        'uid': widget.userId,
+        'sid': storyId,
+        'cid': commentsId,
+        'displayName': name,
+        'photoUrl': photo,
+        'categories': chosenCategories,
+        'storyPhoto': _uploadedFileURL,
+        'title': titleStory.text.toString(),
+        'timeStamp': DateTime.now(),
+        'story': story.text.toString(),
+        'rating': 0 // Every rating will start with 0 - it will be change
+        // According to the users rating
+      });
       message('Congratulations, You posted a new story!');
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReadStory(
+            storyId: storyId,
+            ownerId: widget.userId,
+            commentsId: commentsId,
+          ),
+        ),
+      );
+
+      // We are reseting everything after we finish to upload the story.
+      setState(() {
+        storyId = Uuid().v4();
+        _uploadedFileURL = null;
+        isUploading = false;
+        commentsId = Uuid().v4();
+        file = null;
+        chosenCategories.clear();
+        story.clear();
+        titleStory.clear();
+      });
     }
   }
 
-  bool get wantKeepAlive => true;
+  // Menu for changing photo from camera or gallery
+  selectImage() {
+    return Container(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 20.0,
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Choose Profile Photo',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FlatButton.icon(
+                icon: Icon(Icons.camera),
+                onPressed: () => takePhoto(false),
+                label: Text('Camera'),
+              ),
+              FlatButton.icon(
+                onPressed: () => takePhoto(true),
+                icon: Icon(Icons.image),
+                label: Text("Gallery"),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  // Taking a photo with the camera or choose from the gallery
+  // Depends on the argument value.
+  // Pick image is still ok, its just from older version
+  // If we cancel our choice, try catch will catch the error and isUploading
+  // Will become false
+  void takePhoto(bool isGallery) async {
+    try {
+      Navigator.pop(context);
+      if (isGallery) {
+        File file = await ImagePicker.pickImage(source: ImageSource.gallery);
+        setState(
+          () => this.file = file,
+        );
+      } else {
+        File file = await ImagePicker.pickImage(
+          source: ImageSource.camera,
+          maxHeight: 675,
+          maxWidth: 960,
+        );
+        setState(() => this.file = file);
+      }
+      setState(() {
+        isUploading = true;
+      });
+      await uploadImage(this.file);
+      setState(() {
+        isUploading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isUploading = false;
+      });
+    }
+  }
+
+  // Upload the photo
+  Future<String> uploadImage(imageFile) async {
+    firebase_storage.UploadTask uploadTask =
+        storageRef.child("story_${storyId}.jpg").putFile(imageFile);
+    var imageUrl = await (await uploadTask).ref.getDownloadURL();
+    _uploadedFileURL = imageUrl.toString();
+
+    return _uploadedFileURL;
+  }
+
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -219,7 +369,50 @@ class _UploadStoryState extends State<UploadStory>
                 }),
             Divider(
               color: Colors.black,
-              thickness: 4.0,
+              thickness: 2.0,
+            ),
+            FlatButton.icon(
+              onPressed: () async {
+                showModalBottomSheet(
+                    context: context, builder: ((builder) => selectImage()));
+              },
+              color: Colors.indigo,
+              label: Text(
+                'Upload image',
+                style: TextStyle(color: Colors.white),
+              ),
+              icon: Icon(
+                Icons.upload_rounded,
+                color: Colors.white,
+              ),
+            ),
+            isUploading
+                ? loading()
+                : _uploadedFileURL != null
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.check,
+                            color: Colors.grey[600],
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(
+                            'Image uploaded successfully!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey[600]),
+                          )
+                        ],
+                      )
+                    : Text(
+                        'Please upload your story image',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+            SizedBox(
+              height: 10,
             ),
             TextField(
               controller: story,
@@ -240,8 +433,9 @@ class _UploadStoryState extends State<UploadStory>
             ),
             FloatingActionButton(
                 child: Icon(
-                  Icons.add,
-                  size: 35,
+                  Icons.menu_book,
+                  size: 25,
+                  color: Colors.white,
                 ),
                 backgroundColor: Colors.lightBlueAccent,
                 onPressed: () {

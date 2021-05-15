@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:lipsum/lipsum.dart' as lipsuam;
-import 'package:flutter_read_more_text/flutter_read_more_text.dart';
 import 'package:animated_button/animated_button.dart';
 
-class ReadStory extends StatelessWidget {
+class ReadStory extends StatefulWidget {
+  final String storyId;
+  final String ownerId;
+  final String commentsId;
+
+  ReadStory({this.storyId, this.ownerId, this.commentsId});
+  @override
+  _ReadStoryState createState() => _ReadStoryState();
+}
+
+//TODO: make sure it will work with firebase
+class _ReadStoryState extends State<ReadStory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
         backgroundColor: Colors.white,
         actions: <Widget>[
           Column(
@@ -28,14 +41,6 @@ class ReadStory extends StatelessWidget {
               ),
               SizedBox(
                 height: 5,
-              ),
-              Text(
-                'post author',
-                style: TextStyle(
-                  color: Color(0xffE0E0E1),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10,
-                ),
               ),
             ],
           ),

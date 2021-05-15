@@ -81,7 +81,7 @@ class _SearchState extends State<Search>
                       : null),
             ),
             AnimatedContainer(
-              duration: Duration(milliseconds: 400),
+              duration: Duration(milliseconds: 300),
               child: Material(
                 type: MaterialType.transparency,
                 child: InkWell(
@@ -161,7 +161,7 @@ class _SearchState extends State<Search>
                       color: Colors.white,
                       fontFamily: 'Pacifico',
                     ),
-                    speed: const Duration(milliseconds: 150),
+                    speed: const Duration(milliseconds: 280),
                   ),
                 ],
                 repeatForever: true,

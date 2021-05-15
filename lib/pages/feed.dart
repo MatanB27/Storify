@@ -1,13 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart'; //the font package
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/services/auth_service.dart';
-import 'package:storify/pages/home.dart';
 import 'read_story.dart';
-import 'package:storify/pages/chat.dart';
 import 'package:storify/widgets/story_ticket.dart';
-import 'package:lipsum/lipsum.dart' as lipsuam; //to show stam texts for example
-import 'package:storify/widgets/header.dart';
 
 //todo: read here
 //==============================the main feed code================//
@@ -20,37 +17,56 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   // We work with the class list_item
-  // And her constractor
+  // And her constructor
   // To create a story ticket
 
   //TODO: use for each from firebase
   List<StoryTickets> tickets = [
     StoryTickets(
-        "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
-        "Escape from Alcatraz",
-        "Action",
-        "Raiting : 100",
-        "13.04.2021",
-        "nelson mandela"),
+      title: 'wow1232132123231232131',
+      displayName: '123',
+      timestamp: Timestamp.now(),
+      categories: ['123', '234'],
+      rating: '123',
+      storyPhoto:
+          "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
+    ),
     StoryTickets(
-        "https://picsum.photos/250?image=9",
-        "Biggest story ever",
-        "Adventure, Drama, Sci-fi",
-        "Raiting : 100",
-        "14.04.2021",
-        "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Coolest story ever",
-        "Action", "Raiting : 100", "14.04.2021", "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "14.04.2021", "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "14.04.2021", "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "13.04.2021", "Matan Baruch"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "13.04.2021", "Matan Baruch"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "13.04.2021", "Matan Baruch"),
+      title: 'wow',
+      displayName: '123',
+      timestamp: Timestamp.now(),
+      categories: ['123', '432', '421'],
+      rating: '123',
+      storyPhoto:
+          "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
+    ),
+    StoryTickets(
+      title: 'wow',
+      displayName: '123',
+      timestamp: Timestamp.now(),
+      categories: ['123'],
+      rating: '123',
+      storyPhoto:
+          "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
+    ),
+    StoryTickets(
+      title: 'wow',
+      displayName: '123',
+      timestamp: Timestamp.now(),
+      categories: ['123'],
+      rating: '123',
+      storyPhoto:
+          "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
+    ),
+    StoryTickets(
+      title: 'wow',
+      displayName: '123',
+      timestamp: Timestamp.now(),
+      categories: ['123', '567', '321'],
+      rating: '123',
+      storyPhoto:
+          "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
+    ),
   ];
   // This is a part of the top menu
   // With all the tabs : all,top,popular...... 5 tabs

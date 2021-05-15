@@ -24,6 +24,8 @@ final followingRef =
     FirebaseFirestore.instance.collection('following'); // Following ref
 final followersRef =
     FirebaseFirestore.instance.collection('followers'); // Followers ref
+final storiesRef =
+    FirebaseFirestore.instance.collection('stories'); // Stories ref
 
 AuthService auth = new AuthService();
 

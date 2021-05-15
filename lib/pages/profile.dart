@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/following.dart';
 import 'package:storify/pages/home.dart';
@@ -128,31 +129,6 @@ class _ProfileState extends State<Profile> {
     isFollowing = doc.exists;
   }
 
-  //TODO: use for each from firebase, its just an example. delete later
-  List<StoryTickets> tickets = [
-    StoryTickets("https://picsum.photos/250?image=9", "Best story ever",
-        "Comedy, Horror", "Raiting : 100", "13.04.2021", "Matan Baruch"),
-    StoryTickets(
-        "https://picsum.photos/250?image=9",
-        "Biggest story ever",
-        "Adventure, Drama, Sci-fi",
-        "Raiting : 100",
-        "14.04.2021",
-        "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Coolest story ever",
-        "Action", "Raiting : 100", "14.04.2021", "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "14.04.2021", "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "14.04.2021", "Shay Ohayon"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "13.04.2021", "Matan Baruch"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "13.04.2021", "Matan Baruch"),
-    StoryTickets("https://picsum.photos/250?image=9", "Title", "Categories",
-        "Raiting : 100", "13.04.2021", "Matan Baruch"),
-  ];
-
   // Create room in chatRef and also
   createRoomInFirebase() async {
     DocumentReference doc;
@@ -192,9 +168,9 @@ class _ProfileState extends State<Profile> {
     return FutureBuilder(
       future: userRef
           .doc(widget.profileId)
-          .get(), //we are taking the profile id that we passed
+          .get(), // We are taking the profile id that we passed
       builder: (context, snapshot) {
-        //reload untill all the data will gather up
+        // Reload until all the data will gather up
         if (!snapshot.hasData) {
           return loading();
         }
@@ -402,8 +378,40 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  profileStories() {
-    //TODO: build the stories tickets
+  // Building the stories tickets according to two queries,
+  // One is the userRef and the other storiesRef
+  buildProfileStories() {
+    return FutureBuilder(
+      future: storiesRef
+          .doc(widget.profileId)
+          .collection('storyId')
+          .orderBy('timeStamp', descending: true)
+          .get(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return loading();
+        }
+        List<StoryTickets> tickets = [];
+        snapshot.data.docs.forEach((doc) {
+          List<String> categories = List.from(doc.data()['categories']);
+          StoryTickets ticket = StoryTickets(
+            displayName: doc.data()['displayName'],
+            categories: categories,
+
+            rating: doc.data()['rating'].toString(), //TODO: maybe delete
+            storyPhoto: doc.data()['storyPhoto'],
+            timestamp: doc.data()['timeStamp'],
+            title: doc.data()['title'],
+          );
+          tickets.add(ticket);
+        });
+        return ListView(
+          shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
+          children: tickets,
+        );
+      },
+    );
   }
 
   //when we are in our own profile - we can click this button
@@ -434,6 +442,7 @@ class _ProfileState extends State<Profile> {
       profileHeader();
       getFollowing();
       getFollowers();
+      buildProfileStories();
     });
     return null;
   }
@@ -454,7 +463,7 @@ class _ProfileState extends State<Profile> {
           child: ListView(
             children: [
               profileHeader(),
-              tickets[0],
+              buildProfileStories(),
             ],
           ),
         ),
