@@ -41,7 +41,7 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  //TODO: edit in story && comment name or bio!!!!!
+  //TODO: edit in comment name or photo!!!!!
   // Alert dialog that will ask us if we want to log out
   Future<void> _confirmSignOut(BuildContext context) async {
     try {
