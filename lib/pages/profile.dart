@@ -179,52 +179,89 @@ class _ProfileState extends State<Profile> {
           return loading();
         }
         UserClass user = UserClass.fromDocuments(snapshot.data);
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 8.0,
-              ),
-              CircleAvatar(
-                radius: 56,
-                backgroundImage: CachedNetworkImageProvider(user.photoUrl),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              Text(
-                user.displayName,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22.0),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Stories',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0),
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 28.0, top: 7.0),
+                      child: CircleAvatar(
+                        backgroundImage:
+                            CachedNetworkImageProvider(user.photoUrl),
+                        radius: 44,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 38.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            user.displayName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            storyCount.toString(),
+                            style: TextStyle(
+                              color: Colors.lightBlueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 23.0,
+                            ),
+                          ),
                         ),
-                        Text(
-                          storyCount.toString(),
-                          style: TextStyle(fontSize: 16.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Stories',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12.0,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
+                    Container(
+                      color: Colors.white,
+                      width: 0.6,
+                      height: 22,
+                    ),
+                    GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -236,23 +273,41 @@ class _ProfileState extends State<Profile> {
                           ),
                         );
                       },
-                      child: Column(
-                        children: [
-                          Text(
-                            'Followers',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0),
-                          ),
-                          Text(
-                            followerCount.toString(),
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ],
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                followerCount.toString(),
+                                style: TextStyle(
+                                  color: Colors.lightBlueAccent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 23.0,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Followers',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
+                    Container(
+                      color: Colors.white,
+                      width: 0.6,
+                      height: 22,
+                    ),
+                    GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -265,118 +320,144 @@ class _ProfileState extends State<Profile> {
                         );
                       },
                       child: Column(
-                        children: [
-                          Text(
-                            "Following",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              followingCount.toString(),
+                              style: TextStyle(
+                                color: Colors.lightBlueAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 23.0,
+                              ),
+                            ),
                           ),
-                          Text(
-                            followingCount.toString(),
-                            style: TextStyle(fontSize: 16.0),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Following',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12.0,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    // This button is change depends if it us or not
-                    onPressed: currentUserId == widget.profileId
-                        ? editProfile
-                        : !isFollowing
-                            ? handleFollow
-                            : handleUnfollow,
-                    color: currentUserId == widget.profileId
-                        ? Colors.green
-                        : Colors.lightBlue,
-                    child: currentUserId == widget.profileId
-                        ? Text(
-                            'Edit Profile',
-                            style: TextStyle(color: Colors.white),
-                          )
-                        : Text(
-                            !isFollowing ? 'Follow' : 'Unfollow',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                    padding: currentUserId == widget.profileId
-                        ? EdgeInsets.symmetric(horizontal: 85.0, vertical: 8.0)
-                        : EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
-                  ),
-                  SizedBox(
-                    width: 12.0,
-                  ),
-                  currentUserId == widget.profileId
-                      ? Container() //empty container
-                      : FlatButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          onPressed: () async {
-                            await createRoomInFirebase();
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PrivateMessage(
-                                  privateId: widget.profileId,
-                                  currentRoomId: currentRoomId,
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      // This button is change depends if it us or not
+                      onPressed: currentUserId == widget.profileId
+                          ? editProfile
+                          : !isFollowing
+                              ? handleFollow
+                              : handleUnfollow,
+                      color: currentUserId == widget.profileId
+                          ? Color(0xff479BF0)
+                          : Colors.lightBlue,
+                      child: currentUserId == widget.profileId
+                          ? Text(
+                              'Edit Profile',
+                              style: TextStyle(color: Colors.white),
+                            )
+                          : Text(
+                              !isFollowing ? 'Follow' : 'Unfollow',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                      padding: currentUserId == widget.profileId
+                          ? EdgeInsets.symmetric(
+                              horizontal: 85.0, vertical: 8.0)
+                          : EdgeInsets.symmetric(
+                              horizontal: 50.0, vertical: 8.0),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        currentUserId == widget.profileId
+                            ? Container() //empty container
+                            : FlatButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                onPressed: () async {
+                                  await createRoomInFirebase();
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PrivateMessage(
+                                        privateId: widget.profileId,
+                                        currentRoomId: currentRoomId,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                color: Colors.orangeAccent,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 50.0, vertical: 8.0),
+                                child: Text(
+                                  'Message',
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                            );
-                          },
-                          color: Colors.orangeAccent,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 50.0, vertical: 8.0),
-                          child: Text(
-                            'Message',
-                            style: TextStyle(color: Colors.white),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 12.0,
+                    ),
+                    Text(
+                      'Biography',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 8.0,
+                          width: 12.0,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              user.bio,
+                              style: TextStyle(
+                                  color: Colors.grey[200], fontSize: 18.0),
+                            ),
                           ),
                         ),
-                ],
-              ),
-              SizedBox(
-                height: 5.0,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 12.0,
-                  ),
-                  Text(
-                    'Biography',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    height: 8.0,
-                    width: 12,
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        user.bio,
-                        style: TextStyle(color: Colors.grey[800], fontSize: 18),
-                      ),
+                        SizedBox(
+                          height: 60.0,
+                        ),
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 60.0,
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         );
       },
     );
@@ -402,9 +483,7 @@ class _ProfileState extends State<Profile> {
           StoryTickets ticket = StoryTickets(
             displayName: doc.data()['displayName'],
             categories: categories,
-            storyId: doc.data()['sid'],
-            commentId: doc.data()['cid'],
-            ownerId: doc.data()['uid'],
+
             rating: doc.data()['rating'].toString(), //TODO: maybe delete
             storyPhoto: doc.data()['storyPhoto'],
             timestamp: doc.data()['timeStamp'],
@@ -461,11 +540,21 @@ class _ProfileState extends State<Profile> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(55.0),
-          child: Header(
-            title: 'Profile',
+        backgroundColor: Color(0xff09031D),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Color(0xff09031D),
+          title: Text(
+            'Profile',
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8),
+            ),
+          ],
         ),
         body: RefreshIndicator(
           onRefresh: pullToRefresh,
