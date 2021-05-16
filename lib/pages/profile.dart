@@ -15,13 +15,6 @@ import 'package:storify/widgets/story_ticket.dart';
 import 'package:storify/pages/private_message.dart';
 import 'package:storify/pages/followers.dart';
 
-//todo: here you need to put the stores list from the fire base
-List<String> imagePost = [
-  'https://static.wikia.nocookie.net/arthur/images/e/e9/Buster%27s_Summer_Clothes.PNG/revision/latest?cb=20110719105405',
-  'https://i.pinimg.com/originals/1b/ed/e3/1bede357d643bc08060ee9d59b7fc59c.png',
-  'https://i.ytimg.com/vi/RY4bQKLT4J4/maxresdefault.jpg'
-];
-
 class Profile extends StatefulWidget {
   final String profileId;
   Profile({this.profileId});
@@ -483,7 +476,9 @@ class _ProfileState extends State<Profile> {
           StoryTickets ticket = StoryTickets(
             displayName: doc.data()['displayName'],
             categories: categories,
-
+            storyId: doc.data()['sid'],
+            commentId: doc.data()['cid'],
+            ownerId: doc.data()['uid'],
             rating: doc.data()['rating'].toString(), //TODO: maybe delete
             storyPhoto: doc.data()['storyPhoto'],
             timestamp: doc.data()['timeStamp'],
