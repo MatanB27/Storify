@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:storify/pages/read_story.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 // Here we are building all of the story tickets.
 // Each story will have his own ticket, in the profile page or feed page
 class StoryTickets extends StatelessWidget {
   final String storyPhoto;
+  final String storyId; // To know where to go
+  final String commentId; // To have comment id parameter
+  final String ownerId; // To have the id of the owner of the story
   final String displayName;
   final String title;
   final List<String> categories;
@@ -15,6 +19,9 @@ class StoryTickets extends StatelessWidget {
   StoryTickets(
       {this.storyPhoto,
       this.title,
+      this.storyId,
+      this.commentId,
+      this.ownerId,
       this.categories,
       this.rating, //TODO: might delete
       this.timestamp,
@@ -32,99 +39,105 @@ class StoryTickets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2.0,
-      margin: EdgeInsets.only(bottom: 20.0),
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Column(
-              children: [
-                Hero(
-                  tag: 'animation',
-                  child: Container(
-                    height: 65.0,
-                    width: 65.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(this.storyPhoto),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.person,
-                      color: Colors.black,
-                      size: 20.0,
-                    ),
-                    Text(
-                      this.displayName,
-                      style: TextStyle(fontSize: 14.0, color: Colors.black),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              width: 5.0,
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return FlatButton(
+      onPressed: () {
+        readStory(context,
+            storyId: this.storyId, commentId: this.commentId, ownerId: ownerId);
+      },
+      child: Card(
+        elevation: 2.0,
+        margin: EdgeInsets.only(bottom: 20.0),
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Column(
                 children: [
-                  Text(
-                    this.title,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Hero(
+                    tag: 'animation',
+                    child: Container(
+                      height: 65.0,
+                      width: 65.0,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(this.storyPhoto),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                     ),
-                  ),
-                  Container(
-                    child: Row(children: <Widget>[
-                      // This code is fine, its not a bug!
-                      for (var category in categories)
-                        Text(
-                          category + '  ',
-                          style: TextStyle(color: Colors.grey[600]),
-                        )
-                    ]),
-                  ),
-                  SizedBox(
-                    height: 12.0,
                   ),
                   Row(
                     children: [
-                      SizedBox(
-                        width: 5.0,
+                      Icon(
+                        Icons.person,
+                        color: Colors.black,
+                        size: 20.0,
                       ),
-                      // Icon(Icons.star), //TODO - rating - might delete
-                      // Text(
-                      //   this.rating,
-                      //   style: TextStyle(
-                      //     fontSize: 15,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Icon(Icons.date_range),
                       Text(
-                        timeago.format(this.timestamp.toDate()),
+                        this.displayName,
+                        style: TextStyle(fontSize: 14.0, color: Colors.black),
                       ),
                     ],
                   ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(
+                width: 5.0,
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      this.title,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Container(
+                      child: Row(children: <Widget>[
+                        // This code is fine, its not a bug!
+                        for (var category in categories)
+                          Text(
+                            category + '  ',
+                            style: TextStyle(color: Colors.grey[700]),
+                          )
+                      ]),
+                    ),
+                    SizedBox(
+                      height: 12.0,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        // Icon(Icons.star), //TODO - rating - might delete
+                        // Text(
+                        //   this.rating,
+                        //   style: TextStyle(
+                        //     fontSize: 15,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Icon(Icons.date_range),
+                        Text(
+                          timeago.format(this.timestamp.toDate()),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

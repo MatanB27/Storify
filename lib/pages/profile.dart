@@ -402,7 +402,9 @@ class _ProfileState extends State<Profile> {
           StoryTickets ticket = StoryTickets(
             displayName: doc.data()['displayName'],
             categories: categories,
-
+            storyId: doc.data()['sid'],
+            commentId: doc.data()['cid'],
+            ownerId: doc.data()['uid'],
             rating: doc.data()['rating'].toString(), //TODO: maybe delete
             storyPhoto: doc.data()['storyPhoto'],
             timestamp: doc.data()['timeStamp'],
