@@ -39,9 +39,10 @@ class _EditProfileState extends State<EditProfile> {
     } catch (e) {
       print(e.toString());
     }
+    Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
-  //TODO: edit in story && comment name or bio!!!!!
+  //TODO: edit in comment name or photo!!!!!
   // Alert dialog that will ask us if we want to log out
   Future<void> _confirmSignOut(BuildContext context) async {
     try {
@@ -70,6 +71,23 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
+  // This function will help us update the data inside the stories ref
+  updateNameInStoriesRef() async {
+    // The new name
+    String newName = displayNameController.text.toString();
+    QuerySnapshot x =
+        await storiesRef.doc(auth.currentUser.uid).collection('storyId').get();
+    x.docs.forEach((element) async {
+      await storiesRef
+          .doc(auth.currentUser.uid)
+          .collection('storyId')
+          .doc(element.id)
+          .update({
+        'displayName': newName,
+      });
+    });
+  }
+
   // This function will help us update the data inside the chat Ref
   updateNameInChatRef() async {
     // x will get all the data from the currentUser id
@@ -95,7 +113,6 @@ class _EditProfileState extends State<EditProfile> {
           value.docs.forEach((element) {
             //We are only doing it if the element exist.
             if (element.exists) {
-              print('element ' + element.id);
               String currentName = element.data()['names'][0];
               String otherName = element.data()['names'][1];
               chatRef.doc(element.id).update({
@@ -111,6 +128,7 @@ class _EditProfileState extends State<EditProfile> {
   // Will update the profile photo in the user database and in chat database
   updateProfileData() async {
     await updateNameInChatRef();
+    await updateNameInStoriesRef();
     userRef.doc(auth.currentUser.uid).update({
       "displayName": displayNameController.text,
       "displayNameSearch": displayNameController.text.toLowerCase(),
@@ -125,6 +143,22 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  updatePhotoInStoriesRef() async {
+    // The new photo
+    String newPhoto = _uploadedFileURL;
+    QuerySnapshot x =
+        await storiesRef.doc(auth.currentUser.uid).collection('storyId').get();
+    x.docs.forEach((element) async {
+      await storiesRef
+          .doc(auth.currentUser.uid)
+          .collection('storyId')
+          .doc(element.id)
+          .update({
+        'photoUrl': newPhoto,
+      });
+    });
   }
 
   // Menu for changing photo from camera or gallery
@@ -211,6 +245,7 @@ class _EditProfileState extends State<EditProfile> {
     userRef.doc(auth.currentUser.uid).update({
       "photoUrl": _uploadedFileURL,
     });
+    await updatePhotoInStoriesRef();
     await updatePhotoInChatRef();
     return _uploadedFileURL;
   }
@@ -428,6 +463,7 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     getUserInfo();
     //updateNameInChatRef();
+    //updateNameInStoriesRef();
   }
 
   // Getting the user info from the database

@@ -91,7 +91,7 @@ class StoryTickets extends StatelessWidget {
                       // This code is fine, its not a bug!
                       for (var category in categories)
                         Text(
-                          category + ', ',
+                          category + '  ',
                           style: TextStyle(color: Colors.grey[600]),
                         )
                     ]),
