@@ -475,6 +475,7 @@ class _EditProfileState extends State<EditProfile> {
     bioController.text = user.bio;
   }
 
+  // When we quit the page its disposing it
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.

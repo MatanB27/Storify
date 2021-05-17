@@ -29,10 +29,15 @@ class _FollowersState extends State<Followers> {
 
   // Here we are building the followers tickets according to who are
   // Following us, and it will build a user ticket to each one!
+
   buildFollowersTickets() {
     if (!widget.followersList.isEmpty) {
-      return FutureBuilder(
-        future: userRef.where('id', whereIn: widget.followersList).get(),
+      return StreamBuilder(
+        stream: followersRef
+            .doc(widget.followersId)
+            .collection('userFollowers')
+            .orderBy('displayName', descending: false)
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return loading();
@@ -59,9 +64,18 @@ class _FollowersState extends State<Followers> {
     }
   }
 
+  // Init state of the app
   @override
   void initState() {
     super.initState();
+    print(widget.followersList);
+  }
+
+  // Disposing page
+  @override
+  void dispose() {
+    super.dispose();
+    //widget.followersList.clear();
   }
 
   @override

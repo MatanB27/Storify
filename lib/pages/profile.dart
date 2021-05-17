@@ -1,12 +1,10 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/following.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/user.dart';
-import 'package:storify/widgets/header.dart';
 import 'package:storify/services/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:storify/pages/edit_profile.dart';
@@ -14,13 +12,6 @@ import '../services/auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
 import 'package:storify/pages/private_message.dart';
 import 'package:storify/pages/followers.dart';
-
-//todo: here you need to put the stores list from the fire base
-List<String> imagePost = [
-  'https://static.wikia.nocookie.net/arthur/images/e/e9/Buster%27s_Summer_Clothes.PNG/revision/latest?cb=20110719105405',
-  'https://i.pinimg.com/originals/1b/ed/e3/1bede357d643bc08060ee9d59b7fc59c.png',
-  'https://i.ytimg.com/vi/RY4bQKLT4J4/maxresdefault.jpg'
-];
 
 class Profile extends StatefulWidget {
   final String profileId;
@@ -85,22 +76,36 @@ class _ProfileState extends State<Profile> {
   // Will make the user follow the other user.
   // It will be updated in firebase, We are updating both followingRef
   // And followersRef
-  void handleFollow() {
+  void handleFollow() async {
     setState(() {
       isFollowing = true;
     });
 
-    followersRef
-        .doc(widget.profileId)
-        .collection('userFollowers')
-        .doc(currentUserId)
-        .set({});
+    var doc1 = userRef.doc(currentUserId).get();
+    doc1.then((value) => {
+          followersRef
+              .doc(widget.profileId)
+              .collection('userFollowers')
+              .doc(currentUserId)
+              .set({
+            'displayName': value.get('displayName'),
+            'photoUrl': value.get('photoUrl'),
+            'id': value.get('id'),
+          }),
+        });
 
-    followingRef
-        .doc(currentUserId)
-        .collection('userFollowing')
-        .doc(widget.profileId)
-        .set({});
+    var doc2 = userRef.doc(widget.profileId).get();
+    doc2.then((value) => {
+          followingRef
+              .doc(currentUserId)
+              .collection('userFollowing')
+              .doc(widget.profileId)
+              .set({
+            'displayName': value.get('displayName'),
+            'photoUrl': value.get('photoUrl'),
+            'id': value.get('id'),
+          }),
+        });
   }
 
   // Will remove the follow from the other user.
@@ -168,7 +173,8 @@ class _ProfileState extends State<Profile> {
   }
 
   profileHeader() {
-    //future: help us to get the user information base on their id.
+    // Future: help us to get the user information base on their id.
+
     return FutureBuilder(
       future: userRef
           .doc(widget.profileId)
@@ -386,7 +392,7 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 20,
+                          width: 10,
                         ),
                         currentUserId == widget.profileId
                             ? Container() //empty container
@@ -420,40 +426,61 @@ class _ProfileState extends State<Profile> {
                 SizedBox(
                   height: 15.0,
                 ),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 12.0,
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blueAccent,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
-                    Text(
-                      'Biography',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
                       children: [
                         SizedBox(
-                          height: 8.0,
                           width: 12.0,
                         ),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              user.bio,
-                              style: TextStyle(
-                                  color: Colors.grey[200], fontSize: 18.0),
-                            ),
-                          ),
+                        Text(
+                          'Biography',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.white),
                         ),
-                        SizedBox(
-                          height: 60.0,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 8.0,
+                              width: 12.0,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: user.bio != ''
+                                    ? Text(
+                                        user.bio,
+                                        style: TextStyle(
+                                            color: Colors.grey[200],
+                                            fontSize: 18.0),
+                                      )
+                                    : Text(
+                                        'Biography is empty',
+                                        style: TextStyle(
+                                            color: Colors.grey[200],
+                                            fontSize: 18.0),
+                                      ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60.0,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -463,10 +490,22 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // This method will count us how many stories the user have.
+  // Its looks like buildProfileStories but its different
+  getStoriesCount() async {
+    await storiesRef
+        .doc(widget.profileId)
+        .collection('storyId')
+        .get()
+        .then((value) => {
+              storyCount = value.docs.length,
+            });
+    return storyCount;
+  }
+
   // Building the stories tickets according to two queries,
   // One is the userRef and the other storiesRef
   buildProfileStories() {
-    //storyCount = 0;
     return FutureBuilder(
       future: storiesRef
           .doc(widget.profileId)
@@ -483,7 +522,9 @@ class _ProfileState extends State<Profile> {
           StoryTickets ticket = StoryTickets(
             displayName: doc.data()['displayName'],
             categories: categories,
-
+            storyId: doc.data()['sid'],
+            commentId: doc.data()['cid'],
+            ownerId: doc.data()['uid'],
             rating: doc.data()['rating'].toString(), //TODO: maybe delete
             storyPhoto: doc.data()['storyPhoto'],
             timestamp: doc.data()['timeStamp'],
@@ -501,7 +542,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  //when we are in our own profile - we can click this button
+  // When we are in our own profile - we can click this button
   void editProfile() {
     Navigator.push(
       context,
@@ -517,10 +558,19 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    getFollowers();
-    getFollowing();
+    // getFollowers();
+    // getFollowing();
+    // buildProfileStories();
     checkIfFollowing();
-    buildProfileStories();
+  }
+
+  // When we quit the page its disposing it
+  @override
+  void dispose() {
+    followersList.clear();
+    followingList.clear();
+
+    super.dispose();
   }
 
   // When we pull the page, it will refresh it and fetch the new data.
@@ -537,6 +587,9 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    getFollowers();
+    getFollowing();
+    getStoriesCount();
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(

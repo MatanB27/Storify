@@ -30,10 +30,15 @@ class _FollowingState extends State<Following> {
 
   // Here we are building the following tickets according to who are
   // We following, and it will build a user ticket to each one!
+
   buildFollowingTickets() {
     if (!widget.followingList.isEmpty) {
-      return FutureBuilder(
-        future: userRef.where('id', whereIn: widget.followingList).get(),
+      return StreamBuilder(
+        stream: followingRef
+            .doc(widget.followingId)
+            .collection('userFollowing')
+            .orderBy('displayName', descending: false)
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return loading();
