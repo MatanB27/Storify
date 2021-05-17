@@ -441,6 +441,7 @@ class _ProfileState extends State<Profile> {
                       children: [
                         SizedBox(
                           width: 12.0,
+                          height: 5,
                         ),
                         Text(
                           'Biography',
@@ -463,13 +464,13 @@ class _ProfileState extends State<Profile> {
                                         user.bio,
                                         style: TextStyle(
                                             color: Colors.grey[200],
-                                            fontSize: 18.0),
+                                            fontSize: 14.0),
                                       )
                                     : Text(
                                         'Biography is empty',
                                         style: TextStyle(
                                             color: Colors.grey[200],
-                                            fontSize: 18.0),
+                                            fontSize: 14.0),
                                       ),
                               ),
                             ),
