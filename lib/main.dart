@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 //TODO: repair design
 //TODO: login google & facebook with the same email bug
 //TODO: make stars functions in rating
-//TODO: fix whereIn and arrayContainsAny queries limitations
+
 // This is the main page.
 // From this page we are reaching all of the other pages and widgets in the app.
 void main() async {

@@ -12,6 +12,7 @@ class Search extends StatefulWidget {
   _SearchState createState() => _SearchState();
 }
 
+//TODO: fix whereIn and arrayContainsAny queries limitations if there's any
 class _SearchState extends State<Search>
     with AutomaticKeepAliveClientMixin<Search> {
   // Mixin - help us save he state of this page when we move to another page

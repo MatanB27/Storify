@@ -68,6 +68,7 @@ class _FollowingState extends State<Following> {
   @override
   void initState() {
     super.initState();
+    print(widget.followingList);
   }
 
   @override

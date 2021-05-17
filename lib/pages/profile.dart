@@ -44,6 +44,8 @@ class _ProfileState extends State<Profile> {
   // Will give us the number of the followers and a list of all the followers ids
   // We will use it at the init state
   getFollowers() async {
+    followingList.clear();
+    followersList.clear();
     await followersRef
         .doc(widget.profileId)
         .collection('userFollowers')
@@ -60,6 +62,8 @@ class _ProfileState extends State<Profile> {
   // Will give us the number of the following and a list of all the followers ids
   // We will use it at the init state
   getFollowing() async {
+    followingList.clear();
+    followersList.clear();
     await followingRef
         .doc(widget.profileId)
         .collection('userFollowing')
@@ -427,7 +431,7 @@ class _ProfileState extends State<Profile> {
                   height: 15.0,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -441,6 +445,7 @@ class _ProfileState extends State<Profile> {
                       children: [
                         SizedBox(
                           width: 12.0,
+                          height: 5,
                         ),
                         Text(
                           'Biography',
@@ -463,13 +468,13 @@ class _ProfileState extends State<Profile> {
                                         user.bio,
                                         style: TextStyle(
                                             color: Colors.grey[200],
-                                            fontSize: 18.0),
+                                            fontSize: 14.0),
                                       )
                                     : Text(
                                         'Biography is empty',
                                         style: TextStyle(
                                             color: Colors.grey[200],
-                                            fontSize: 18.0),
+                                            fontSize: 14.0),
                                       ),
                               ),
                             ),
@@ -558,8 +563,9 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    // getFollowers();
-    // getFollowing();
+    getFollowers();
+    getFollowing();
+    getStoriesCount();
     // buildProfileStories();
     checkIfFollowing();
   }
@@ -576,6 +582,7 @@ class _ProfileState extends State<Profile> {
   // When we pull the page, it will refresh it and fetch the new data.
   Future<Null> pullToRefresh() async {
     await Future.delayed(Duration(seconds: 1));
+
     setState(() {
       profileHeader();
       getFollowing();
@@ -587,9 +594,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    getFollowers();
-    getFollowing();
-    getStoriesCount();
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
