@@ -182,6 +182,7 @@ class _SearchState extends State<Search>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      //backgroundColor: Color(0xff09031D),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(

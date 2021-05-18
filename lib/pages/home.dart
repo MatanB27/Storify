@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
           SalomonBottomBarItem(
             icon: Icon(Icons.person),
             title: Text("Profile"),
-            selectedColor: Colors.teal,
+            selectedColor: Color(0xff09031D),
           ),
         ],
       ),

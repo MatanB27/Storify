@@ -471,7 +471,7 @@ class _ProfileState extends State<Profile> {
                                             fontSize: 14.0),
                                       )
                                     : Text(
-                                        'Biography is empty',
+                                        'Nothing here',
                                         style: TextStyle(
                                             color: Colors.grey[200],
                                             fontSize: 14.0),

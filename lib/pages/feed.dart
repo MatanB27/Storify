@@ -6,7 +6,6 @@ import 'package:storify/services/auth_service.dart';
 import 'read_story.dart';
 import 'package:storify/widgets/story_ticket.dart';
 
-//todo: read here
 //==============================the main feed code================//
 //pleas follow my comments
 

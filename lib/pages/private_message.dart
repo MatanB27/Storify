@@ -99,17 +99,6 @@ class _PrivateMessageState extends State<PrivateMessage> {
               ],
             ),
           ),
-          actions: [
-            IconButton(
-                icon: Icon(
-                  Icons.more_vert,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  //TODO : do something, might delete this icon
-                  print(widget.currentRoomId);
-                }),
-          ],
         );
       },
     );

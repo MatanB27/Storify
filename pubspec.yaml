@@ -43,13 +43,12 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/google_signin_button.png
-    - assets/images/continue_with_facebook.png
     - assets/images/logo.png
     - assets/land1.jpg
     - assets/images/landing2.jpg
     - assets/images/test11.png
     - assets/images/search_background.jpg
+    - assets/images/signin.jpg
 
   fonts:
   - family: Pacifico

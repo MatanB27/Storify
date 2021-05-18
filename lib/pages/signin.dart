@@ -69,8 +69,8 @@ class _SigninPageState extends State<SigninPage> {
               end: Alignment.centerRight,
             ),
             image: DecorationImage(
-              image: NetworkImage(
-                  'https://images.unsplash.com/photo-1497704628914-8772bb97f450?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80'), //the image that we see above the container
+              image: AssetImage(
+                  'assets/images/signin.jpg'), // The image that we see above the container
               fit: BoxFit.cover,
             ),
           ),

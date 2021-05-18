@@ -12,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../services/auth_service.dart';
 import 'home.dart';
 
+//TODO: improve UI
 class EditProfile extends StatefulWidget {
   final String currentUserId;
   EditProfile({this.currentUserId});
@@ -489,6 +490,7 @@ class _EditProfileState extends State<EditProfile> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
+        //backgroundColor: Color(0xff09031D),
         key: _scaffoldKey,
         appBar: AppBar(
           leading: IconButton(

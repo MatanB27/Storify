@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:storify/pages/read_story.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+//TODO: improve UI
 // Here we are building all of the story tickets.
 // Each story will have his own ticket, in the profile page or feed page
 class StoryTickets extends StatelessWidget {
