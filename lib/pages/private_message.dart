@@ -182,38 +182,39 @@ class _PrivateMessageState extends State<PrivateMessage> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-          backgroundColor: Colors.grey[350],
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(55.0),
-            child: header(),
-          ),
-          body: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                MessageStream(
-                  currentUserId: currentUserId,
-                  currentRoomId: widget.currentRoomId,
+        backgroundColor: Colors.grey[350],
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(55.0),
+          child: header(),
+        ),
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              MessageStream(
+                currentUserId: currentUserId,
+                currentRoomId: widget.currentRoomId,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.grey, width: 2.0),
+                  ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(color: Colors.grey, width: 2.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: sendMessageBlock(),
                     ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: sendMessageBlock(),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -292,7 +293,7 @@ class MessageStream extends StatelessWidget {
           return loading();
         }
         final messages = snapshot.data.docs;
-        var currentUser;
+        var currentUser; //TODO: maybe delete
         List<MessageBubbles> messageBubbles = [];
         for (var message in messages) {
           final messageText = message.data()['message'];

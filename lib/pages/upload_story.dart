@@ -8,7 +8,6 @@ import 'package:storify/pages/home.dart';
 import 'package:storify/pages/read_story.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/loading.dart';
-import 'package:uuid/uuid.dart';
 
 // The page where we uploading the story to the data base.
 class UploadStory extends StatefulWidget {
@@ -21,8 +20,8 @@ class UploadStory extends StatefulWidget {
 
 class _UploadStoryState extends State<UploadStory> {
   // Text fields variables
-  TextEditingController titleStory = TextEditingController();
-  TextEditingController story = TextEditingController();
+  TextEditingController titleStoryController = TextEditingController();
+  TextEditingController storyController = TextEditingController();
 
   // All the categories in Storify app.
   List<String> allCategories = [
@@ -49,11 +48,7 @@ class _UploadStoryState extends State<UploadStory> {
   bool isUploading = false;
 
   // Getting doc id for the storyID
-  String storyId = Uuid().v4();
-
-  // Getting doc id for the commentsID - every story will have his own
-  // Comments page
-  String commentsId = Uuid().v4();
+  String storyId;
 
   // Variables to fetch the name and photo from the user ref
   String name;
@@ -81,8 +76,8 @@ class _UploadStoryState extends State<UploadStory> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    titleStory.dispose();
-    story.dispose();
+    titleStoryController.dispose();
+    storyController.dispose();
     super.dispose();
   }
 
@@ -116,13 +111,14 @@ class _UploadStoryState extends State<UploadStory> {
   // Categories or the story itself
   // It will all add to the firebase.
   publishStory() async {
-    if (story.text.toString().trim().length < 20 ||
-        titleStory.text.toString().trim().length < 3 ||
+    if (storyController.text.toString().trim().length < 20 ||
+        titleStoryController.text.toString().trim().length < 3 ||
         chosenCategories.length == 0 ||
         _uploadedFileURL == null) {
       message('Make sure you fill everything correctly.');
     } else {
-      print(storyId);
+      // Generating random id from firebase
+      storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
       await storiesRef
           .doc(widget.userId)
           .collection('storyId')
@@ -130,14 +126,13 @@ class _UploadStoryState extends State<UploadStory> {
           .set({
         'uid': widget.userId,
         'sid': storyId,
-        'cid': commentsId,
         'displayName': name,
         'photoUrl': photo,
         'categories': chosenCategories,
         'storyPhoto': _uploadedFileURL,
-        'title': titleStory.text.toString(),
+        'title': titleStoryController.text.toString(),
         'timeStamp': DateTime.now(),
-        'story': story.text.toString(),
+        'story': storyController.text.toString(),
         'rating': 0 // Every rating will start with 0 - it will be change
         // According to the users rating
       });
@@ -148,21 +143,18 @@ class _UploadStoryState extends State<UploadStory> {
           builder: (context) => ReadStory(
             storyId: storyId,
             ownerId: widget.userId,
-            commentsId: commentsId,
           ),
         ),
       );
 
-      // We are reseting everything after we finish to upload the story.
+      // We are resetting everything after we finish to upload the story.
       setState(() {
-        storyId = Uuid().v4();
+        storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
         _uploadedFileURL = null;
         isUploading = false;
-        commentsId = Uuid().v4();
         file = null;
-        chosenCategories.clear();
-        story.clear();
-        titleStory.clear();
+        storyController.clear();
+        titleStoryController.clear();
       });
     }
   }
@@ -271,7 +263,7 @@ class _UploadStoryState extends State<UploadStory> {
             shrinkWrap: true,
             children: [
               TextFormField(
-                controller: titleStory,
+                controller: titleStoryController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -419,8 +411,8 @@ class _UploadStoryState extends State<UploadStory> {
                 height: 10,
               ),
               TextField(
-                controller: story,
-                maxLength: 5000,
+                controller: storyController,
+                maxLength: 7500,
                 maxLines: 30,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(

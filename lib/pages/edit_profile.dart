@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/services/keywords.dart';
 import 'package:storify/user.dart';
@@ -43,7 +44,6 @@ class _EditProfileState extends State<EditProfile> {
     Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
-  //TODO: edit in comment name or photo!!!!!
   // Alert dialog that will ask us if we want to log out
   Future<void> _confirmSignOut(BuildContext context) async {
     try {
@@ -89,7 +89,13 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-  // This function will help us update the data inside the chat Ref
+  //TODO: edit photo URL and displayName in the commentRef
+  // This function will help us to update the data inside the comment ref
+  updateNameInCommentRef() async {
+    String newName = displayNameController.text.toString();
+  }
+
+  // This function will help us to update the data inside the chat Ref
   updateNameInChatRef() async {
     // x will get all the data from the currentUser id
     DocumentSnapshot x = await userRef.doc(auth.currentUser.uid).get();
@@ -126,8 +132,10 @@ class _EditProfileState extends State<EditProfile> {
         });
   }
 
-  // Will update the profile photo in the user database and in chat database
+  // Will update the profile photo in the user database, chat database,
+  // Story database and comment database
   updateProfileData() async {
+    await updateNameInCommentRef();
     await updateNameInChatRef();
     await updateNameInStoriesRef();
     userRef.doc(auth.currentUser.uid).update({

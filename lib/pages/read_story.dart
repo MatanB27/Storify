@@ -2,10 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lipsum/lipsum.dart' as lipsuam;
 import 'package:animated_button/animated_button.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/pages/comments.dart';
 import 'package:storify/pages/home.dart';
+import 'package:storify/pages/profile.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:readmore/readmore.dart';
 import 'package:storify/services/loading.dart';
@@ -13,9 +14,8 @@ import 'package:storify/services/loading.dart';
 class ReadStory extends StatefulWidget {
   final String storyId;
   final String ownerId;
-  final String commentsId;
 
-  ReadStory({this.storyId, this.ownerId, this.commentsId});
+  ReadStory({this.storyId, this.ownerId});
   @override
   _ReadStoryState createState() => _ReadStoryState();
 }
@@ -29,6 +29,9 @@ class _ReadStoryState extends State<ReadStory> {
   List<String> categories = [];
   String storyPhoto = '';
   String story = '';
+  Timestamp timeStamp;
+  String ownerUserId; // The story teller ID
+  final String currentUserId = auth.currentUser?.uid; // the current user ID
 
   // The init state of the app, we are getting the info
   // of the story from here
@@ -38,25 +41,27 @@ class _ReadStoryState extends State<ReadStory> {
     // print(widget.storyId);
     // print(widget.commentsId);
     // print(widget.ownerId);
-    //getInfo();
+
+    // getInfo();
   }
 
-  getInfo() async {
-    DocumentSnapshot doc = await storiesRef
-        .doc(widget.ownerId)
-        .collection('storyId')
-        .doc(widget.storyId)
-        .get();
-    if (!doc.exists) {
-      return loading();
-    }
-    photoUrl = doc.get('photoUrl');
-    displayName = doc.get('displayName');
-    title = doc.get('title');
-    categories = doc.get('categories');
-    storyPhoto = doc.get('storyPhoto');
-    story = doc.get('story');
-  }
+  // getInfo() async { //TODO: maybe delete
+  //   DocumentSnapshot doc = await storiesRef
+  //       .doc(widget.ownerId)
+  //       .collection('storyId')
+  //       .doc(widget.storyId)
+  //       .get();
+  //   if (!doc.exists) {
+  //     return loading();
+  //   }
+  //   photoUrl = doc.get('photoUrl');
+  //   displayName = doc.get('displayName');
+  //   title = doc.get('title');
+  //   categories = doc.get('categories');
+  //   storyPhoto = doc.get('storyPhoto');
+  //   story = doc.get('story');
+  //   print(story.length);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +85,8 @@ class _ReadStoryState extends State<ReadStory> {
             categories = List.from(doc.data()['categories']);
             storyPhoto = doc.data()['storyPhoto'];
             story = doc.data()['story'];
+            timeStamp = doc.data()['timeStamp'];
+            ownerUserId = doc.data()['uid'];
           });
           return Scaffold(
             backgroundColor: Colors.white,
@@ -94,13 +101,18 @@ class _ReadStoryState extends State<ReadStory> {
                     SizedBox(
                       height: 20,
                     ),
-                    Center(
-                      child: Text(
-                        displayName,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
+                    GestureDetector(
+                      onTap: () {
+                        showProfile(context, profileId: ownerUserId);
+                      },
+                      child: Center(
+                        child: Text(
+                          displayName,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
                         ),
                       ),
                     ),
@@ -109,11 +121,16 @@ class _ReadStoryState extends State<ReadStory> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    radius: 27,
-                    backgroundImage: CachedNetworkImageProvider(photoUrl),
+                GestureDetector(
+                  onTap: () {
+                    showProfile(context, profileId: ownerUserId);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      radius: 27,
+                      backgroundImage: CachedNetworkImageProvider(photoUrl),
+                    ),
                   ),
                 ),
               ],
@@ -160,18 +177,24 @@ class _ReadStoryState extends State<ReadStory> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
                     Row(
                       children: [
+                        Icon(
+                          Icons.date_range_rounded,
+                          color: Colors.grey[700],
+                          size: 20,
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Written by ' + displayName,
+                            timeStamp.toDate().day.toString() +
+                                '/' +
+                                timeStamp.toDate().month.toString() +
+                                '/' +
+                                timeStamp.toDate().year.toString(),
                             style: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xffC3C3E0),
+                              fontSize: 16,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
@@ -184,7 +207,10 @@ class _ReadStoryState extends State<ReadStory> {
                       padding: const EdgeInsets.all(8.0),
                       child: ReadMoreText(
                         story,
-                        trimLines: 2,
+                        delimiter: ' ',
+                        trimCollapsedText: ' read more',
+                        trimExpandedText: ' show less',
+                        trimLength: 300,
                         colorClickableText: Colors.grey,
                         style: TextStyle(
                           color: Colors.black,
@@ -227,7 +253,12 @@ class _ReadStoryState extends State<ReadStory> {
                         ],
                       ),
                       onPressed: () {
-                        getInfo();
+                        showComments(
+                          context,
+                          storyId: widget.storyId,
+                          currentUserId: currentUserId,
+                          ownerUserId: widget.ownerId,
+                        );
                       },
                       height: 40,
                       shadowDegree: ShadowDegree.dark,
@@ -252,7 +283,6 @@ readStory(BuildContext context,
     MaterialPageRoute(
       builder: (context) => ReadStory(
         storyId: storyId,
-        commentsId: commentId,
         ownerId: ownerId,
       ),
     ),
