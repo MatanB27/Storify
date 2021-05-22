@@ -36,6 +36,7 @@ class _UploadStoryState extends State<UploadStory> {
     'Romantic',
     'Novel',
     'Science',
+    'Action',
   ];
 
   // Chosen categories -> up to 3 categories
@@ -119,11 +120,11 @@ class _UploadStoryState extends State<UploadStory> {
     } else {
       // Generating random id from firebase
       storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
-      await storiesRef
-          .doc(widget.userId)
-          .collection('storyId')
-          .doc(storyId)
-          .set({
+      await userRef.doc(widget.userId).set({
+        'stories': FieldValue.arrayUnion([storyId]),
+      }, SetOptions(merge: true));
+
+      await storiesRef.doc(storyId).set({
         'uid': widget.userId,
         'sid': storyId,
         'displayName': name,

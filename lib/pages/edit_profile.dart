@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/services/keywords.dart';
 import 'package:storify/user.dart';
@@ -89,10 +88,69 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-  //TODO: edit photo URL and displayName in the commentRef
+//   String newPhoto = _uploadedFileURL; //TODO: DELETE
+//   QuerySnapshot x =
+//       await storiesRef.doc(auth.currentUser.uid).collection('storyId').get();
+//   x.docs.forEach((element) async {
+//   await storiesRef
+//       .doc(auth.currentUser.uid)
+//       .collection('storyId')
+//       .doc(element.id)
+//       .update({
+//   'photoUrl': newPhoto,
+//   });
+// });
+
   // This function will help us to update the data inside the comment ref
   updateNameInCommentRef() async {
     String newName = displayNameController.text.toString();
+
+    QuerySnapshot docStories = await storiesRef.get();
+    if (docStories.docs.length > 0) {
+      List<DocumentSnapshot> doc = docStories.docs;
+
+      doc.forEach((element) {
+        commentsRef
+            .doc(element.id)
+            .collection('userId')
+            .doc(widget.currentUserId)
+            .update({'displayName': newName});
+      });
+    }
+  }
+
+  // updatePhotoInStoriesRef() async {
+  //   // The new photo
+  //   String newPhoto = _uploadedFileURL;
+  //   QuerySnapshot x =
+  //   await storiesRef.doc(auth.currentUser.uid).collection('storyId').get();
+  //   x.docs.forEach((element) async {
+  //     await storiesRef
+  //         .doc(auth.currentUser.uid)
+  //         .collection('storyId')
+  //         .doc(element.id)
+  //         .update({
+  //       'photoUrl': newPhoto,
+  //     });
+  //   });
+  // }
+
+  // Updating the photo in the photo ref
+  updatePhotoInCommentRef() async {
+    String newPhoto = _uploadedFileURL;
+
+    QuerySnapshot docStories = await storiesRef.get();
+    if (docStories.docs.length > 0) {
+      List<DocumentSnapshot> doc = docStories.docs;
+
+      doc.forEach((element) {
+        commentsRef
+            .doc(element.id)
+            .collection('userId')
+            .doc(widget.currentUserId)
+            .update({'photoUrl': newPhoto});
+      });
+    }
   }
 
   // This function will help us to update the data inside the chat Ref
@@ -102,34 +160,39 @@ class _EditProfileState extends State<EditProfile> {
 
     // Here we are inserting all of the user rooms id in userRef.
     Map<dynamic, dynamic> map = x.get('messages');
+
     List<dynamic> userRooms = [];
     map.forEach((key, value) {
       userRooms.add(value);
     });
-    print(userRooms);
+    //print(userRooms);
 
-    // We are filtering the chatRef with the user ids that we got
-    var y = chatRef.where('rid', whereIn: userRooms).get();
+    // Check if collection exist:
+    var snap = await chatRef.get();
+    if (snap.docs.length > 0) {
+      // We are filtering the chatRef with the user ids that we got
+      var y = chatRef.where('rid', whereIn: userRooms).get();
 
-    // The new name
-    String newName = displayNameController.text.toString();
+      // The new name
+      String newName = displayNameController.text.toString();
 
-    // The update itself, we are checking who is the user and according to
-    // The result we decide in which index we are changing the name
-    y.then((value) => {
-          value.docs.forEach((element) {
-            //We are only doing it if the element exist.
-            if (element.exists) {
-              String currentName = element.data()['names'][0];
-              String otherName = element.data()['names'][1];
-              chatRef.doc(element.id).update({
-                'names': auth.currentUser.uid == element.data()['ids'][0]
-                    ? [newName, otherName]
-                    : [currentName, newName],
-              });
-            }
-          }),
-        });
+      // The update itself, we are checking who is the user and according to
+      // The result we decide in which index we are changing the name
+      y.then((value) => {
+            value.docs.forEach((element) {
+              //We are only doing it if the element exist.
+              if (element.exists) {
+                String currentName = element.data()['names'][0];
+                String otherName = element.data()['names'][1];
+                chatRef.doc(element.id).update({
+                  'names': auth.currentUser.uid == element.data()['ids'][0]
+                      ? [newName, otherName]
+                      : [currentName, newName],
+                });
+              }
+            }),
+          });
+    }
   }
 
   // Will update the profile photo in the user database, chat database,
@@ -138,6 +201,7 @@ class _EditProfileState extends State<EditProfile> {
     await updateNameInCommentRef();
     await updateNameInChatRef();
     await updateNameInStoriesRef();
+
     userRef.doc(auth.currentUser.uid).update({
       "displayName": displayNameController.text,
       "displayNameSearch": displayNameController.text.toLowerCase(),
@@ -254,8 +318,10 @@ class _EditProfileState extends State<EditProfile> {
     userRef.doc(auth.currentUser.uid).update({
       "photoUrl": _uploadedFileURL,
     });
+    await updateNameInCommentRef();
     await updatePhotoInStoriesRef();
     await updatePhotoInChatRef();
+    await updatePhotoInCommentRef();
     return _uploadedFileURL;
   }
 

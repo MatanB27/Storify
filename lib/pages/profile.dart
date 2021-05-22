@@ -512,11 +512,7 @@ class _ProfileState extends State<Profile> {
   // One is the userRef and the other storiesRef
   buildProfileStories() {
     return FutureBuilder(
-      future: storiesRef
-          .doc(widget.profileId)
-          .collection('storyId')
-          .orderBy('timeStamp', descending: true)
-          .get(),
+      future: storiesRef.orderBy('timeStamp', descending: true).get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return loading();
