@@ -23,10 +23,15 @@ class _FollowingState extends State<Following> {
     await Future.delayed(Duration(seconds: 1));
     setState(() {
       buildFollowingTickets();
+      getIds();
     });
     return null;
   }
 
+  getIds() {
+    var doc = followingRef.get();
+    doc.then((value) => {print(value.docs)});
+  }
   // Here we are building the following tickets according to who are
   // We following, and it will build a user ticket to each one!
 
@@ -67,7 +72,8 @@ class _FollowingState extends State<Following> {
   @override
   void initState() {
     super.initState();
-    print(widget.followingList);
+    //print(widget.followingList);
+    print(widget.followingId);
   }
 
   @override

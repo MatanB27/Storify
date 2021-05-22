@@ -55,6 +55,8 @@ class _CommentsState extends State<Comments> {
             .get();
 
         if (!commentDoc.exists) {
+          // Creating first the document
+          commentsRef.doc(widget.storyId).set({});
           commentsRef
               .doc(widget.storyId)
               .collection('userId')

@@ -24,6 +24,7 @@ class _FollowersState extends State<Followers> {
     setState(() {
       buildFollowersTickets();
     });
+
     return null;
   }
 
@@ -68,7 +69,8 @@ class _FollowersState extends State<Followers> {
   @override
   void initState() {
     super.initState();
-    print(widget.followersList);
+    //print(widget.followersList);
+    print(widget.followersId);
   }
 
   // Disposing page

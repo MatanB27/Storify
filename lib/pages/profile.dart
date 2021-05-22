@@ -87,6 +87,8 @@ class _ProfileState extends State<Profile> {
 
     var doc1 = userRef.doc(currentUserId).get();
     doc1.then((value) => {
+          // Im creating first the doc - so it wont be a dummy JSON
+          followersRef.doc(widget.profileId).set({}),
           followersRef
               .doc(widget.profileId)
               .collection('userFollowers')
@@ -100,6 +102,7 @@ class _ProfileState extends State<Profile> {
 
     var doc2 = userRef.doc(widget.profileId).get();
     doc2.then((value) => {
+          followingRef.doc(currentUserId).set({}),
           followingRef
               .doc(currentUserId)
               .collection('userFollowing')
@@ -512,7 +515,11 @@ class _ProfileState extends State<Profile> {
   // One is the userRef and the other storiesRef
   buildProfileStories() {
     return FutureBuilder(
-      future: storiesRef.orderBy('timeStamp', descending: true).get(),
+      future: storiesRef
+          .doc(widget.profileId)
+          .collection('storyId')
+          .orderBy('timeStamp', descending: true)
+          .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return loading();

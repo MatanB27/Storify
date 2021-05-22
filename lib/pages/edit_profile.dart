@@ -88,67 +88,114 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-//   String newPhoto = _uploadedFileURL; //TODO: DELETE
-//   QuerySnapshot x =
-//       await storiesRef.doc(auth.currentUser.uid).collection('storyId').get();
-//   x.docs.forEach((element) async {
-//   await storiesRef
-//       .doc(auth.currentUser.uid)
-//       .collection('storyId')
-//       .doc(element.id)
-//       .update({
-//   'photoUrl': newPhoto,
-//   });
-// });
+  // Updating the photo in the photo ref
+  updatePhotoInCommentRef() async {
+    String newPhoto = _uploadedFileURL;
+
+    var doc = await commentsRef.get();
+    if (doc.docs.length > 0) {
+      doc.docs.forEach((element) {
+        element.reference
+            .collection('userId')
+            .where('uid', isEqualTo: widget.currentUserId)
+            .get()
+            .then((value) => {
+                  value.docs.forEach((element) {
+                    element.reference.update({'photoUrl': newPhoto});
+                  })
+                });
+      });
+    }
+  }
 
   // This function will help us to update the data inside the comment ref
   updateNameInCommentRef() async {
     String newName = displayNameController.text.toString();
 
-    QuerySnapshot docStories = await storiesRef.get();
-    if (docStories.docs.length > 0) {
-      List<DocumentSnapshot> doc = docStories.docs;
-
-      doc.forEach((element) {
-        commentsRef
-            .doc(element.id)
+    var doc = await commentsRef.get();
+    if (doc.docs.length > 0) {
+      doc.docs.forEach((element) {
+        element.reference
             .collection('userId')
-            .doc(widget.currentUserId)
-            .update({'displayName': newName});
+            .where('uid', isEqualTo: widget.currentUserId)
+            .get()
+            .then((value) => {
+                  value.docs.forEach((element) {
+                    element.reference.update({'displayName': newName});
+                  })
+                });
       });
     }
   }
 
-  // updatePhotoInStoriesRef() async {
-  //   // The new photo
-  //   String newPhoto = _uploadedFileURL;
-  //   QuerySnapshot x =
-  //   await storiesRef.doc(auth.currentUser.uid).collection('storyId').get();
-  //   x.docs.forEach((element) async {
-  //     await storiesRef
-  //         .doc(auth.currentUser.uid)
-  //         .collection('storyId')
-  //         .doc(element.id)
-  //         .update({
-  //       'photoUrl': newPhoto,
-  //     });
-  //   });
-  // }
+  // Updating the name in following and followers REF!
+  updateNameInFollowingAndFollowersRef() async {
+    String newName = displayNameController.text.toString();
 
-  // Updating the photo in the photo ref
-  updatePhotoInCommentRef() async {
+    // In followingRef
+    var followingDoc = await followingRef.get();
+    if (followingDoc.docs.length > 0) {
+      followingDoc.docs.forEach((element) {
+        element.reference
+            .collection('userFollowing')
+            .where('id', isEqualTo: widget.currentUserId)
+            .get()
+            .then((value) => {
+                  value.docs.forEach((element) {
+                    element.reference.update({'displayName': newName});
+                  })
+                });
+      });
+    }
+    // In followerRef
+    var followerDoc = await followersRef.get();
+    if (followerDoc.docs.length > 0) {
+      followerDoc.docs.forEach((element) {
+        element.reference
+            .collection('userFollowers')
+            .where('id', isEqualTo: widget.currentUserId)
+            .get()
+            .then((value) => {
+                  value.docs.forEach((element) {
+                    element.reference.update({'displayName': newName});
+                  })
+                });
+      });
+    }
+  }
+
+  // Updating the photo in following and followers REF!
+  updatePhotoInFollowingAndFollowersRef() async {
     String newPhoto = _uploadedFileURL;
 
-    QuerySnapshot docStories = await storiesRef.get();
-    if (docStories.docs.length > 0) {
-      List<DocumentSnapshot> doc = docStories.docs;
-
-      doc.forEach((element) {
-        commentsRef
-            .doc(element.id)
-            .collection('userId')
-            .doc(widget.currentUserId)
-            .update({'photoUrl': newPhoto});
+    // In followingRef
+    var followingDoc = await followingRef.get();
+    if (followingDoc.docs.length > 0) {
+      followingDoc.docs.forEach((element) {
+        element.reference
+            .collection('userFollowing')
+            .where('id', isEqualTo: widget.currentUserId)
+            .get()
+            .then((value) => {
+                  value.docs.forEach((element) {
+                    element.reference.update({'photoUrl': newPhoto});
+                  })
+                });
+      });
+    }
+    // In followerRef
+    var followerDoc = await followersRef.get();
+    if (followerDoc.docs.length > 0) {
+      followerDoc.docs.forEach((element) {
+        element.reference
+            .collection('userFollowers')
+            .where('id', isEqualTo: widget.currentUserId)
+            .get()
+            .then((value) => {
+                  value.docs.forEach((element) {
+                    element.reference.update({'photoUrl': newPhoto});
+                  })
+                });
       });
     }
   }
@@ -201,6 +248,7 @@ class _EditProfileState extends State<EditProfile> {
     await updateNameInCommentRef();
     await updateNameInChatRef();
     await updateNameInStoriesRef();
+    await updateNameInFollowingAndFollowersRef();
 
     userRef.doc(auth.currentUser.uid).update({
       "displayName": displayNameController.text,
@@ -318,10 +366,11 @@ class _EditProfileState extends State<EditProfile> {
     userRef.doc(auth.currentUser.uid).update({
       "photoUrl": _uploadedFileURL,
     });
-    await updateNameInCommentRef();
+    //await updateNameInCommentRef();
     await updatePhotoInStoriesRef();
     await updatePhotoInChatRef();
     await updatePhotoInCommentRef();
+    await updatePhotoInFollowingAndFollowersRef();
     return _uploadedFileURL;
   }
 

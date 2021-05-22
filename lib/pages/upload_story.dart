@@ -8,6 +8,7 @@ import 'package:storify/pages/home.dart';
 import 'package:storify/pages/read_story.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/loading.dart';
+import 'package:uuid/uuid.dart';
 
 // The page where we uploading the story to the data base.
 class UploadStory extends StatefulWidget {
@@ -49,7 +50,7 @@ class _UploadStoryState extends State<UploadStory> {
   bool isUploading = false;
 
   // Getting doc id for the storyID
-  String storyId;
+  String storyId = Uuid().v4();
 
   // Variables to fetch the name and photo from the user ref
   String name;
@@ -119,12 +120,14 @@ class _UploadStoryState extends State<UploadStory> {
       message('Make sure you fill everything correctly.');
     } else {
       // Generating random id from firebase
-      storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
-      await userRef.doc(widget.userId).set({
-        'stories': FieldValue.arrayUnion([storyId]),
-      }, SetOptions(merge: true));
-
-      await storiesRef.doc(storyId).set({
+      //storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
+      // First we are creating the doc story
+      await storiesRef.doc(widget.userId).set({});
+      await storiesRef
+          .doc(widget.userId)
+          .collection('storyId')
+          .doc(storyId)
+          .set({
         'uid': widget.userId,
         'sid': storyId,
         'displayName': name,
@@ -150,7 +153,7 @@ class _UploadStoryState extends State<UploadStory> {
 
       // We are resetting everything after we finish to upload the story.
       setState(() {
-        storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
+        storyId = Uuid().v4();
         _uploadedFileURL = null;
         isUploading = false;
         file = null;
