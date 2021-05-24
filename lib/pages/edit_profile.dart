@@ -5,7 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/services/database.dart';
 import 'package:storify/services/keywords.dart';
+import 'package:storify/services/navigator_to_pages.dart';
+import 'package:storify/services/scaffold_message.dart';
 import 'package:storify/user.dart';
 import 'package:storify/services/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -256,14 +259,7 @@ class _EditProfileState extends State<EditProfile> {
       "bio": bioController.text,
       "keywords": setSearchParam(displayNameController.text.toString()),
     });
-    final snackBar = SnackBar(
-      content: Text('Profile has been update successfully!'),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {}, // No need to put anything, just click "Undo"
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    showMessage(context, 'Profile has been updated successfully!');
   }
 
   updatePhotoInStoriesRef() async {
@@ -329,7 +325,7 @@ class _EditProfileState extends State<EditProfile> {
   // Will become false
   void takePhoto(bool isGallery) async {
     try {
-      Navigator.pop(context);
+      goBack(context);
       if (isGallery) {
         File file = await ImagePicker.pickImage(source: ImageSource.gallery);
         setState(
@@ -547,7 +543,7 @@ class _EditProfileState extends State<EditProfile> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => goBack(context),
                         child: Text(
                           'cancel',
                           style: TextStyle(
@@ -619,7 +615,7 @@ class _EditProfileState extends State<EditProfile> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             color: Colors.black,
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => goBack(context),
           ),
           title: Text(
             'Edit profile',

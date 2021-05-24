@@ -5,9 +5,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
-import 'package:storify/pages/read_story.dart';
 import 'package:storify/services/auth_service.dart';
+import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
+import 'package:storify/services/navigator_to_pages.dart';
+import 'package:storify/services/scaffold_message.dart';
 import 'package:uuid/uuid.dart';
 
 // The page where we uploading the story to the data base.
@@ -52,6 +54,9 @@ class _UploadStoryState extends State<UploadStory> {
   // Getting doc id for the storyID
   String storyId = Uuid().v4();
 
+  // The current user who is logged in
+  final String currentUserId = auth.currentUser?.uid;
+
   // Variables to fetch the name and photo from the user ref
   String name;
   String photo;
@@ -63,7 +68,7 @@ class _UploadStoryState extends State<UploadStory> {
       String category = allCategories.removeAt(index);
       chosenCategories.add(category);
     } else {
-      message('You already have 3 genres');
+      showMessage(context, 'You already have 3 genres');
     }
   }
 
@@ -81,18 +86,6 @@ class _UploadStoryState extends State<UploadStory> {
     titleStoryController.dispose();
     storyController.dispose();
     super.dispose();
-  }
-
-  // Will give some kind of a message at the bottom of the screen
-  message(String text) {
-    final snackBar = SnackBar(
-      content: Text(text),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {}, // No need to put anything, just click "Undo"
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   getDisplayNameAndPhoto() async {
@@ -117,11 +110,13 @@ class _UploadStoryState extends State<UploadStory> {
         titleStoryController.text.toString().trim().length < 3 ||
         chosenCategories.length == 0 ||
         _uploadedFileURL == null) {
-      message('Make sure you fill everything correctly.');
+      showMessage(context, 'Make sure you fill everything correctly.');
     } else {
-      // Generating random id from firebase
-      //storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
-      // First we are creating the doc story
+      /*
+         Generating random id from firebase
+         storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
+         First we are creating the doc story
+      */
       await storiesRef.doc(widget.userId).set({});
       await storiesRef
           .doc(widget.userId)
@@ -133,6 +128,9 @@ class _UploadStoryState extends State<UploadStory> {
         'displayName': name,
         'photoUrl': photo,
         'categories': chosenCategories,
+        'average': 0, // Average score
+        'countRating': 0, // How many ratings the story got
+        'total': 0, // Total score (to calculate average)
         'storyPhoto': _uploadedFileURL,
         'title': titleStoryController.text.toString(),
         'timeStamp': DateTime.now(),
@@ -140,16 +138,9 @@ class _UploadStoryState extends State<UploadStory> {
         'rating': 0 // Every rating will start with 0 - it will be change
         // According to the users rating
       });
-      message('Congratulations, You posted a new story!');
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ReadStory(
-            storyId: storyId,
-            ownerId: widget.userId,
-          ),
-        ),
-      );
+      showMessage(context, 'Congratulations, You posted a new story!');
+
+      await showReadStory(context, storyId: storyId, ownerId: widget.userId);
 
       // We are resetting everything after we finish to upload the story.
       setState(() {
@@ -210,7 +201,7 @@ class _UploadStoryState extends State<UploadStory> {
   // Will become false
   void takePhoto(bool isGallery) async {
     try {
-      Navigator.pop(context);
+      goBack(context);
       if (isGallery) {
         File file = await ImagePicker.pickImage(source: ImageSource.gallery);
         setState(
@@ -240,8 +231,9 @@ class _UploadStoryState extends State<UploadStory> {
 
   // Upload the photo
   Future<String> uploadImage(imageFile) async {
-    firebase_storage.UploadTask uploadTask =
-        storageRef.child("story_${storyId}.jpg").putFile(imageFile);
+    firebase_storage.UploadTask uploadTask = storageRef
+        .child("story_ " + storyId + "_" + currentUserId + ".jpg")
+        .putFile(imageFile);
     var imageUrl = await (await uploadTask).ref.getDownloadURL();
     _uploadedFileURL = imageUrl.toString();
 

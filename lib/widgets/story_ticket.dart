@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:storify/pages/read_story.dart';
+import 'package:storify/services/navigator_to_pages.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:storify/services/database.dart';
 
 //TODO: improve UI
 // Here we are building all of the story tickets.
@@ -41,8 +42,9 @@ class StoryTickets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: () {
-        readStory(context,
+      onPressed: () async {
+        await getAverageRatingFromStoriesRef(storyId);
+        showReadStory(context,
             storyId: this.storyId, commentId: this.commentId, ownerId: ownerId);
       },
       child: Card(

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:storify/pages/private_message.dart';
+import 'package:storify/services/navigator_to_pages.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Here we are building all of the chat history tickets
-// According to the attributes
+/*
+   Here we are building all of the chat history tickets
+  According to the attributes
+ */
 class ChatHistory extends StatelessWidget {
   final String rid; // Room ID
   final String id; // User ID

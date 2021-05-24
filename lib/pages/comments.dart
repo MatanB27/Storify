@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/pages/home.dart';
 import 'package:storify/services/auth_service.dart';
+import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
+import 'package:storify/services/rating.dart';
 import 'package:storify/widgets/comment_ticket.dart';
 
 class Comments extends StatefulWidget {
@@ -25,7 +26,7 @@ class _CommentsState extends State<Comments> {
   }
 
   // The current rating a user can choose. it can be changed
-  int rating = 50;
+  dynamic rating = 50;
 
   // comment controller for the text field
   TextEditingController commentController = TextEditingController();
@@ -56,6 +57,9 @@ class _CommentsState extends State<Comments> {
 
         if (!commentDoc.exists) {
           // Creating first the document
+
+          await updateAverageStoryRating(
+              rating, widget.storyId, widget.ownerUserId);
           commentsRef.doc(widget.storyId).set({});
           commentsRef
               .doc(widget.storyId)
@@ -133,10 +137,7 @@ class _CommentsState extends State<Comments> {
   sendCommentBlock() {
     return Column(
       children: [
-        Text(
-          rating.toString(),
-          style: TextStyle(fontSize: 17.0),
-        ),
+        ratingStars(rating, 22, true),
         SliderTheme(
           data: SliderThemeData(
             activeTrackColor: Colors.blueAccent,
@@ -230,23 +231,4 @@ class _CommentsState extends State<Comments> {
       ),
     );
   }
-}
-
-// With this method we can go into the comment page of the story
-// We are getting as arguments userid and storyid
-// Storyid - help us to know which comments page are we
-// userId =- help us to know the current user so he can write a comment
-// ownerUserId = help us to know the id of the story owner
-showComments(BuildContext context,
-    {String storyId, String ownerUserId, String currentUserId}) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => Comments(
-        storyId: storyId,
-        currentUserId: currentUserId,
-        ownerUserId: ownerUserId,
-      ),
-    ),
-  );
 }

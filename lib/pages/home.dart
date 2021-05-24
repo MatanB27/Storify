@@ -15,19 +15,6 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 UserClass currentUserHome; //current user
 DateTime timestampNow = DateTime.now(); // The time the user was created
-final userRef = FirebaseFirestore.instance.collection('users'); // Users ref
-final storageRef = FirebaseStorage.instance.ref(); // Storage ref
-final chatRef = FirebaseFirestore.instance.collection('chatrooms'); // Chat ref
-final messageRef =
-    FirebaseFirestore.instance.collection('messages'); // MessageRef
-final followingRef =
-    FirebaseFirestore.instance.collection('following'); // Following ref
-final followersRef =
-    FirebaseFirestore.instance.collection('followers'); // Followers ref
-final storiesRef =
-    FirebaseFirestore.instance.collection('stories'); // Stories ref
-final commentsRef =
-    FirebaseFirestore.instance.collection('comments'); // Comments ref
 
 AuthService auth = new AuthService();
 

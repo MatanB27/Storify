@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/services/auth_service.dart';
-import 'package:storify/pages/profile.dart';
+import 'package:storify/services/database.dart';
+import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/user.dart';
 import 'package:storify/services/loading.dart';
 import '../services/loading.dart';
@@ -68,18 +69,11 @@ class _PrivateMessageState extends State<PrivateMessage> {
               Icons.arrow_back,
               color: Colors.black,
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => goBack(context),
           ),
           title: GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Profile(
-                    profileId: widget.privateId,
-                  ),
-                ),
-              );
+              showProfile(context, profileId: widget.privateId);
             },
             child: Row(
               children: [
@@ -317,18 +311,4 @@ class MessageStream extends StatelessWidget {
       },
     );
   }
-}
-
-// When we click on the chat history tickets - it will send us to the
-//Private message page, We are using this method in chat_history widget
-showPrivateMessage(BuildContext context, {String privateId, String roomId}) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => PrivateMessage(
-        privateId: privateId,
-        currentRoomId: roomId,
-      ),
-    ),
-  );
 }

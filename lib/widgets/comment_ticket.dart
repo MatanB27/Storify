@@ -1,10 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:storify/pages/profile.dart';
+import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/services/rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+/*
+  This page is the comment tickets in the comment's page
+  It will show the UI with the current data from firebaes
+ */
 class CommentTicket extends StatelessWidget {
   final String uid; // user ID
   final String displayName;
@@ -43,7 +47,7 @@ class CommentTicket extends StatelessWidget {
                 this.displayName,
                 style: TextStyle(fontSize: 18.0),
               ),
-              subtitle: ratingStars(rating),
+              subtitle: ratingStars(rating, 32.0, false),
               isThreeLine: true,
             ),
             Text(

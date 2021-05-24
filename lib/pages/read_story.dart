@@ -4,12 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_button/animated_button.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/pages/comments.dart';
 import 'package:storify/pages/home.dart';
-import 'package:storify/pages/profile.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:readmore/readmore.dart';
+import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
+import 'package:storify/services/navigator_to_pages.dart';
+import 'package:storify/services/rating.dart';
 
 class ReadStory extends StatefulWidget {
   final String storyId;
@@ -30,6 +31,7 @@ class _ReadStoryState extends State<ReadStory> {
   String storyPhoto = '';
   String story = '';
   Timestamp timeStamp;
+  dynamic average;
   String ownerUserId; // The story teller ID
   final String currentUserId = auth.currentUser?.uid; // the current user ID
 
@@ -87,6 +89,7 @@ class _ReadStoryState extends State<ReadStory> {
             story = doc.data()['story'];
             timeStamp = doc.data()['timeStamp'];
             ownerUserId = doc.data()['uid'];
+            average = doc.data()['average'];
           });
           return Scaffold(
             backgroundColor: Colors.white,
@@ -166,6 +169,10 @@ class _ReadStoryState extends State<ReadStory> {
                     ),
                     SizedBox(
                       height: 15,
+                    ),
+                    ratingStars(average, 50.0, true),
+                    SizedBox(
+                      height: 8.0,
                     ),
                     Container(
                       height: 250,
@@ -273,18 +280,4 @@ class _ReadStoryState extends State<ReadStory> {
       ),
     );
   }
-}
-
-// Method that help us go inside the read story.
-readStory(BuildContext context,
-    {String storyId, String commentId, String ownerId}) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ReadStory(
-        storyId: storyId,
-        ownerId: ownerId,
-      ),
-    ),
-  );
 }

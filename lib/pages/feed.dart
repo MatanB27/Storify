@@ -155,6 +155,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       return InkWell(
                         onTap: () {
                           Navigator.push(
+                              //TODO: put it in the navigator_to_page
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ReadStory(),

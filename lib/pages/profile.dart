@@ -2,16 +2,14 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/pages/following.dart';
 import 'package:storify/pages/home.dart';
+import 'package:storify/services/database.dart';
+import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/user.dart';
 import 'package:storify/services/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:storify/pages/edit_profile.dart';
 import '../services/auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';
-import 'package:storify/pages/private_message.dart';
-import 'package:storify/pages/followers.dart';
 
 class Profile extends StatefulWidget {
   final String profileId;
@@ -207,6 +205,7 @@ class _ProfileState extends State<Profile> {
                     Padding(
                       padding: const EdgeInsets.only(left: 28.0, top: 7.0),
                       child: CircleAvatar(
+                        backgroundColor: Colors.lightBlueAccent,
                         backgroundImage:
                             CachedNetworkImageProvider(user.photoUrl),
                         radius: 44,
@@ -276,15 +275,9 @@ class _ProfileState extends State<Profile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Followers(
-                              followersId: widget.profileId,
-                              followersList: followersList,
-                            ),
-                          ),
-                        );
+                        showFollowers(context,
+                            profileId: widget.profileId,
+                            followersList: followingList);
                       },
                       child: Container(
                         child: Column(
@@ -322,15 +315,9 @@ class _ProfileState extends State<Profile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Following(
-                              followingId: widget.profileId,
-                              followingList: followingList,
-                            ),
-                          ),
-                        );
+                        showFollowing(context,
+                            profileId: widget.profileId,
+                            followingList: followingList);
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -408,15 +395,9 @@ class _ProfileState extends State<Profile> {
                                     borderRadius: BorderRadius.circular(20)),
                                 onPressed: () async {
                                   await createRoomInFirebase();
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PrivateMessage(
-                                        privateId: widget.profileId,
-                                        currentRoomId: currentRoomId,
-                                      ),
-                                    ),
-                                  );
+                                  await showPrivateMessage(context,
+                                      privateId: widget.profileId,
+                                      roomId: currentRoomId);
                                 },
                                 color: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
@@ -552,14 +533,7 @@ class _ProfileState extends State<Profile> {
 
   // When we are in our own profile - we can click this button
   void editProfile() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProfile(
-          currentUserId: currentUserId,
-        ),
-      ),
-    );
+    showEditProfile(context, currentUserId);
   }
 
   // Init state of the app
@@ -628,17 +602,4 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-}
-
-// When we click on the user tickets - it will send us to the profile page
-// We are using this method in user_ticket widget
-showProfile(BuildContext context, {String profileId}) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => Profile(
-        profileId: profileId,
-      ),
-    ),
-  );
 }
