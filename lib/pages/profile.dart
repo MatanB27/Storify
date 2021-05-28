@@ -39,8 +39,10 @@ class _ProfileState extends State<Profile> {
   List<String> followingList = [];
   List<String> followersList = [];
 
-  // Will give us the number of the followers and a list of all the followers ids
-  // We will use it at the init state
+  /*
+     Will give us the number of the followers and a list of all the followers ids
+     We will use it at the init state
+   */
   getFollowers() async {
     followingList.clear();
     followersList.clear();
@@ -52,13 +54,20 @@ class _ProfileState extends State<Profile> {
               value.docs.forEach((element) {
                 followersList.add(element.id);
               }),
-              followerCount = value.docs.length,
+              if (mounted) // Won't give us the set state error after dispose
+                {
+                  setState(() {
+                    followerCount = value.docs.length;
+                  }),
+                }
             });
     return followersList;
   }
 
-  // Will give us the number of the following and a list of all the followers ids
-  // We will use it at the init state
+  /*
+     Will give us the number of the following and a list of all the followers ids
+     We will use it at the init state
+   */
   getFollowing() async {
     followingList.clear();
     followersList.clear();
@@ -70,14 +79,21 @@ class _ProfileState extends State<Profile> {
               value.docs.forEach((element) {
                 followingList.add(element.id);
               }),
-              followingCount = value.docs.length,
+              if (mounted) // Won't give us the set state error after dispose
+                {
+                  setState(() {
+                    followingCount = value.docs.length;
+                  }),
+                }
             });
     return followingList;
   }
 
-  // Will make the user follow the other user.
-  // It will be updated in firebase, We are updating both followingRef
-  // And followersRef
+  /*
+     Will make the user follow the other user.
+     It will be updated in firebase, We are updating both followingRef
+     And followersRef
+   */
   void handleFollow() async {
     setState(() {
       isFollowing = true;
@@ -113,8 +129,10 @@ class _ProfileState extends State<Profile> {
         });
   }
 
-  // Will remove the follow from the other user.
-  // It will delete the data from both following and followers database.
+  /*
+     Will remove the follow from the other user.
+     It will delete the data from both following and followers database.
+   */
   void handleUnfollow() {
     setState(() {
       isFollowing = false;
@@ -132,8 +150,10 @@ class _ProfileState extends State<Profile> {
         .delete();
   }
 
-  // This method will remember if we are following the other user or not
-  // We will use it in the init state
+  /*
+     This method will remember if we are following the other user or not
+     We will use it in the init state
+   */
   checkIfFollowing() async {
     DocumentSnapshot doc = await followersRef
         .doc(widget.profileId)
@@ -479,15 +499,22 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  // This method will count us how many stories the user have.
-  // Its looks like buildProfileStories but its different
+  /*
+    This method will count us how many stories the user have.
+    Its looks like buildProfileStories but its different
+   */
   getStoriesCount() async {
     await storiesRef
         .doc(widget.profileId)
         .collection('storyId')
         .get()
         .then((value) => {
-              storyCount = value.docs.length,
+              if (mounted) // Won't give us the set state error after dispose
+                {
+                  setState(() {
+                    storyCount = value.docs.length;
+                  }),
+                }
             });
     return storyCount;
   }
@@ -543,7 +570,6 @@ class _ProfileState extends State<Profile> {
     getFollowers();
     getFollowing();
     getStoriesCount();
-    // buildProfileStories();
     checkIfFollowing();
   }
 

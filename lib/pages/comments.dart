@@ -6,6 +6,7 @@ import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/services/rating.dart';
 import 'package:storify/widgets/comment_ticket.dart';
+import 'package:storify/services/scaffold_message.dart';
 
 class Comments extends StatefulWidget {
   final String storyId;
@@ -74,28 +75,16 @@ class _CommentsState extends State<Comments> {
             'timeStamp': Timestamp.now(),
           });
         } else {
-          message('You already rated that story!');
+          showMessage(context, 'You already rated that story!');
         }
 
         setState(() {
           rating = 50;
         });
       } else {
-        message("You can't rate your own story!");
+        showMessage(context, "You can't rate your own story!");
       }
     }
-  }
-
-  // Show an error message for the user
-  message(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {}, // No need to put anything, just click "Undo"
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   // Taking the comments from the firebase and showing them in the UI.

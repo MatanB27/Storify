@@ -114,7 +114,7 @@ class _SearchState extends State<Search>
     );
   }
 
-  //building the search results
+  // Building the search results
   buildSearchResults() {
     return FutureBuilder(
       future: searchResults,
@@ -174,9 +174,11 @@ class _SearchState extends State<Search>
     );
   }
 
-  // This variable is to keep the state of the screen alive,
-  // Even if we move to another screen.
-  // Super.build(context) is also part of that.
+  /*
+    This variable is to keep the state of the screen alive,
+    Even if we move to another screen.
+    Super.build(context) is also part of that.
+   */
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {

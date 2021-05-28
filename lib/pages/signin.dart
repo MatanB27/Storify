@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
-import '../services/auth_service.dart';
+import 'package:storify/services/database.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -17,16 +16,6 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
-  //the function that will sign us in with google account
-  Future<void> _signInWithGoogle(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthService>(context, listen: false);
-      await auth.signInWithGoogle();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   static const colorizeColors = [
     Colors.purple,
     Colors.blue,
@@ -38,22 +27,13 @@ class _SigninPageState extends State<SigninPage> {
     fontSize: 50.0,
     fontFamily: 'Pacifico',
   );
-//this method sign us with the facebook account
-  Future<void> _signInWithFacebook(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthService>(context, listen: false);
-      await auth.signInWithFacebook();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    //if the user is not logged in he will see this page
+    // If the user is not logged in he will see this page
     return Scaffold(
       body: SingleChildScrollView(
-        //this is the up container design
+        // This is the up container design
         child: Container(
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height,
@@ -134,8 +114,6 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(24),
-                    //this is the part the we see down the up container
-                    //the children of the column are : text, and 2 buttons
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,11 +146,11 @@ class _SigninPageState extends State<SigninPage> {
                         ),
                         //sign in button
                         SignInButton(
-                          //the button it self
+                          // The button itself
                           Buttons.Google,
                           text: "Signin with Google",
-                          //when the button is get pressed we need to sign up with are google account
-                          onPressed: () => _signInWithGoogle(context),
+                          // When the button is get pressed we need to sign up with are google account
+                          onPressed: () => signInWithGoogle(context),
                         ),
                         SizedBox(
                           height: 20,
@@ -181,8 +159,8 @@ class _SigninPageState extends State<SigninPage> {
                         SignInButton(
                           Buttons.Facebook,
                           text: "Signin with Facebook",
-                          //when the button get pressed we need to sign up with are facebook account
-                          onPressed: () => _signInWithFacebook(context),
+                          // When the button get pressed we need to sign up with are facebook account
+                          onPressed: () => signInWithFacebook(context),
                         ),
                         SizedBox(
                           height: 10,
@@ -190,7 +168,7 @@ class _SigninPageState extends State<SigninPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            //inside the row we have text child
+                            // Inside the row we have text child
                             Text(
                               'powered by dart',
                               style: TextStyle(

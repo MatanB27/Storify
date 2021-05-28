@@ -14,6 +14,7 @@ import 'package:storify/services/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../services/auth_service.dart';
 import 'home.dart';
+import 'package:storify/services/database.dart';
 
 //TODO: improve UI
 class EditProfile extends StatefulWidget {
@@ -34,45 +35,6 @@ class _EditProfileState extends State<EditProfile> {
   File file;
   String _uploadedFileURL;
   bool isUploading = false;
-
-  // Logout method that will send us back go the signin screen
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthService>(context, listen: false);
-      await auth.signOut();
-    } catch (e) {
-      print(e.toString());
-    }
-    Navigator.popUntil(context, ModalRoute.withName("/"));
-  }
-
-  // Alert dialog that will ask us if we want to log out
-  Future<void> _confirmSignOut(BuildContext context) async {
-    try {
-      final didRequestSignOut = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Logout'),
-          content: Text('Are you sure you want to logout?'),
-          actions: [
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel'),
-            ),
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Accept'),
-            ),
-          ],
-        ),
-      );
-      if (didRequestSignOut == true) {
-        _signOut(context);
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   // This function will help us update the data inside the stories ref
   updateNameInStoriesRef() async {
@@ -318,11 +280,13 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  // Taking a photo with the camera or choose from the gallery
-  // Depends on the argument value.
-  // Pick image is still ok, its just from older version
-  // If we cancel our choice, try catch will catch the error and isUploading
-  // Will become false
+  /*
+     Taking a photo with the camera or choose from the gallery
+     Depends on the argument value.
+    Pick image is still ok, its just from older version
+    If we cancel our choice, try catch will catch the error and isUploading
+    Will become false
+   */
   void takePhoto(bool isGallery) async {
     try {
       goBack(context);
@@ -362,7 +326,6 @@ class _EditProfileState extends State<EditProfile> {
     userRef.doc(auth.currentUser.uid).update({
       "photoUrl": _uploadedFileURL,
     });
-    //await updateNameInCommentRef();
     await updatePhotoInStoriesRef();
     await updatePhotoInChatRef();
     await updatePhotoInCommentRef();
@@ -599,6 +562,8 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
+    displayNameController.clear();
+    bioController.clear();
     displayNameController.dispose();
     bioController.dispose();
     super.dispose();
@@ -629,7 +594,7 @@ class _EditProfileState extends State<EditProfile> {
                 Icons.logout,
                 color: Colors.black,
               ),
-              onPressed: () => _confirmSignOut(context),
+              onPressed: () => confirmSignOut(context),
             ),
           ],
         ),

@@ -21,6 +21,7 @@ class UploadStory extends StatefulWidget {
   _UploadStoryState createState() => _UploadStoryState();
 }
 
+// The implement it too keep the state of the app when we are moving to another page
 class _UploadStoryState extends State<UploadStory> {
   // Text fields variables
   TextEditingController titleStoryController = TextEditingController();
@@ -36,7 +37,8 @@ class _UploadStoryState extends State<UploadStory> {
     'Mystery',
     'Reality',
     'Parody',
-    'Romantic',
+    'Adventure',
+    'Romance',
     'Novel',
     'Science',
     'Action',
@@ -60,9 +62,12 @@ class _UploadStoryState extends State<UploadStory> {
   // Variables to fetch the name and photo from the user ref
   String name;
   String photo;
-  // We are picking a category, removing it from the AllCategories
-  // And adding it to chosenCategories, if chosenCategories length is 3,
-  // We will get an error message that we cant take more categories
+
+  /*
+     We are picking a category, removing it from the AllCategories
+    And adding it to chosenCategories, if chosenCategories length is 3,
+     We will get an error message that we cant take more categories
+   */
   pickACategory(int index) {
     if (chosenCategories.length < 3) {
       String category = allCategories.removeAt(index);
@@ -72,8 +77,10 @@ class _UploadStoryState extends State<UploadStory> {
     }
   }
 
-  // Will remove the category from the chosenCategories list and add it
-  // Into AllCategories
+  /*
+    Will remove the category from the chosenCategories list and add it
+    Into AllCategories
+   */
   removeACategory(int index) {
     String category = chosenCategories.removeAt(index);
     allCategories.add(category);
@@ -102,9 +109,11 @@ class _UploadStoryState extends State<UploadStory> {
     getDisplayNameAndPhoto();
   }
 
-  // Publish story method, it will only work if the user have story title,
-  // Categories or the story itself
-  // It will all add to the firebase.
+  /*
+     Publish story method, it will only work if the user have story title,
+     Categories or the story itself
+     It will all add to the firebase.
+  */
   publishStory() async {
     if (storyController.text.toString().trim().length < 20 ||
         titleStoryController.text.toString().trim().length < 3 ||
@@ -128,14 +137,13 @@ class _UploadStoryState extends State<UploadStory> {
         'displayName': name,
         'photoUrl': photo,
         'categories': chosenCategories,
-        'average': 0, // Average score
+        'average': 0, // Average score - start with 0
         'countRating': 0, // How many ratings the story got
         'total': 0, // Total score (to calculate average)
         'storyPhoto': _uploadedFileURL,
         'title': titleStoryController.text.toString(),
         'timeStamp': DateTime.now(),
         'story': storyController.text.toString(),
-        'rating': 0 // Every rating will start with 0 - it will be change
         // According to the users rating
       });
       showMessage(context, 'Congratulations, You posted a new story!');
@@ -156,49 +164,53 @@ class _UploadStoryState extends State<UploadStory> {
 
   // Menu for changing photo from camera or gallery
   selectImage() {
-    return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 20.0,
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Choose Profile Photo',
-            style: TextStyle(
-              fontSize: 20.0,
+    return Flexible(
+      child: Container(
+        height: 100.0,
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 20.0,
+        ),
+        child: Column(
+          children: [
+            Text(
+              'Choose Profile Photo',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton.icon(
-                icon: Icon(Icons.camera),
-                onPressed: () => takePhoto(false),
-                label: Text('Camera'),
-              ),
-              FlatButton.icon(
-                onPressed: () => takePhoto(true),
-                icon: Icon(Icons.image),
-                label: Text("Gallery"),
-              ),
-            ],
-          )
-        ],
+            SizedBox(
+              height: 15.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FlatButton.icon(
+                  icon: Icon(Icons.camera),
+                  onPressed: () => takePhoto(false),
+                  label: Text('Camera'),
+                ),
+                FlatButton.icon(
+                  onPressed: () => takePhoto(true),
+                  icon: Icon(Icons.image),
+                  label: Text("Gallery"),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
-  // Taking a photo with the camera or choose from the gallery
-  // Depends on the argument value.
-  // Pick image is still ok, its just from older version
-  // If we cancel our choice, try catch will catch the error and isUploading
-  // Will become false
+  /*
+     Taking a photo with the camera or choose from the gallery
+     Depends on the argument value.
+     Pick image is still ok, its just from older version
+     If we cancel our choice, try catch will catch the error and isUploading
+     Will become false
+   */
   void takePhoto(bool isGallery) async {
     try {
       goBack(context);
@@ -260,6 +272,7 @@ class _UploadStoryState extends State<UploadStory> {
             children: [
               TextFormField(
                 controller: titleStoryController,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -407,6 +420,8 @@ class _UploadStoryState extends State<UploadStory> {
                 height: 10,
               ),
               TextField(
+                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
                 controller: storyController,
                 maxLength: 7500,
                 maxLines: 30,
