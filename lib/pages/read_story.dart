@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_button/animated_button.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/services/auth_service.dart';
@@ -64,6 +65,36 @@ class _ReadStoryState extends State<ReadStory> {
   //   story = doc.get('story');
   //   print(story.length);
   // }
+
+  /*
+    This method will used when we click on the play button.
+    as long as it play - the system will read us the story.
+    There is a limitation of how many chars we can from a string
+    We cut the string to 2 parts: 3000 chars and 3500 chars
+           (Each story have maximum of 7500 chars)
+  */
+  Future speak(String story) async {
+    //TODO: stop button
+    await FlutterTts().setLanguage("en-US");
+
+    if (story.length >= 3000) {
+      List<String> temp = [
+        story.substring(0, 3000),
+        story.substring(3001, story.length - 1)
+      ];
+      int i = 0;
+      FlutterTts flutterTts = FlutterTts();
+      await flutterTts.speak(temp[i]);
+      flutterTts.setCompletionHandler(() async {
+        if (i < temp.length - 1) {
+          i++;
+          await flutterTts.speak(temp[i]);
+        }
+      });
+    } else {
+      await FlutterTts().speak(story);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,6 +240,65 @@ class _ReadStoryState extends State<ReadStory> {
                     ),
                     SizedBox(
                       height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.lightBlueAccent[200]),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              //TODO: sharing story in social media.
+                            },
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green[300],
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.play_arrow,
+                              color: Colors.black,
+                              size: 34.0,
+                            ),
+                            onPressed: () {
+                              speak(story);
+                            },
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red[300],
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.report_problem,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              //TODO: moving to report story
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
