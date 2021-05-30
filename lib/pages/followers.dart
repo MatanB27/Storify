@@ -86,6 +86,7 @@ class _FollowersState extends State<Followers> {
     return RefreshIndicator(
       onRefresh: pullToRefresh,
       child: Scaffold(
+        backgroundColor: Color(0xff1C1A32),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(55.0),
           child: Header(

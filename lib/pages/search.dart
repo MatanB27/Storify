@@ -114,7 +114,7 @@ class _SearchState extends State<Search>
     );
   }
 
-  // Building the search results
+  //building the search results
   buildSearchResults() {
     return FutureBuilder(
       future: searchResults,
@@ -162,7 +162,7 @@ class _SearchState extends State<Search>
                       color: Colors.white,
                       fontFamily: 'Pacifico',
                     ),
-                    speed: const Duration(milliseconds: 280),
+                    speed: const Duration(milliseconds: 100),
                   ),
                 ],
                 repeatForever: true,
@@ -174,24 +174,16 @@ class _SearchState extends State<Search>
     );
   }
 
-  /*
-    This variable is to keep the state of the screen alive,
-    Even if we move to another screen.
-    Super.build(context) is also part of that.
-   */
+  // This variable is to keep the state of the screen alive,
+  // Even if we move to another screen.
+  // Super.build(context) is also part of that.
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      //backgroundColor: Color(0xff09031D),
+      backgroundColor: Color(0xff1C1A32),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/search_background.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: Column(
           children: [
             SizedBox(

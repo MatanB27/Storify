@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:storify/services/database.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 //TODO: improve UI
 // Here we are building all of the story tickets.

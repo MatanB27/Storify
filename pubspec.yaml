@@ -35,7 +35,8 @@ dependencies:
   uuid: ^2.0.0 #maybe delete
   salomon_bottom_bar: ^3.0.0
   readmore: ^2.0.0
-
+  avatar_view: ^1.0.0
+  carousel_slider: ^3.0.0
 
 dev_dependencies:
   flutter_test:
