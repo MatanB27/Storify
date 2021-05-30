@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart'; //the font package
+import 'package:storify/pages/top_filter.dart';
+import 'package:storify/pages/categories_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/services/auth_service.dart';
+import 'package:storify/pages/all_filter.dart';
 import 'read_story.dart';
 import 'package:storify/widgets/story_ticket.dart';
 
@@ -67,23 +70,26 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
           "https://m.media-amazon.com/images/M/MV5BNWRiZGRjOGQtZjIzYy00MDc0LWIwYzktYTJlMTJlMWVkZjk5XkEyXkFqcGdeQXVyMjc4NzY1MTM@._V1_.jpg",
     ),
   ];
-  // This is a part of the top menu
-  // With all the tabs : all,top,popular...... 5 tabs
+  /*
+     This is a part of the top menu
+    With all the tabs : all,top,popular...... 5 tabs
+    TODO: Feed: stories of the user followings.
+    TODO: All: all of the stories in our app.
+    TODO: Top: highest stories rating.
+    TODO: Categories: stories by categories.
+  */
   List<Tab> tabList = [
     Tab(
-      child: Text('all'),
+      child: Text('Feed'),
     ),
     Tab(
-      child: Text('popular'),
+      child: Text('All'),
     ),
     Tab(
-      child: Text('top'),
+      child: Text('Top'),
     ),
     Tab(
-      child: Text('editor choice'),
-    ),
-    Tab(
-      child: Text('category'),
+      child: Text('Categories'),
     ),
   ];
 
@@ -171,22 +177,9 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
             // If you want to put list in other category put it inside the containers
             // Each container include other category - those are the tabs
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Container(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Container(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Container(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Container(),
-            ),
+            AllFilter(),
+            TopFilter(),
+            CategoriesFilter(),
           ],
         ),
       ),

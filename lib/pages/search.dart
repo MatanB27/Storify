@@ -162,7 +162,7 @@ class _SearchState extends State<Search>
                       color: Colors.white,
                       fontFamily: 'Pacifico',
                     ),
-                    speed: const Duration(milliseconds: 100),
+                    speed: const Duration(milliseconds: 150),
                   ),
                 ],
                 repeatForever: true,
