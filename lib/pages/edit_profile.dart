@@ -40,7 +40,8 @@ class _EditProfileState extends State<EditProfile> {
   updateNameInStoriesRef() async {
     // The new name
     String newName = displayNameController.text.toString();
-    QuerySnapshot x = await storiesRef.get();
+    QuerySnapshot x =
+        await storiesRef.where('uid', isEqualTo: widget.currentUserId).get();
     x.docs.forEach((element) async {
       await storiesRef.doc(element.id).update({
         'displayName': newName,
@@ -222,7 +223,8 @@ class _EditProfileState extends State<EditProfile> {
   updatePhotoInStoriesRef() async {
     // The new photo
     String newPhoto = _uploadedFileURL;
-    QuerySnapshot x = await storiesRef.get();
+    QuerySnapshot x =
+        await storiesRef.where('uid', isEqualTo: widget.currentUserId).get();
     x.docs.forEach((element) async {
       await storiesRef.doc(element.id).update({
         'photoUrl': newPhoto,
