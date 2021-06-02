@@ -63,11 +63,7 @@ getAverageRatingFromStoriesRef([String storyId]) async {
  */
 updateAverageStoryRating(
     dynamic rating, String storyId, String ownerUserId) async {
-  DocumentSnapshot doc = await storiesRef
-      .doc(ownerUserId)
-      .collection('storyId')
-      .doc(storyId)
-      .get();
+  DocumentSnapshot doc = await storiesRef.doc(storyId).get();
   dynamic total = await doc.get('total');
   dynamic countRating = await doc.get('countRating');
   dynamic average = await doc.get('average');
@@ -156,12 +152,3 @@ Future<void> signInWithFacebook(BuildContext context) async {
 }
 
 ///-----------------------------------------------------------------------------
-allFilter() async {
-  List<String> userIds = [];
-  await storiesRef.get().then((value) => {
-        value.docs.forEach((element) {
-          userIds.add(element.id);
-        }),
-      });
-  print(userIds);
-}

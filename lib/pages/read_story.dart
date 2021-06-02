@@ -101,11 +101,7 @@ class _ReadStoryState extends State<ReadStory> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: FutureBuilder(
-        future: storiesRef
-            .doc(widget.ownerId)
-            .collection('storyId')
-            .where('sid', isEqualTo: widget.storyId)
-            .get(),
+        future: storiesRef.where('sid', isEqualTo: widget.storyId).get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return loading();

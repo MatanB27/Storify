@@ -21,6 +21,7 @@ class UploadStory extends StatefulWidget {
   _UploadStoryState createState() => _UploadStoryState();
 }
 
+//TODO: clicking on upload image will make it overflow for 1 sec on a real phone
 // The implement it too keep the state of the app when we are moving to another page
 class _UploadStoryState extends State<UploadStory> {
   // Text fields variables
@@ -126,16 +127,15 @@ class _UploadStoryState extends State<UploadStory> {
          storyId = storiesRef.doc(widget.userId).collection('storyId').doc().id;
          First we are creating the doc story
       */
-      await storiesRef.doc(widget.userId).set({});
-      await storiesRef
-          .doc(widget.userId)
-          .collection('storyId')
-          .doc(storyId)
-          .set({
+      await userRef.doc(currentUserId).update({
+        'stories': FieldValue.arrayUnion([storyId]),
+      });
+      await storiesRef.doc(storyId).set({
         'uid': widget.userId,
         'sid': storyId,
         'displayName': name,
         'photoUrl': photo,
+
         'categories': chosenCategories,
         'average': 0, // Average score - start with 0
         'countRating': 0, // How many ratings the story got

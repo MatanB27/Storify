@@ -524,8 +524,7 @@ class _ProfileState extends State<Profile> {
   buildProfileStories() {
     return FutureBuilder(
       future: storiesRef
-          .doc(widget.profileId)
-          .collection('storyId')
+          .where('uid', isEqualTo: widget.profileId)
           .orderBy('timeStamp', descending: true)
           .get(),
       builder: (context, snapshot) {
