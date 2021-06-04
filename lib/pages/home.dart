@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:storify/pages/welcome.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/pages/chat.dart';
 import 'package:storify/pages/feed.dart';
@@ -96,6 +97,8 @@ class _HomePageState extends State<HomePage> {
             title: Text("Chat"),
             selectedColor: Colors.teal,
           ),
+
+          ///Profile
           SalomonBottomBarItem(
             icon: Icon(Icons.person),
             title: Text("Profile"),

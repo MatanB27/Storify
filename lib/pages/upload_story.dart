@@ -130,6 +130,7 @@ class _UploadStoryState extends State<UploadStory> {
       await userRef.doc(currentUserId).update({
         'stories': FieldValue.arrayUnion([storyId]),
       });
+
       await storiesRef.doc(storyId).set({
         'uid': widget.userId,
         'sid': storyId,

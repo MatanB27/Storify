@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:storify/pages/comments.dart';
 import 'package:storify/pages/edit_profile.dart';
+import 'package:storify/pages/feed_filter.dart';
 import 'package:storify/pages/followers.dart';
 import 'package:storify/pages/following.dart';
 import 'package:storify/pages/private_message.dart';
@@ -133,6 +134,22 @@ showReadStory(BuildContext context,
       builder: (context) => ReadStory(
         storyId: storyId,
         ownerId: ownerId,
+      ),
+    ),
+  );
+}
+
+/*
+  Show the first page that the user is seeing - FilterFeed
+*/
+
+showFilterFeed(
+    BuildContext context, String currentUser, List<String> userIds) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => FeedFilter(
+        userId: currentUser,
       ),
     ),
   );

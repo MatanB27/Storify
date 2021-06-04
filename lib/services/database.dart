@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/pages/feed_filter.dart';
+import 'package:storify/pages/home.dart';
 import 'package:storify/services/auth_service.dart';
 
 /*
@@ -152,3 +154,13 @@ Future<void> signInWithFacebook(BuildContext context) async {
 }
 
 ///-----------------------------------------------------------------------------
+/*
+  This method will return us a list of the user ids that the user is currently
+  following.
+*/
+getFollowing(String userId, List<String> followingList) async {
+  QuerySnapshot snapshot =
+      await followingRef.doc(userId).collection('userFollowing').get();
+  followingList = snapshot.docs.map((e) => e.id).toList();
+  return followingList;
+}

@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart'; //the font package
+import 'package:flutter/cupertino.dart'; // The font package
 import 'package:storify/pages/feed_filter.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/pages/top_filter.dart';
 import 'package:storify/pages/categories_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/pages/welcome.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/pages/all_filter.dart';
 import 'package:storify/services/database.dart';
-import 'read_story.dart';
-import 'package:storify/widgets/story_ticket.dart';
 
 //==============================the main feed code================//
 //pleas follow my comments
@@ -28,6 +26,9 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   */
   List<Tab> tabList = [
     Tab(
+      child: Text('Welcome'),
+    ),
+    Tab(
       child: Text('Feed'),
     ),
     Tab(
@@ -41,11 +42,15 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     ),
   ];
 
+  // Current user id
+  final String currentUser = auth.currentUser?.uid;
+
   TabController tabController;
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: tabList.length, vsync: this);
+    getFollowing(currentUser);
   }
 
   @override
@@ -58,9 +63,26 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   Future<Null> pullToRefresh() async {
     await Future.delayed(Duration(seconds: 1));
     setState(() {
-      //TODO: Updating the stories on refresh.
+      getFollowing(currentUser);
     });
     return null;
+  }
+
+  /*
+    Get the user Following ids, so we can pass it through feed_filter page
+  */
+  List<String> followingList = [];
+  getFollowing(String userId) async {
+    await followingRef
+        .doc(userId)
+        .collection('userFollowing')
+        .get()
+        .then((value) => {
+              value.docs.forEach((element) {
+                followingList.add(element.id);
+              }),
+            });
+    return followingList;
   }
 
   @override
@@ -101,14 +123,16 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             The tabs - we can switch between those pages in the "Home" page.
            */
           children: [
+            Welcome(), //Welcome screen
             FeedFilter(
-              userId: auth.currentUser?.uid,
+              userId: currentUser,
+              userIds: followingList,
             ),
             AllFilter(
-              userId: auth.currentUser?.uid,
+              userId: currentUser,
             ),
-            TopFilter(userId: auth.currentUser?.uid),
-            CategoriesFilter(userId: auth.currentUser?.uid),
+            TopFilter(userId: currentUser),
+            CategoriesFilter(userId: currentUser),
           ],
         ),
       ),
