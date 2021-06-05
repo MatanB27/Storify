@@ -131,12 +131,13 @@ class _UploadStoryState extends State<UploadStory> {
         'stories': FieldValue.arrayUnion([storyId]),
       });
 
+      print(getFollowers(currentUserId));
       await storiesRef.doc(storyId).set({
         'uid': widget.userId,
         'sid': storyId,
         'displayName': name,
         'photoUrl': photo,
-
+        'followers': FieldValue.arrayUnion(await getFollowers(currentUserId)),
         'categories': chosenCategories,
         'average': 0, // Average score - start with 0
         'countRating': 0, // How many ratings the story got
@@ -165,7 +166,7 @@ class _UploadStoryState extends State<UploadStory> {
 
   // Menu for changing photo from camera or gallery
   selectImage() {
-    return Flexible(
+    return SingleChildScrollView(
       child: Container(
         height: 100.0,
         width: MediaQuery.of(context).size.width,
@@ -258,6 +259,7 @@ class _UploadStoryState extends State<UploadStory> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
           backgroundColor: Colors.white,

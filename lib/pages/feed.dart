@@ -26,9 +26,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   */
   List<Tab> tabList = [
     Tab(
-      child: Text('Welcome'),
-    ),
-    Tab(
       child: Text('Feed'),
     ),
     Tab(
@@ -50,39 +47,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     tabController = TabController(length: tabList.length, vsync: this);
-    getFollowing(currentUser);
   }
 
   @override
   void dispose() {
     tabController.dispose();
     super.dispose();
-  }
-
-  // When we pull the page, it will refresh it and fetch the new data.
-  Future<Null> pullToRefresh() async {
-    await Future.delayed(Duration(seconds: 1));
-    setState(() {
-      getFollowing(currentUser);
-    });
-    return null;
-  }
-
-  /*
-    Get the user Following ids, so we can pass it through feed_filter page
-  */
-  List<String> followingList = [];
-  getFollowing(String userId) async {
-    await followingRef
-        .doc(userId)
-        .collection('userFollowing')
-        .get()
-        .then((value) => {
-              value.docs.forEach((element) {
-                followingList.add(element.id);
-              }),
-            });
-    return followingList;
   }
 
   @override
@@ -123,10 +93,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             The tabs - we can switch between those pages in the "Home" page.
            */
           children: [
-            Welcome(), //Welcome screen
             FeedFilter(
               userId: currentUser,
-              userIds: followingList,
             ),
             AllFilter(
               userId: currentUser,

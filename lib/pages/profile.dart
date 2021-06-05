@@ -127,6 +127,21 @@ class _ProfileState extends State<Profile> {
             'id': value.get('id'),
           }),
         });
+    /*
+      In this code we are adding the current user id to the followers
+      array in the firebase of the other user - so the current user can
+      See the stories of the user he just follow.
+    */
+    await storiesRef
+        .where('uid', isEqualTo: widget.profileId)
+        .get()
+        .then((value) => {
+              value.docs.forEach((element) {
+                element.reference.update({
+                  'followers': FieldValue.arrayUnion([currentUserId]),
+                });
+              })
+            });
   }
 
   /*
@@ -148,6 +163,19 @@ class _ProfileState extends State<Profile> {
         .collection('userFollowing')
         .doc(widget.profileId)
         .delete();
+
+    /*
+      In this code we are removing the current user id from the followers
+      array in the firebase of the other user - so the current user
+      will no longer see the stories of that user in his feed
+    */
+    storiesRef.where('uid', isEqualTo: widget.profileId).get().then((value) => {
+          value.docs.forEach((element) {
+            element.reference.update({
+              'followers': FieldValue.arrayRemove([currentUserId]),
+            });
+          })
+        });
   }
 
   /*

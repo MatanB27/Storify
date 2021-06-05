@@ -157,10 +157,13 @@ Future<void> signInWithFacebook(BuildContext context) async {
 /*
   This method will return us a list of the user ids that the user is currently
   following.
+  The user ids will be the ids of the followers of the current user.
 */
-getFollowing(String userId, List<String> followingList) async {
+Future<List<String>> getFollowers(String userId) async {
+  List<String> followersList = [];
   QuerySnapshot snapshot =
-      await followingRef.doc(userId).collection('userFollowing').get();
-  followingList = snapshot.docs.map((e) => e.id).toList();
-  return followingList;
+      await followersRef.doc(userId).collection('userFollowers').get();
+  followersList = snapshot.docs.map((e) => e.id).toList();
+  print(followersList);
+  return followersList;
 }

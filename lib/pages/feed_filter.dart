@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/services/auth_service.dart';
@@ -8,13 +7,12 @@ import 'package:storify/widgets/story_ticket.dart';
 
 /*
   The main page, the user can read the stories of the users he follow
-  //TODO: finish!!!!!!!!
+
 */
 class FeedFilter extends StatefulWidget {
   final String userId;
-  final List<String> userIds;
 
-  FeedFilter({this.userId, this.userIds});
+  FeedFilter({this.userId});
 
   @override
   _FeedFilterState createState() => _FeedFilterState();
@@ -40,11 +38,10 @@ class _FeedFilterState extends State<FeedFilter> {
     The body of the Feed tab - will show us only the stories of the users
     we are following
   */
-
   buildFeed() {
     return FutureBuilder(
       future: storiesRef
-          .where('uid', whereIn: widget.userIds)
+          .where('followers', arrayContains: widget.userId)
           .orderBy('timeStamp', descending: true)
           .get(),
       builder: (context, snapshot) {
@@ -82,9 +79,8 @@ class _FeedFilterState extends State<FeedFilter> {
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: pullToRefresh,
-          child: widget.userIds.isEmpty
-              ? loading() // Will show it loading if the list is empty
-              : buildFeed(),
+          child: // Will show it loading if the list is empty
+              buildFeed(),
         ),
       ),
     );

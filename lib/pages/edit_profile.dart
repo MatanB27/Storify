@@ -234,40 +234,42 @@ class _EditProfileState extends State<EditProfile> {
 
   // Menu for changing photo from camera or gallery
   selectImage() {
-    return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 20.0,
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Choose Profile Photo',
-            style: TextStyle(
-              fontSize: 20.0,
+    return SingleChildScrollView(
+      child: Container(
+        height: 100.0,
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 20.0,
+        ),
+        child: Column(
+          children: [
+            Text(
+              'Choose Profile Photo',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton.icon(
-                icon: Icon(Icons.camera),
-                onPressed: () => takePhoto(false),
-                label: Text('Camera'),
-              ),
-              FlatButton.icon(
-                onPressed: () => takePhoto(true),
-                icon: Icon(Icons.image),
-                label: Text("Gallery"),
-              ),
-            ],
-          )
-        ],
+            SizedBox(
+              height: 15.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FlatButton.icon(
+                  icon: Icon(Icons.camera),
+                  onPressed: () => takePhoto(false),
+                  label: Text('Camera'),
+                ),
+                FlatButton.icon(
+                  onPressed: () => takePhoto(true),
+                  icon: Icon(Icons.image),
+                  label: Text("Gallery"),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
