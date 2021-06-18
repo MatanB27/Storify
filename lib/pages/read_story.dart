@@ -12,6 +12,7 @@ import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/services/rating.dart';
+import 'package:storify/services/scaffold_message.dart';
 
 class ReadStory extends StatefulWidget {
   final String storyId;
@@ -22,7 +23,7 @@ class ReadStory extends StatefulWidget {
   _ReadStoryState createState() => _ReadStoryState();
 }
 
-//TODO: add report button, listen to story button and share button
+//TODO: add share button
 class _ReadStoryState extends State<ReadStory> {
   // Story variables that we will take from the firebase:
   String photoUrl = '';
@@ -287,8 +288,11 @@ class _ReadStoryState extends State<ReadStory> {
                               color: Colors.black,
                             ),
                             onPressed: () {
-                              showReport(
-                                  context, currentUserId, widget.storyId);
+                              currentUserId == ownerUserId
+                                  ? showMessage(context,
+                                      "You can't report your own story!")
+                                  : showReport(
+                                      context, currentUserId, widget.storyId);
                             },
                           ),
                         ),
