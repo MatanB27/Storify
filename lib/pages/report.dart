@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:storify/services/database.dart';
+import 'package:storify/services/scaffold_message.dart';
 import 'package:storify/widgets/header.dart';
 
 class Report extends StatefulWidget {
@@ -12,11 +14,35 @@ class Report extends StatefulWidget {
 }
 
 class _ReportState extends State<Report> {
+  // Controller of the textfield
+  TextEditingController reportController = TextEditingController();
+
+  // Function that will send the report to the firebase
+  reportStoryToFirebase() {
+    if (reportController.text.toString().trim().length > 10) {
+      reportsRef.doc().set({
+        'userReporting': widget.currentUserId,
+        'storyReported': widget.storyId,
+        'text': reportController.text.toString(),
+      });
+      showMessage(context, "Story has been reported successfully!");
+      Navigator.pop(context);
+    } else {
+      showMessage(context, "You must write at least 10 characters");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     print(widget.currentUserId);
     print(widget.storyId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    reportController.dispose();
   }
 
   @override
@@ -28,7 +54,60 @@ class _ReportState extends State<Report> {
           title: 'Report story',
         ),
       ),
-      body: Container(),
+      body: ListView(children: [
+        Padding(
+          padding: const EdgeInsets.all(42.0),
+          child: Column(
+            children: [
+              Text(
+                "Why do you want to report this story?",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
+                controller: reportController,
+                maxLength: 100,
+                maxLines: 20,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      width: 0,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                  hintText: 'Type here...',
+                  fillColor: Colors.grey,
+                  filled: true,
+                ),
+              ),
+              SizedBox(
+                height: 18.0,
+              ),
+              Container(
+                color: Colors.red,
+                child: FlatButton(
+                  onPressed: () {
+                    reportStoryToFirebase();
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Report',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ]),
     );
   }
 }
