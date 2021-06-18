@@ -287,7 +287,8 @@ class _ReadStoryState extends State<ReadStory> {
                               color: Colors.black,
                             ),
                             onPressed: () {
-                              //TODO: moving to report story
+                              showReport(
+                                  context, currentUserId, widget.storyId);
                             },
                           ),
                         ),

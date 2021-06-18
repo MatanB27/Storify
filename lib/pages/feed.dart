@@ -2,16 +2,13 @@ import 'package:flutter/cupertino.dart'; // The font package
 import 'package:storify/pages/feed_filter.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/pages/top_filter.dart';
-import 'package:storify/pages/categories_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storify/pages/welcome.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/pages/all_filter.dart';
-import 'package:storify/services/database.dart';
+import 'package:storify/services/categories.dart';
 
-//==============================the main feed code================//
-//pleas follow my comments
+//==============================The main feed code================//
 
 class Feed extends StatefulWidget {
   @override
@@ -53,7 +50,63 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   void dispose() {
     tabController.dispose();
     super.dispose();
+
+    /// When we are disposing the page - the
+    removedCategories = [
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+    ];
+    chosenCategories = List.from(allCategories);
+
+    for (int i = 0; i < isChecked.length; i++) {
+      isChecked[i] = true;
+    }
   }
+
+  /*
+    List that will include all of the categories the user wants to see.
+    If we are removing a category from this list - the index will become null
+    And will move into the removedCategory list.
+*/
+  List<String> chosenCategories = List.from(allCategories);
+
+  // Remove the category from the filter
+  removeChosenCategory(int index) {
+    removedCategories[index] = chosenCategories[index];
+    chosenCategories[index] = '';
+  }
+
+  // Add category back to the chosenCategory
+  addChosenCategory(int index) {
+    chosenCategories[index] = removedCategories[index];
+    removedCategories[index] = '';
+  }
+
+  /*
+    This list will include all of the removed categories.
+    We are keeping them here so we can retrieve the data
+  */
+  /// This list must be at the same size of the allCategories!!!!!!!!!!!
+  List<String> removedCategories = [
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -84,23 +137,64 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               labelColor: Colors.black,
             ),
           ),
+          actions: [Icon(Icons.list)],
         ),
-        //-------------------the end of the app bar----------//
-        //now we use the lists to show them
+        //-------------------The end of the app bar----------//
+        // Now we use the lists to show them
         body: TabBarView(
           controller: tabController,
           /*
             The tabs - we can switch between those pages in the "Home" page.
            */
           children: [
+            /// Feed page
             FeedFilter(
               userId: currentUser,
+              categoriesFilter: chosenCategories,
             ),
+
+            /// All stories page
             AllFilter(
               userId: currentUser,
+              categoriesFilter: chosenCategories,
             ),
-            TopFilter(userId: currentUser),
-            CategoriesFilter(userId: currentUser),
+
+            /// Top rating page
+            TopFilter(
+              userId: currentUser,
+              categoriesFilter: chosenCategories,
+            ),
+
+            /// Filter categories
+            /*
+              The only Page that doesn't need another page
+            */
+            Scaffold(
+              body: ListView.builder(
+                itemCount: allCategories.length,
+                itemBuilder: (context, index) {
+                  return CheckboxListTile(
+                    value: isChecked[index],
+                    title: Text(allCategories[index]),
+                    onChanged: (newValue) {
+                      setState(
+                        () {
+                          isChecked[index] = !isChecked[index];
+                          !isChecked[index]
+                              ? removeChosenCategory(index)
+                              : addChosenCategory(index);
+                          //print(isChecked);
+                          print('chosen cagetories:');
+                          print(chosenCategories);
+                          print('removed categories:');
+                          print(removedCategories);
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

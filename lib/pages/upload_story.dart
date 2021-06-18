@@ -11,6 +11,7 @@ import 'package:storify/services/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/services/scaffold_message.dart';
 import 'package:uuid/uuid.dart';
+import 'package:storify/services/categories.dart';
 
 // The page where we uploading the story to the data base.
 class UploadStory extends StatefulWidget {
@@ -28,27 +29,14 @@ class _UploadStoryState extends State<UploadStory> {
   TextEditingController titleStoryController = TextEditingController();
   TextEditingController storyController = TextEditingController();
 
-  // All the categories in Storify app.
-  List<String> allCategories = [
-    'Drama',
-    'Poetry',
-    'Fantasy',
-    'Horror',
-    'Humor',
-    'Mystery',
-    'Reality',
-    'Parody',
-    'Adventure',
-    'Romance',
-    'Novel',
-    'Science',
-    'Action',
-  ];
-
   // Chosen categories -> up to 3 categories
   // User will have to pick at least 1 category
   List<String> chosenCategories = [];
-
+  /*
+    We are copying all of the allCategories list value to a copy list
+    Because we don't want to touch the original.
+  */
+  List<String> copyCategories = List.from(allCategories);
   // Variable for uploading an image
   File file;
   String _uploadedFileURL;
@@ -65,13 +53,13 @@ class _UploadStoryState extends State<UploadStory> {
   String photo;
 
   /*
-     We are picking a category, removing it from the AllCategories
+     We are picking a category, removing it from the copyCategories
     And adding it to chosenCategories, if chosenCategories length is 3,
      We will get an error message that we cant take more categories
    */
   pickACategory(int index) {
     if (chosenCategories.length < 3) {
-      String category = allCategories.removeAt(index);
+      String category = copyCategories.removeAt(index);
       chosenCategories.add(category);
     } else {
       showMessage(context, 'You already have 3 genres');
@@ -80,11 +68,11 @@ class _UploadStoryState extends State<UploadStory> {
 
   /*
     Will remove the category from the chosenCategories list and add it
-    Into AllCategories
+    Into copyCategories
    */
   removeACategory(int index) {
     String category = chosenCategories.removeAt(index);
-    allCategories.add(category);
+    copyCategories.add(category);
   }
 
   // When we quit the app
@@ -315,7 +303,7 @@ class _UploadStoryState extends State<UploadStory> {
                       childAspectRatio: 8 / 2,
                       crossAxisSpacing: 5,
                       mainAxisSpacing: 10),
-                  itemCount: allCategories.length,
+                  itemCount: copyCategories.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () {
@@ -330,7 +318,7 @@ class _UploadStoryState extends State<UploadStory> {
                           ),
                           color: Colors.red[300],
                         ),
-                        child: Center(child: Text(allCategories[index])),
+                        child: Center(child: Text(copyCategories[index])),
                         height: 25,
                       ),
                     );

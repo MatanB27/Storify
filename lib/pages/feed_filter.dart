@@ -11,19 +11,14 @@ import 'package:storify/widgets/story_ticket.dart';
 */
 class FeedFilter extends StatefulWidget {
   final String userId;
-
-  FeedFilter({this.userId});
+  final List<String> categoriesFilter;
+  FeedFilter({this.userId, this.categoriesFilter});
 
   @override
   _FeedFilterState createState() => _FeedFilterState();
 }
 
 class _FeedFilterState extends State<FeedFilter> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   // When we pull the page, it will refresh it and fetch the new data.
   Future<Null> pullToRefresh() async {
     await Future.delayed(Duration(seconds: 1));
@@ -70,6 +65,13 @@ class _FeedFilterState extends State<FeedFilter> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: delete
+    super.initState();
+    print(widget.categoriesFilter);
   }
 
   @override

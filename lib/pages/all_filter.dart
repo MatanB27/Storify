@@ -12,8 +12,9 @@ import 'package:storify/widgets/story_ticket.dart';
 class AllFilter extends StatefulWidget {
   // Our own userId
   final String userId;
+  final List<String> categoriesFilter;
 
-  AllFilter({this.userId});
+  AllFilter({this.userId, this.categoriesFilter});
   @override
   _AllFilterState createState() => _AllFilterState();
 }
@@ -24,7 +25,10 @@ class _AllFilterState extends State<AllFilter> {
   */
   allFilter() {
     return FutureBuilder(
-      future: storiesRef.orderBy('timeStamp', descending: true).get(),
+      future: storiesRef
+          .where('categories', arrayContainsAny: widget.categoriesFilter)
+          .orderBy('timeStamp', descending: true)
+          .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return loading();
@@ -61,6 +65,13 @@ class _AllFilterState extends State<AllFilter> {
       allFilter();
     });
     return null;
+  }
+
+  @override
+  void initState() {
+    // TODO: delete
+    super.initState();
+    print(widget.categoriesFilter);
   }
 
   @override

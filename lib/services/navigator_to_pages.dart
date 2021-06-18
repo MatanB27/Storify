@@ -7,6 +7,7 @@ import 'package:storify/pages/following.dart';
 import 'package:storify/pages/private_message.dart';
 import 'package:storify/pages/profile.dart';
 import 'package:storify/pages/read_story.dart';
+import 'package:storify/pages/report.dart';
 
 /*
   This page will include every navigator method of the app
@@ -143,13 +144,24 @@ showReadStory(BuildContext context,
   Show the first page that the user is seeing - FilterFeed
 */
 
-showFilterFeed(
-    BuildContext context, String currentUser, List<String> userIds) async {
+showFilterFeed(BuildContext context, String currentUser) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => FeedFilter(
         userId: currentUser,
+      ),
+    ),
+  );
+}
+
+showReport(BuildContext context, String currentUser, String storyId) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Report(
+        currentUserId: currentUser,
+        storyId: storyId,
       ),
     ),
   );

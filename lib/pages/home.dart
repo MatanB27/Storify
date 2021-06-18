@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:storify/pages/welcome.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/pages/chat.dart';
 import 'package:storify/pages/feed.dart';

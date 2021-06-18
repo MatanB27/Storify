@@ -10,7 +10,8 @@ import 'package:storify/widgets/story_ticket.dart';
 */
 class TopFilter extends StatefulWidget {
   final String userId;
-  TopFilter({this.userId});
+  final List<String> categoriesFilter;
+  TopFilter({this.userId, this.categoriesFilter});
   @override
   _TopFilterState createState() => _TopFilterState();
 }
@@ -30,9 +31,13 @@ class _TopFilterState extends State<TopFilter> {
     The method that will give us all the stories from firebase
     From the highest rating to the lowest.
   */
-  TopFilter() {
+
+  topFilter() {
     return FutureBuilder(
-      future: storiesRef.orderBy('average', descending: true).get(),
+      future: storiesRef
+          .where('categories', arrayContainsAny: widget.categoriesFilter)
+          .orderBy('average', descending: true)
+          .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return loading();
@@ -62,13 +67,20 @@ class _TopFilterState extends State<TopFilter> {
   }
 
   @override
+  void initState() {
+    // TODO: delete
+    super.initState();
+    print(widget.categoriesFilter);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: pullToRefresh,
-          child: TopFilter(),
+          child: topFilter(),
         ),
       ),
     );

@@ -34,7 +34,10 @@ class _SearchState extends State<Search>
           dynamic doc = element.data()['displayNameSearch'];
           docList.add(doc);
           print(doc);
-          users = userRef.where("displayNameSearch", whereIn: docList).get();
+          users = userRef
+              .where("displayNameSearch", whereIn: docList)
+              .limit(10)
+              .get();
           setState(() {
             searchResults = users;
           });
