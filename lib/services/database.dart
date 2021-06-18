@@ -37,6 +37,9 @@ final storiesRef = FirebaseFirestore.instance.collection('stories');
 // Comments ref
 final commentsRef = FirebaseFirestore.instance.collection('comments');
 
+// Reports ref
+final reportsRef = FirebaseFirestore.instance.collection('reports');
+
 ///-----------------------------------------------------------------------------
 /*
   This method will check the scores in the commentsRef and will return us
