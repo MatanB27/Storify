@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:animated_button/animated_button.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:readmore/readmore.dart';
+import 'package:storify/services/build_icon.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/services/rating.dart';
+import 'package:storify/services/scaffold_message.dart';
 
 class ReadStory extends StatefulWidget {
   final String storyId;
@@ -22,7 +25,6 @@ class ReadStory extends StatefulWidget {
   _ReadStoryState createState() => _ReadStoryState();
 }
 
-//TODO: add report button, listen to story button and share button
 class _ReadStoryState extends State<ReadStory> {
   // Story variables that we will take from the firebase:
   String photoUrl = '';
@@ -74,9 +76,8 @@ class _ReadStoryState extends State<ReadStory> {
            (Each story have maximum of 7500 chars)
   */
   Future speak(String story) async {
-    //TODO: stop button
+    //TODO: add stop button
     await FlutterTts().setLanguage("en-US");
-
     if (story.length >= 3000) {
       List<String> temp = [
         story.substring(0, 3000),
@@ -94,6 +95,18 @@ class _ReadStoryState extends State<ReadStory> {
     } else {
       await FlutterTts().speak(story);
     }
+  }
+
+  Future stop() async {
+    //TODO:
+    await FlutterTts().stop();
+  }
+
+  share() {
+    Share.share(story +
+        "\n This story was written by " +
+        displayName +
+        ".\n © By Storify app");
   }
 
   @override
@@ -240,58 +253,40 @@ class _ReadStoryState extends State<ReadStory> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.lightBlueAccent[200]),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.share,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              //TODO: sharing story in social media.
-                            },
-                          ),
+                        BuildIcon(
+                          // Share icon
+                          color: Colors.lightBlueAccent[200],
+                          icon: Icons.share,
+                          onPressed: () {
+                            share();
+                          },
                         ),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.green[300],
-                          ),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.play_arrow,
-                              color: Colors.black,
-                              size: 34.0,
-                            ),
-                            onPressed: () {
-                              speak(story);
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.red[300],
-                          ),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.report_problem,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              showReport(
-                                  context, currentUserId, widget.storyId);
-                            },
-                          ),
-                        ),
+                        BuildIcon(
+                          // Play icon
+                          color: Colors.greenAccent[200],
+                          icon: Icons.play_arrow,
+                          onPressed: () {
+                            speak(story);
+                          },
+                        ), // play
+                        BuildIcon(
+                          color: Colors.yellowAccent[400],
+                          icon: Icons.stop,
+                          onPressed: () {
+                            stop();
+                          },
+                        ), // pause
+                        BuildIcon(
+                          color: Colors.red[300],
+                          icon: Icons.report_problem,
+                          onPressed: () {
+                            currentUserId == ownerUserId
+                                ? showMessage(
+                                    context, "You can't report your own story!")
+                                : showReport(
+                                    context, currentUserId, widget.storyId);
+                          },
+                        ), // report
                       ],
                     ),
                     SizedBox(

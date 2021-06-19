@@ -37,6 +37,9 @@ final storiesRef = FirebaseFirestore.instance.collection('stories');
 // Comments ref
 final commentsRef = FirebaseFirestore.instance.collection('comments');
 
+// Reports ref
+final reportsRef = FirebaseFirestore.instance.collection('reports');
+
 ///-----------------------------------------------------------------------------
 /*
   This method will check the scores in the commentsRef and will return us
@@ -81,7 +84,6 @@ updateAverageStoryRating(
 }
 
 ///-----------------------------------------------------------------------------
-
 ///-----------------------------------------------------------------------------
 /*
   Logout method that will send us back go the sign in screen
@@ -129,7 +131,6 @@ Future<void> confirmSignOut(BuildContext context) async {
 }
 
 ///-----------------------------------------------------------------------------
-
 ///-----------------------------------------------------------------------------
 /*
   SignInWithGoogle && SignInWithFacebook will both be in the sign in page.

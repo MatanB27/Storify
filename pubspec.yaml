@@ -19,9 +19,9 @@ dependencies:
   firebase_core: ^0.7.0
   provider: ^5.0.0
   flutter_facebook_login: ^3.0.0
-  timeago: 2.0.17 #"last seen 5 minutes ago" example
+  timeago: 2.0.17 # last seen 5 minutes ago" example
   flutter_signin_button: ^2.0.0
-  image_picker: ^0.6.0+2 #uploading pictures from gallery or camera
+  image_picker: ^0.6.0+2 # Uploading pictures from gallery or camera
   ionicons: ^0.1.2
   cached_network_image: ^2.0.0
   lipsum: ^1.0.1 # maybe delete
@@ -37,6 +37,7 @@ dependencies:
   readmore: ^2.0.0
   avatar_view: ^1.0.0
   carousel_slider: ^3.0.0
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:
