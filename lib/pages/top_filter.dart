@@ -52,7 +52,7 @@ class _TopFilterState extends State<TopFilter> {
             storyId: story.data()['sid'],
             commentId: story.data()['cid'],
             ownerId: story.data()['uid'],
-            rating: story.data()['rating'].toString(), //TODO: maybe delete
+            rating: story.data()['average'],
             storyPhoto: story.data()['storyPhoto'],
             timestamp: story.data()['timeStamp'],
             title: story.data()['title'],
@@ -60,6 +60,7 @@ class _TopFilterState extends State<TopFilter> {
           tickets.add(ticket);
         }
         return ListView(
+          scrollDirection: Axis.horizontal,
           children: tickets,
         );
       },

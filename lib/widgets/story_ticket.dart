@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:storify/services/navigator_to_pages.dart';
+import 'package:storify/services/rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:storify/services/database.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -8,7 +10,6 @@ import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-//TODO: improve UI
 // Here we are building all of the story tickets.
 // Each story will have his own ticket, in the profile page or feed page
 class StoryTickets extends StatelessWidget {
@@ -19,7 +20,7 @@ class StoryTickets extends StatelessWidget {
   final String displayName;
   final String title;
   final List<String> categories;
-  final String rating; //TODO: might delete
+  final dynamic rating;
   final Timestamp timestamp;
 
   StoryTickets(
@@ -29,7 +30,7 @@ class StoryTickets extends StatelessWidget {
       this.commentId,
       this.ownerId,
       this.categories,
-      this.rating, //TODO: might delete
+      this.rating,
       this.timestamp,
       this.displayName});
 
@@ -51,99 +52,106 @@ class StoryTickets extends StatelessWidget {
         showReadStory(context,
             storyId: this.storyId, commentId: this.commentId, ownerId: ownerId);
       },
-      child: Card(
-        elevation: 2.0,
-        margin: EdgeInsets.only(bottom: 20.0),
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Column(
-                children: [
-                  Container(
-                    height: 65.0,
-                    width: 65.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(this.storyPhoto),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.person,
-                        color: Colors.black,
-                        size: 20.0,
-                      ),
-                      Text(
-                        this.displayName,
-                        style: TextStyle(fontSize: 14.0, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ],
+      child: Container(
+        width: 330,
+        height: 500,
+        margin: EdgeInsets.all(12.0),
+        child: Stack(
+          alignment: Alignment.center,
+          fit: StackFit.loose,
+          children: [
+            Container(
+              height: 400,
+              width: 500,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(this.storyPhoto),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(12.0),
               ),
-              SizedBox(
-                width: 5.0,
+            ),
+            Positioned(
+              bottom: 200,
+              child: buildContainer(
+                Text(
+                  ' ' + this.title + ' ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+                ),
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Positioned(
+              bottom: 120,
+              child: buildContainer(
+                ratingStars(rating, 42.0, false),
+              ),
+            ),
+            Positioned(
+              bottom: 55,
+              left: 10,
+              child: buildContainer(
+                Row(
                   children: [
+                    Icon(
+                      Icons.person,
+                    ),
                     Text(
-                      this.title,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Container(
-                      child: Row(children: <Widget>[
-                        // This code is fine, its not a bug!
-                        for (var category in categories)
-                          Text(
-                            category + '  ',
-                            style: TextStyle(color: Colors.grey[700]),
-                          )
-                      ]),
-                    ),
-                    SizedBox(
-                      height: 12.0,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        // Icon(Icons.star), //TODO - rating - might delete
-                        // Text(
-                        //   this.rating,
-                        //   style: TextStyle(
-                        //     fontSize: 15,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Icon(Icons.date_range),
-                        Text(
-                          timeago.format(this.timestamp.toDate()),
-                        ),
-                      ],
+                      ' ' + this.displayName + ' ',
+                      style: TextStyle(fontSize: 21.0),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Positioned(
+              left: 10,
+              bottom: 85,
+              child: buildContainer(
+                Row(
+                  children: [
+                    Icon(Icons.date_range),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      timeago.format(this.timestamp.toDate()),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 172,
+              child: buildContainer(
+                Container(
+                  child: Row(children: <Widget>[
+                    // This code is fine, its not a bug!
+                    for (var category in categories)
+                      Text(
+                        ' ' + category + '  ',
+                        style: TextStyle(fontSize: 18.0),
+                      )
+                  ]),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  /*
+    Building containers for all the widgets on the stack
+  */
+  Container buildContainer(Widget widget) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: widget);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storify/services/database.dart';
 
 Icon star(double size) {
   return Icon(
@@ -14,18 +15,15 @@ Icon star(double size) {
  We are using this method in both story and comment page, so we have to check
  In which page we are to adjust the UI
  */
-Widget ratingStars(
-  dynamic rating,
-  double size,
-  bool isStory,
-) {
+Widget ratingStars(dynamic rating, double size, bool isStory) {
   /*
     This "if" will only be visible on the story, because when someone is
     Rating the story, it will be from 1 to 100
    */
-  if (rating == 0) {
+
+  if (rating == 0 || rating == null) {
     return Text(
-      'No rating yet!',
+      ' No rating yet! ',
       style: TextStyle(color: Colors.grey[500], fontSize: 30),
     );
   } else if (rating > 0 && rating < 20) {
@@ -79,5 +77,6 @@ Widget ratingStars(
       ],
     );
   }
+
   return Container();
 }

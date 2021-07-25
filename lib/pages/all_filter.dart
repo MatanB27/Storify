@@ -43,7 +43,7 @@ class _AllFilterState extends State<AllFilter> {
             storyId: story.data()['sid'],
             commentId: story.data()['cid'],
             ownerId: story.data()['uid'],
-            rating: story.data()['rating'].toString(), //TODO: maybe delete
+            rating: story.data()['average'], //TODO: maybe delete
             storyPhoto: story.data()['storyPhoto'],
             timestamp: story.data()['timeStamp'],
             title: story.data()['title'],
@@ -51,6 +51,7 @@ class _AllFilterState extends State<AllFilter> {
           tickets.add(ticket);
         }
         return ListView(
+          scrollDirection: Axis.horizontal,
           children: tickets,
         );
       },

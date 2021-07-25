@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -440,62 +441,97 @@ class _EditProfileState extends State<EditProfile> {
                           'Change Profile Photo',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.blue,
+                            color: Colors.blueAccent,
+                            //fontFamily: 'Pacifico',
                           ),
                         ),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 8,
+                    height: 20,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
                       bottom: 35,
                     ),
-                    child: TextField(
-                      controller: displayNameController,
-                      maxLength: 20,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(bottom: 3),
-                        labelText: "Your name:",
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        hintStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Your name",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
-                      ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        TextField(
+                          controller: displayNameController,
+                          maxLength: 20,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
                       bottom: 35,
                     ),
-                    child: TextField(
-                      controller: bioController,
-                      maxLength: 150,
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(bottom: 3),
-                        labelText: "Tell us about yourself:",
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        hintStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Tell us about yourself",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
-                      ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        TextField(
+                          controller: bioController,
+                          maxLength: 150,
+                          maxLines: 4,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
-                    height: 35,
+                    height: 18,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      OutlineButton(
-                        color: Colors.black,
+                      FlatButton(
+                        color: Colors.blueAccent,
                         padding: EdgeInsets.symmetric(horizontal: 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -506,21 +542,21 @@ class _EditProfileState extends State<EditProfile> {
                           style: TextStyle(
                             fontSize: 14,
                             letterSpacing: 2.2,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                      OutlineButton(
+                      FlatButton(
                         onPressed: updateProfileData,
                         padding: EdgeInsets.symmetric(horizontal: 50),
-                        color: Colors.black,
+                        color: Colors.blueAccent,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                         child: Text(
                           'save',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black,
+                            color: Colors.white,
                             letterSpacing: 2.2,
                           ),
                         ),
@@ -569,24 +605,25 @@ class _EditProfileState extends State<EditProfile> {
       create: (context) => AuthService(),
       child: Scaffold(
         //backgroundColor: Color(0xff09031D),
+        backgroundColor: Color(0xff09031D),
         key: _scaffoldKey,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            color: Colors.black,
+            color: Colors.white,
             onPressed: () => goBack(context),
           ),
           title: Text(
             'Edit profile',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.grey,
+          backgroundColor: Color(0xff09031D),
           elevation: 1,
           actions: [
             IconButton(
               icon: Icon(
                 Icons.logout,
-                color: Colors.black,
+                color: Colors.white,
               ),
               onPressed: () => confirmSignOut(context),
             ),

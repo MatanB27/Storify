@@ -4,6 +4,7 @@ import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/story_ticket.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 /*
   The main page, the user can read the stories of the users he follow
@@ -53,7 +54,7 @@ class _FeedFilterState extends State<FeedFilter> {
             storyId: story.data()['sid'],
             commentId: story.data()['cid'],
             ownerId: story.data()['uid'],
-            rating: story.data()['rating'].toString(), //TODO: maybe delete
+            rating: story.data()['average'],
             storyPhoto: story.data()['storyPhoto'],
             timestamp: story.data()['timeStamp'],
             title: story.data()['title'],
@@ -61,17 +62,11 @@ class _FeedFilterState extends State<FeedFilter> {
           tickets.add(ticket);
         }
         return ListView(
+          scrollDirection: Axis.horizontal,
           children: tickets,
         );
       },
     );
-  }
-
-  @override
-  void initState() {
-    // TODO: delete
-    super.initState();
-    print(widget.categoriesFilter);
   }
 
   @override

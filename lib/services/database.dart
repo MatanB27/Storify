@@ -63,8 +63,11 @@ getAverageRatingFromStoriesRef([String storyId]) async {
 }
 
 /*
-  Every time a use is giving his review on some story,
+  Every time a user is giving his review on some story,
   It will be updated in the storiesRef
+  countRating - how many user rated the story
+  total - total number of rating
+  average - the story current average rating
  */
 updateAverageStoryRating(
     dynamic rating, String storyId, String ownerUserId) async {

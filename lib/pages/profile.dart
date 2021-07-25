@@ -318,7 +318,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     Container(
                       color: Colors.white,
-                      width: 0.6,
+                      width: 0.8,
                       height: 22,
                     ),
                     GestureDetector(
@@ -568,7 +568,7 @@ class _ProfileState extends State<Profile> {
             storyId: doc.data()['sid'],
             commentId: doc.data()['cid'],
             ownerId: doc.data()['uid'],
-            rating: doc.data()['rating'].toString(), //TODO: maybe delete
+            rating: doc.data()['average'],
             storyPhoto: doc.data()['storyPhoto'],
             timestamp: doc.data()['timeStamp'],
             title: doc.data()['title'],
