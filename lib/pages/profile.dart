@@ -576,10 +576,14 @@ class _ProfileState extends State<Profile> {
           tickets.add(ticket);
           storyCount = tickets.length;
         });
-        return ListView(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          children: tickets,
+        return SizedBox(
+          height: 500.0,
+          child: ListView(
+            physics: ClampingScrollPhysics(),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            children: tickets,
+          ),
         );
       },
     );
@@ -645,11 +649,14 @@ class _ProfileState extends State<Profile> {
         ),
         body: RefreshIndicator(
           onRefresh: pullToRefresh,
-          child: ListView(
-            children: [
-              profileHeader(),
-              buildProfileStories(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                profileHeader(),
+                buildProfileStories(),
+              ],
+            ),
           ),
         ),
       ),
