@@ -4,7 +4,6 @@ import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/story_ticket.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 /*
   The main page, the user can read the stories of the users he follow

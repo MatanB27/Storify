@@ -36,7 +36,7 @@ dependencies:
   salomon_bottom_bar: ^3.0.0
   readmore: ^2.0.0
   avatar_view: ^1.0.0
-  carousel_slider: ^4.0.0
+  flutter_boom_menu: ^1.0.2
   share: ^2.0.4
 
 dev_dependencies:

@@ -79,7 +79,7 @@ class _ChatState extends State<Chat> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-        backgroundColor: Colors.grey[350],
+        backgroundColor: Color(0xff09031D),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(55.0),
           child: Header(

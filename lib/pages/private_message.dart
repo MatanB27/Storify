@@ -138,20 +138,59 @@ class _PrivateMessageState extends State<PrivateMessage> {
   }
 
   sendMessageBlock() {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: TextField(
-        controller: messageText,
-        obscureText: false,
-        decoration: InputDecoration(
-          hintText: 'Write your message...',
-          suffixIcon: IconButton(
-            icon: Icon(Icons.send),
-            onPressed: () {
-              sendMessage();
-            },
+    return Container(
+      margin: EdgeInsets.all(15.0),
+      height: 61,
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(35.0),
+                boxShadow: [
+                  BoxShadow(
+                      offset: Offset(0, 3), blurRadius: 5, color: Colors.grey)
+                ],
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                      icon: Icon(
+                        Icons.face,
+                        color: Colors.blueAccent,
+                      ),
+                      onPressed: () {}),
+                  Expanded(
+                    child: TextField(
+                        controller: messageText,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                            hintText: "Type Something...",
+                            hintStyle: TextStyle(color: Colors.blueAccent),
+                            border: InputBorder.none)),
+                  ),
+                  SizedBox(width: 15),
+                  Container(
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                        color: Colors.blueAccent, shape: BoxShape.circle),
+                    child: InkWell(
+                      child: Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
+                      onTap: () {
+                        sendMessage();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
+          SizedBox(width: 15),
+        ],
       ),
     );
   }
@@ -177,7 +216,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-        backgroundColor: Colors.grey[350],
+        backgroundColor: Color(0xff09031D),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(55.0),
           child: header(),
@@ -193,9 +232,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: Colors.grey, width: 2.0),
-                  ),
+                  border: Border(),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -243,13 +280,13 @@ class MessageBubbles extends StatelessWidget {
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30),
                   ),
-            color: isMe ? Colors.lightBlueAccent : Colors.white,
+            color: isMe ? Color(0xff6F61E8) : Color(0xff2B2250),
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Text(
                 this.message,
-                style: TextStyle(color: isMe ? Colors.white : Colors.black),
+                style: TextStyle(color: isMe ? Colors.white : Colors.white),
               ),
             ),
           ),
@@ -258,7 +295,7 @@ class MessageBubbles extends StatelessWidget {
           ),
           Text(
             timeago.format(this.timestamp.toDate()),
-            style: TextStyle(color: Colors.black54, fontSize: 12.0),
+            style: TextStyle(color: Colors.grey, fontSize: 12.0),
           ),
         ],
       ),

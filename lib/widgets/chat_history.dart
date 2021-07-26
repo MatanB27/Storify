@@ -37,14 +37,20 @@ class ChatHistory extends StatelessWidget {
         ),
         title: Text(
           this.displayName,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
         ),
         subtitle: Text(
           this.message,
           overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
         ),
         trailing: Text(
           timeago.format(this.timeStamp.toDate()),
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+          ),
         ),
         dense: true,
         onTap: () {

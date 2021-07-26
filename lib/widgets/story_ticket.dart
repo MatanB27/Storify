@@ -5,10 +5,6 @@ import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/services/rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:storify/services/database.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:carousel_slider/carousel_controller.dart';
-import 'package:carousel_slider/carousel_options.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 // Here we are building all of the story tickets.
 // Each story will have his own ticket, in the profile page or feed page

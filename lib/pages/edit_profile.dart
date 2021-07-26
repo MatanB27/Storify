@@ -15,9 +15,8 @@ import 'package:storify/services/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../services/auth_service.dart';
 import 'home.dart';
-import 'package:storify/services/database.dart';
+import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 
-//TODO: improve UI
 class EditProfile extends StatefulWidget {
   final String currentUserId;
   EditProfile({this.currentUserId});
@@ -529,39 +528,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FlatButton(
-                        color: Colors.blueAccent,
-                        padding: EdgeInsets.symmetric(horizontal: 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        onPressed: () => goBack(context),
-                        child: Text(
-                          'cancel',
-                          style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 2.2,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: updateProfileData,
-                        padding: EdgeInsets.symmetric(horizontal: 50),
-                        color: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Text(
-                          'save',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            letterSpacing: 2.2,
-                          ),
-                        ),
-                      ),
-                    ],
+                    children: [],
                   ),
                 ],
               ),
@@ -604,7 +571,6 @@ class _EditProfileState extends State<EditProfile> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-        //backgroundColor: Color(0xff09031D),
         backgroundColor: Color(0xff09031D),
         key: _scaffoldKey,
         appBar: AppBar(
@@ -619,18 +585,39 @@ class _EditProfileState extends State<EditProfile> {
           ),
           backgroundColor: Color(0xff09031D),
           elevation: 1,
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.logout,
-                color: Colors.white,
-              ),
-              onPressed: () => confirmSignOut(context),
-            ),
-          ],
         ),
         body: Container(
           child: profileEditPage(),
+        ),
+        floatingActionButton: BoomMenu(
+          backgroundColor: Colors.blueAccent,
+          animatedIcon: AnimatedIcons.menu_close,
+          animatedIconTheme: IconThemeData(size: 22.0),
+          //child: Icon(Icons.add),
+
+          scrollVisible: true,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.7,
+          children: [
+            MenuItem(
+              child: Icon(Icons.logout, color: Colors.white),
+              title: "Logout",
+              titleColor: Colors.white,
+              subtitle: "Click here to exit",
+              subTitleColor: Colors.white,
+              backgroundColor: Colors.blue,
+              onTap: () => confirmSignOut(context),
+            ),
+            MenuItem(
+              child: Icon(Icons.verified_user, color: Colors.white),
+              title: "Save",
+              titleColor: Colors.white,
+              subtitle: "Save the changes",
+              subTitleColor: Colors.white,
+              backgroundColor: Colors.red,
+              onTap: () => updateProfileData(),
+            ),
+          ],
         ),
       ),
     );
