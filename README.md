@@ -6,7 +6,7 @@
   <h3 align="center">Storify</h3>
 
   <p align="center">
-    Example app with Flutter that uses Firebase
+    Storify is a beutiful social media app where users can share their own stories with other users.
     <br>
     Base project made with much  :heart: . Contains CRUD, patterns, and much more!
     <br>
