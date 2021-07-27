@@ -103,3 +103,5 @@ In the edit page screen we can change our profile picture, our bio and our name.
 * Matan Baruch
 * Shay Ohayon
 
+# More
+There are more features in this app, like searching users and writing a story
