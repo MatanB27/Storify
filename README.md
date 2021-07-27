@@ -17,8 +17,8 @@
 # Main screens of the app
 
 ## Login Screen
-<p align="center">
-    ![log in](https://user-images.githubusercontent.com/69850880/127153895-88f9fb8f-770f-4e1e-9a32-91116fbba8c2.PNG)
+<p align="center">![log in](https://user-images.githubusercontent.com/69850880/127154036-379d3b54-c10d-4c28-9a0e-e78b41eaddc7.PNG)
+
 
   <h3 align="center">Storify</h3>
 
