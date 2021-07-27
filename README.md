@@ -10,9 +10,11 @@
     <br>
     You can follow other users, chat, reading and writing stories and even more!
     <br>
-    More details explanation will be on each main screen!
+    More details will be on each main screen!
     <br>
   </p>
 </p>
 
 # Main screens of the app
+
+## Login Screen
