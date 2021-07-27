@@ -29,7 +29,6 @@ We implemented Google Firebase Cloud Firestore, Storage and Authentication to pr
 <br>
 
 ## Home page
-<br>
 ![image](https://user-images.githubusercontent.com/69850880/127155061-eb696752-6910-49e7-9327-12c0e8747a1f.png)
 <br>
 Your homepage! 
