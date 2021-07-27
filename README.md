@@ -78,5 +78,14 @@ The story includes:
     <br>
     - Comments button - show what other people think about your story and their rating
    
-    
+## Chat history
+![image](https://user-images.githubusercontent.com/69850880/127158128-dac23fc2-2d2d-44e9-b882-ea50f2ad961f.png)
+<br>
+This screen will show us all the user that we talked to before.
+<br>
+If we click on each of those tickets - It will bring us to the chat room with that user
+<br>
+![image](https://user-images.githubusercontent.com/69850880/127158428-f68d32b0-d621-4738-b11a-964f582f3d08.png)
+<br>
 
+## Profile page
