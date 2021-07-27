@@ -27,3 +27,6 @@ All your data will be safe and secured in our database, we are using Firebase
 <br>
 We implemented Google Firebase Cloud Firestore, Storage and Authentication to provide database and authentication services to the application
 <br>
+
+## Home page
+![image](https://user-images.githubusercontent.com/69850880/127154954-f24255f8-f081-487e-80a9-24fcd767e0d0.png)
