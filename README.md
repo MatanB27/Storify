@@ -19,10 +19,11 @@
 ## Login Screen
 <p align="center">
 
-  ![log in](https://user-images.githubusercontent.com/69850880/127154036-379d3b54-c10d-4c28-9a0e-e78b41eaddc7.PNG)
+  
   <h3 align="center">Storify</h3>
 
   <p align="center">
+    ![log in](https://user-images.githubusercontent.com/69850880/127154036-379d3b54-c10d-4c28-9a0e-e78b41eaddc7.PNG)
     Storify is a beutiful social media app where users can share their own stories with other users.
     <br>
     You can follow other users, chat, reading and writing stories and even more!
