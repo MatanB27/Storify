@@ -46,5 +46,9 @@ At the main page, we have 4 sections: Feed, All, Top and Categories:
     Top - Most high rated stories of our app
     <br>
     Categories - Filter only the "Top" and "All" sections - we decide which category we want the app to show us
-    <br>
-We will explain more about the details in each story in "Stories page"
+ 
+## Read story
+![image](https://user-images.githubusercontent.com/69850880/127156513-3cddbdef-ef07-43ff-a750-c6a991c387b9.png)
+<br>
+
+
