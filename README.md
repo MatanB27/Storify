@@ -19,7 +19,6 @@
 ## Login Screen
 <p align="center">
     ![log in](https://user-images.githubusercontent.com/69850880/127153895-88f9fb8f-770f-4e1e-9a32-91116fbba8c2.PNG)
-  </a>
 
   <h3 align="center">Storify</h3>
 
