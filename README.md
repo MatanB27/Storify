@@ -19,10 +19,11 @@
 ## Login Screen
 ![log in](https://user-images.githubusercontent.com/69850880/127154036-379d3b54-c10d-4c28-9a0e-e78b41eaddc7.PNG)
 
-Storify is a beutiful social media app where users can share their own stories with other users.
+In this screen the user can decided in which platform he wants to login to our app - Google or Facebook.
 <br>
-You can follow other users, chat, reading and writing stories and even more!
+If we don't have a user yet, we can create one with a Google or Facebook account.
 <br>
-More details will be on each main screen!
+All your data will be safe and secured in our database, we are using Firebase
 <br>
-
+We implemented Google Firebase Cloud Firestore, Storage and Authentication to provide database and authentication services to the application
+<br>
