@@ -1,5 +1,6 @@
+
+![splash](https://user-images.githubusercontent.com/69850880/127160384-f04edeee-5959-4613-9ab5-2cda90de0297.png)
 <p align="center">
-![splash](https://user-images.githubusercontent.com/69850880/127160218-180a966b-1253-4f68-948b-395b0becfccf.png)
 
   <h3 align="center">Storify</h3>
 
