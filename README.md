@@ -1,11 +1,6 @@
-
-
-<p align="center">
+![splash](https://user-images.githubusercontent.com/69850880/127160384-f04edeee-5959-4613-9ab5-2cda90de0297.png)
 
   <h3 align="center">Storify</h3>
-
-  <p align="center">
-  ![splash](https://user-images.githubusercontent.com/69850880/127160384-f04edeee-5959-4613-9ab5-2cda90de0297.png)
   <br>
     Storify is a beutiful social media app where users can share their own stories with other users.
     <br>
@@ -13,8 +8,6 @@
     <br>
     More details will be on each main screen!
     <br>
-  </p>
-</p>
 
 # Main screens of the app
 
