@@ -1,11 +1,11 @@
-# storify
+# Storify
 
 <p align="center">
   <a href="https://flutter.io/">
     <img src="https://diegolaballos.com/files/images/flutter-icon.jpg" alt="Logo" width=72 height=72>
   </a>
 
-  <h3 align="center">Flutter Example App</h3>
+  <h3 align="center">Storify</h3>
 
   <p align="center">
     Example app with Flutter that uses Firebase
