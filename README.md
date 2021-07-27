@@ -89,5 +89,13 @@ If we click on each of those tickets - It will bring us to the chat room with th
 ## Profile page
 ![image](https://user-images.githubusercontent.com/69850880/127158428-f68d32b0-d621-4738-b11a-964f582f3d08.png)
 <br>
-
+Simple and beutiful profile page,
+<br>
+Every user can see how many stories he wrote, how many followers and following he have and reading his own stories by clicking on them.
+<br>
+If we are going to other user profiles, We will see a button to follow / unfollow them and a button to send them a message.
+<br>
+Clicking on the EditPage will move us to the edit page screen.
+<br>
+In the edit page screen we can change our profile picture, our bio and our name.
 
