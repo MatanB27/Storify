@@ -18,4 +18,8 @@
 # Main screens of the app
 
 ## Login Screen
+<p align="center">
+  
 1
+  
+</p>
