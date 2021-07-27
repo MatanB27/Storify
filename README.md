@@ -1,6 +1,5 @@
 <p align="center">
-    <img src="https://diegolaballos.com/files/images/flutter-icon.jpg" alt="Logo" width=72 height=72>
-  </a>
+![splash](https://user-images.githubusercontent.com/69850880/127160218-180a966b-1253-4f68-948b-395b0becfccf.png)
 
   <h3 align="center">Storify</h3>
 
