@@ -30,4 +30,12 @@ We implemented Google Firebase Cloud Firestore, Storage and Authentication to pr
 
 ## Home page
 ![image](https://user-images.githubusercontent.com/69850880/127155061-eb696752-6910-49e7-9327-12c0e8747a1f.png)
-
+Your homepage! 
+Every user have is own dynamic homepage.
+If we want to see more stories we can swipe right in the middle of the screen.
+At the main page, we have 4 sections: Feed, All, Top and Categories:
+    Feed - Showing us the stories of people we follow (newest stories will be first)
+    All - Showing us all of the current stories in our app - this section help us know new people ( newest stories will be first)
+    Top - Most high rated stories of our app
+    Categories - Filter only the "Top" and "All" sections - we decide which category we want the app to show us
+We will explain more about the details in each story in "Stories page"
