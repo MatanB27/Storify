@@ -62,21 +62,21 @@ The story includes:
     <br>
     Amount of rating the story got from other users - if there's no rating it will write "No rating yet",  and if it does - it will show us how many stars the story got
     <br>
-    * Date of the writing story
+    Date of the writing story
     <br>
     Buttons:
         <br>
-        * Share your story with other apps.
+        Share your story with other apps.
         <br>
-        * Let the phone read the story.
+        Let the phone read the story.
         <br>
-        * Stop the phone from reading the story.
-        
-        * Reporting the story.
-    
-    * The story itself.
-    
-    * Comments button - show what other people think about your story and their rating
+        Stop the phone from reading the story.
+        <br>
+        Reporting the story.
+    <br>
+    The story itself.
+    <br>
+    Comments button - show what other people think about your story and their rating
    
 ## Chat history
 ![image](https://user-images.githubusercontent.com/69850880/127158128-dac23fc2-2d2d-44e9-b882-ea50f2ad961f.png)
