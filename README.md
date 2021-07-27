@@ -50,5 +50,33 @@ At the main page, we have 4 sections: Feed, All, Top and Categories:
 ## Read story
 ![image](https://user-images.githubusercontent.com/69850880/127156513-3cddbdef-ef07-43ff-a750-c6a991c387b9.png)
 <br>
-
+In this page we are reading the story.
+<br>
+The story includes:
+    <br>
+    - The name and the avatar of the author at the top of the screen.
+    <br>
+    - Which categories does the story related to. 
+    <br>
+    - Title of the story
+    <br>
+    - Amount of rating the story got from other users - if there's no rating it will write "No rating yet",  and if it does - it will show us how many stars the story got
+    <br>
+    - Date of the writing story
+    <br>
+    Buttons:
+        <br>
+        - Share your story with other apps.
+        <br>
+        - Let the phone read the story.
+        <br>
+        - Stop the phone from reading the story.
+        <br>
+        - Reporting the story.
+    <br>
+    - The story itself.
+    <br>
+    - Comments button - show what other people think about your story and their rating
+   
+    
 
