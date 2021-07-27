@@ -85,7 +85,9 @@ This screen will show us all the user that we talked to before.
 <br>
 If we click on each of those tickets - It will bring us to the chat room with that user
 <br>
+
+## Profile page
 ![image](https://user-images.githubusercontent.com/69850880/127158428-f68d32b0-d621-4738-b11a-964f582f3d08.png)
 <br>
 
-## Profile page
+
