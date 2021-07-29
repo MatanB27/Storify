@@ -132,7 +132,7 @@ class _ReadStoryState extends State<ReadStory> {
             average = doc.data()['average'];
           });
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Color(0xff09031D),
             appBar: AppBar(
               iconTheme: IconThemeData(
                 color: Colors.black,
@@ -186,31 +186,19 @@ class _ReadStoryState extends State<ReadStory> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          for (var category in categories)
-                            Text(
-                              category + '  ',
-                              style: TextStyle(
-                                  color: Colors.grey[700], fontSize: 20),
-                            )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
                       child: Text(
                         title,
                         style: TextStyle(
                           fontSize: 35,
-                          color: Colors.black,
+                          color: Colors.white,
+                          fontFamily: 'Pacifico',
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    ratingStars(average, 50.0, true),
                     SizedBox(
                       height: 8.0,
                     ),
@@ -225,6 +213,7 @@ class _ReadStoryState extends State<ReadStory> {
                       ),
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.date_range_rounded,
@@ -245,49 +234,69 @@ class _ReadStoryState extends State<ReadStory> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          for (var category in categories)
+                            Text(
+                              category + '  ',
+                              style: TextStyle(
+                                  color: Colors.grey[700], fontSize: 15),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          BuildIcon(
+                            icon: Icons.share,
+                            onPressed: () {
+                              share();
+                            },
+                          ),
+                          BuildIcon(
+                            icon: Icons.headset,
+                            onPressed: () {
+                              speak(story);
+                            },
+                          ),
+                          BuildIcon(
+                            icon: Icons.stop,
+                            onPressed: () {
+                              stop();
+                            },
+                          ),
+                          BuildIcon(
+                            icon: Icons.report_problem,
+                            onPressed: () {
+                              currentUserId == ownerUserId
+                                  ? showMessage(context,
+                                      "You can't report your own story!")
+                                  : showReport(
+                                      context, currentUserId, widget.storyId);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ratingStars(average, 20.0, true),
                       ],
                     ),
                     SizedBox(
                       height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        BuildIcon(
-                          // Share icon
-                          color: Colors.lightBlueAccent[200],
-                          icon: Icons.share,
-                          onPressed: () {
-                            share();
-                          },
-                        ),
-                        BuildIcon(
-                          // Play icon
-                          color: Colors.greenAccent[200],
-                          icon: Icons.play_arrow,
-                          onPressed: () {
-                            speak(story);
-                          },
-                        ), // play
-                        BuildIcon(
-                          color: Colors.yellowAccent[400],
-                          icon: Icons.stop,
-                          onPressed: () {
-                            stop();
-                          },
-                        ), // pause
-                        BuildIcon(
-                          color: Colors.red[300],
-                          icon: Icons.report_problem,
-                          onPressed: () {
-                            currentUserId == ownerUserId
-                                ? showMessage(
-                                    context, "You can't report your own story!")
-                                : showReport(
-                                    context, currentUserId, widget.storyId);
-                          },
-                        ), // report
-                      ],
                     ),
                     SizedBox(
                       height: 8.0,
@@ -302,7 +311,7 @@ class _ReadStoryState extends State<ReadStory> {
                         trimLength: 300,
                         colorClickableText: Colors.grey,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 18,
                         ),
                       ),

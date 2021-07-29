@@ -148,35 +148,65 @@ class _CommentsState extends State<Comments> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: commentController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
+          child: Container(
+            margin: EdgeInsets.all(15.0),
+            height: 61,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(35.0),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 3),
+                            blurRadius: 5,
+                            color: Colors.grey)
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.comment,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                              controller: commentController,
+                              maxLength: 150,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                  counterText: "",
+                                  hintText: 'Add a comment...',
+                                  hintStyle:
+                                      TextStyle(color: Colors.blueAccent),
+                                  border: InputBorder.none)),
+                        ),
+                        SizedBox(width: 15),
+                        Container(
+                          padding: const EdgeInsets.all(15.0),
+                          decoration: BoxDecoration(
+                              color: Colors.blueAccent, shape: BoxShape.circle),
+                          child: InkWell(
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                            ),
+                            onTap: () async {
+                              await sendCommentToFirebase();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              fillColor: Colors.grey[300],
-              filled: true,
-              icon: Icon(
-                Icons.comment,
-                color: Colors.black,
-              ),
-              hintText: 'Add a comment...',
-              helperText: 'at least 3 characters',
-              suffixIcon: IconButton(
-                icon: Icon(
-                  Icons.send,
-                  color: Colors.black,
-                ),
-                onPressed: () async {
-                  await sendCommentToFirebase();
-                },
-              ),
+                SizedBox(width: 15),
+              ],
             ),
-            maxLength: 150,
           ),
         ),
       ],
@@ -195,6 +225,7 @@ class _CommentsState extends State<Comments> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
+        backgroundColor: Color(0xff09031D),
         body: SafeArea(
           child: Column(
             children: [

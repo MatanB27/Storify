@@ -19,16 +19,17 @@ class StoryTickets extends StatelessWidget {
   final dynamic rating;
   final Timestamp timestamp;
 
-  StoryTickets(
-      {this.storyPhoto,
-      this.title,
-      this.storyId,
-      this.commentId,
-      this.ownerId,
-      this.categories,
-      this.rating,
-      this.timestamp,
-      this.displayName});
+  StoryTickets({
+    this.storyPhoto,
+    this.title,
+    this.storyId,
+    this.commentId,
+    this.ownerId,
+    this.categories,
+    this.rating,
+    this.timestamp,
+    this.displayName,
+  });
 
   // Let us see all of the categories in the List
   getCategories() {

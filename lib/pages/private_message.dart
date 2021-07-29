@@ -156,19 +156,20 @@ class _PrivateMessageState extends State<PrivateMessage> {
               child: Row(
                 children: [
                   IconButton(
-                      icon: Icon(
-                        Icons.face,
-                        color: Colors.blueAccent,
-                      ),
-                      onPressed: () {}),
+                    icon: Icon(
+                      Icons.face,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
                   Expanded(
                     child: TextField(
-                        controller: messageText,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            hintText: "Type Something...",
-                            hintStyle: TextStyle(color: Colors.blueAccent),
-                            border: InputBorder.none)),
+                      controller: messageText,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                          hintText: "Type Something...",
+                          hintStyle: TextStyle(color: Colors.blueAccent),
+                          border: InputBorder.none),
+                    ),
                   ),
                   SizedBox(width: 15),
                   Container(

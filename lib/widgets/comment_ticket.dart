@@ -28,44 +28,66 @@ class CommentTicket extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showProfile(context, profileId: uid);
-      },
-      child: Card(
-        color: Colors.blueGrey[300],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            ListTile(
-              leading: CircleAvatar(
+        onTap: () {
+          showProfile(context, profileId: uid);
+        },
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Material(
+                elevation: 5,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                color: Color(0xff6F61E8),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
+                      child: Text(
+                        this.comment,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ratingStars(rating, 25.0, true),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              CircleAvatar(
                 backgroundImage: CachedNetworkImageProvider(this.photoUrl),
               ),
-              title: Text(
-                this.displayName,
-                style: TextStyle(fontSize: 18.0),
+              SizedBox(
+                height: 3,
               ),
-              subtitle: ratingStars(rating, 32.0, false),
-              isThreeLine: true,
-            ),
-            Text(
-              this.comment,
-              style: TextStyle(color: Colors.black, fontSize: 16.0),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              timeago.format(this.timeStamp.toDate()),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-          ],
-        ),
-      ),
-    );
+              Text(
+                this.displayName,
+                style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 3,
+              ),
+              Text(
+                timeago.format(this.timeStamp.toDate()),
+                style: TextStyle(color: Colors.grey, fontSize: 12.0),
+              ),
+            ],
+          ),
+        ));
   }
 }

@@ -48,6 +48,7 @@ class _ReportState extends State<Report> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff09031D),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(55.0),
         child: Header(
@@ -64,10 +65,11 @@ class _ReportState extends State<Report> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
               SizedBox(
-                height: 8.0,
+                height: 30.0,
               ),
               TextField(
                 keyboardType: TextInputType.multiline,
@@ -84,7 +86,7 @@ class _ReportState extends State<Report> {
                     ),
                   ),
                   hintText: 'Type here...',
-                  fillColor: Colors.grey,
+                  fillColor: Colors.white,
                   filled: true,
                 ),
               ),
@@ -92,7 +94,7 @@ class _ReportState extends State<Report> {
                 height: 18.0,
               ),
               Container(
-                color: Colors.red,
+                color: Colors.blueAccent,
                 child: FlatButton(
                   onPressed: () {
                     reportStoryToFirebase();
