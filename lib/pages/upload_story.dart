@@ -12,6 +12,9 @@ import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/services/scaffold_message.dart';
 import 'package:uuid/uuid.dart';
 import 'package:storify/services/categories.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
+import 'package:sweetalert/sweetalert.dart';
+import 'package:edge_alert/edge_alert.dart';
 
 // The page where we uploading the story to the data base.
 class UploadStory extends StatefulWidget {
@@ -108,7 +111,11 @@ class _UploadStoryState extends State<UploadStory> {
         titleStoryController.text.toString().trim().length < 3 ||
         chosenCategories.length == 0 ||
         _uploadedFileURL == null) {
-      showMessage(context, 'Make sure you fill everything correctly.');
+      SweetAlert.show(context,
+          title: "Ops",
+          subtitle:
+              "pleas make sure you pick a photo\n ,or all the fields are full",
+          style: SweetAlertStyle.error);
     } else {
       /*
          Generating random id from firebase
@@ -136,7 +143,10 @@ class _UploadStoryState extends State<UploadStory> {
         'story': storyController.text.toString(),
         // According to the users rating
       });
-      showMessage(context, 'Congratulations, You posted a new story!');
+      SweetAlert.show(context,
+          title: "Just show a message",
+          subtitle: "Sweet alert is pretty",
+          style: SweetAlertStyle.success);
 
       await showReadStory(context, storyId: storyId, ownerId: widget.userId);
 
@@ -165,7 +175,7 @@ class _UploadStoryState extends State<UploadStory> {
         child: Column(
           children: [
             Text(
-              'Choose Profile Photo',
+              'upload your own photo',
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -247,208 +257,285 @@ class _UploadStoryState extends State<UploadStory> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text(
-            'Upload Story',
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              TextFormField(
-                controller: titleStoryController,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
+        backgroundColor: Color(0xff09031D),
+        body: Container(
+          padding: EdgeInsets.only(left: 16, top: 25, right: 16),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: ListView(
+              children: [
+                Stack(
+                  children: [
+                    Center(
+                      child: isUploading
+                          ? loading()
+                          : Container(
+                              width: 130,
+                              height: 130,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 4,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    spreadRadius: 2,
+                                    blurRadius: 10,
+                                    color: Colors.black.withOpacity(0.1),
+                                    offset: Offset(0, 10),
+                                  ),
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      'https://www.publicdomainpictures.net/pictures/320000/velka/background-image.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Center(),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 18,
+                ),
+                GestureDetector(
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: ((builder) => selectImage()));
+                      },
+                      child: Text(
+                        'Choose your own story photo',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.blueAccent,
+                          //fontFamily: 'Pacifico',
+                        ),
+                      ),
                     ),
                   ),
-                  fillColor: Colors.white,
-                  filled: true,
-                  icon: Icon(
-                    Icons.title,
-                    color: Colors.black,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 35,
                   ),
-                  hintText: 'Write your title...',
-                  helperText: 'at least 3 characters',
-                ),
-                maxLength: 30,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Pick the story genres - up to 3 genres:',
-                style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              GridView.builder(
-                  // All categories
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 120,
-                      childAspectRatio: 8 / 2,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 10),
-                  itemCount: copyCategories.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          pickACategory(index);
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Colors.red[300],
-                        ),
-                        child: Center(child: Text(copyCategories[index])),
-                        height: 25,
-                      ),
-                    );
-                  }),
-              SizedBox(
-                height: 12,
-              ),
-              Text(
-                'Your genres:',
-                style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              GridView.builder(
-                  // All categories
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 120,
-                      childAspectRatio: 8 / 2,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 10),
-                  itemCount: chosenCategories.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          removeACategory(index);
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Colors.lightBlueAccent,
-                        ),
-                        child: Center(child: Text(chosenCategories[index])),
-                        height: 25,
-                      ),
-                    );
-                  }),
-              Divider(
-                color: Colors.black,
-                thickness: 2.0,
-              ),
-              FlatButton.icon(
-                onPressed: () async {
-                  showModalBottomSheet(
-                      context: context, builder: ((builder) => selectImage()));
-                },
-                color: Colors.indigo,
-                label: Text(
-                  'Upload image',
-                  style: TextStyle(color: Colors.white),
-                ),
-                icon: Icon(
-                  Icons.upload_rounded,
-                  color: Colors.white,
-                ),
-              ),
-              isUploading
-                  ? loading()
-                  : _uploadedFileURL != null
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.check,
-                              color: Colors.grey[600],
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          FlatButton(
+                            child: Text(
+                              "Your title",
+                              style: TextStyle(color: Colors.white),
                             ),
-                            SizedBox(
-                              width: 3,
+                            onPressed: () {
+                              EdgeAlert.show(
+                                context,
+                                title: 'Your story title',
+                                // description: 'Description',
+                                gravity: EdgeAlert.TOP,
+                                icon: Icons.info,
+                                backgroundColor: Colors.grey,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      FlatButton(
+                        child: TextField(
+                          controller: titleStoryController,
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLength: 30,
+                          decoration: InputDecoration(
+                            // hintText: "title here",
+                            fillColor: Colors.white,
+                            filled: true,
+                            helperText: 'at least 3 characters',
+                            helperStyle: TextStyle(
+                              color: Colors.grey,
                             ),
-                            Text(
-                              'Image uploaded successfully!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey[600]),
-                            )
-                          ],
-                        )
-                      : Text(
-                          'Please upload your story image',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      FlatButton(
+                        child: Text(
+                          'Pick the story genres - up to 3 genres:',
+                          style: TextStyle(
+                              fontSize: 16.0, color: Colors.grey[700]),
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey[600]),
                         ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
-                keyboardType: TextInputType.multiline,
-                textCapitalization: TextCapitalization.sentences,
-                controller: storyController,
-                maxLength: 7500,
-                maxLines: 30,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
-                    ),
+                        onPressed: () {
+                          EdgeAlert.show(
+                            context,
+                            title: 'Genres',
+                            description: 'pleas choose three',
+                            gravity: EdgeAlert.TOP,
+                            icon: Icons.info,
+                            backgroundColor: Colors.grey,
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      GridView.builder(
+                          // All categories
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 120,
+                                  childAspectRatio: 8 / 2,
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 10),
+                          itemCount: copyCategories.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  pickACategory(index);
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
+                                    ),
+                                    color: Colors.white24),
+                                child:
+                                    Center(child: Text(copyCategories[index])),
+                                height: 25,
+                              ),
+                            );
+                          }),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        'Your genres:',
+                        style:
+                            TextStyle(fontSize: 16.0, color: Colors.grey[700]),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      GridView.builder(
+                          // All categories
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 120,
+                                  childAspectRatio: 8 / 2,
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 10),
+                          itemCount: chosenCategories.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  removeACategory(index);
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  color: Colors.blueAccent,
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  chosenCategories[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                )),
+                                height: 25,
+                              ),
+                            );
+                          }),
+                    ],
                   ),
-                  hintText: 'Tell us your story here...',
-                  fillColor: Colors.white,
-                  filled: true,
                 ),
-              ),
-              FloatingActionButton(
-                  child: Icon(
-                    Icons.menu_book,
-                    size: 25,
-                    color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 35,
                   ),
-                  backgroundColor: Colors.lightBlueAccent,
-                  onPressed: () {
-                    publishStory();
-                  }),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'By clicking the publish button - you are agreeing '
-                'that you are the owner of the story and you didnt stole it from other places.'
-                ' Breaking those rules will result in deleting your story or deleting your account',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "your story",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        controller: storyController,
+                        maxLength: 7500,
+                        maxLines: 15,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          hintText: 'Tell us your story here...',
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      AnimatedButton(
+                        height: 40,
+                        width: 200,
+                        text: 'Add',
+                        isReverse: true,
+                        selectedTextColor: Colors.black,
+                        transitionType: TransitionType.LEFT_TO_RIGHT,
+                        //textStyle: submitTextStyle,
+                        backgroundColor: Colors.black,
+                        borderColor: Colors.white,
+                        borderRadius: 50,
+                        borderWidth: 2,
+                        onPress: publishStory,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

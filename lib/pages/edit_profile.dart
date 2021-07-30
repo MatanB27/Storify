@@ -16,6 +16,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../services/auth_service.dart';
 import 'home.dart';
 import 'package:flutter_boom_menu/flutter_boom_menu.dart';
+import 'package:sweetalert/sweetalert.dart';
 
 class EditProfile extends StatefulWidget {
   final String currentUserId;
@@ -217,7 +218,13 @@ class _EditProfileState extends State<EditProfile> {
       "bio": bioController.text,
       "keywords": setSearchParam(displayNameController.text.toString()),
     });
-    showMessage(context, 'Profile has been updated successfully!');
+    SweetAlert.show(
+      context,
+      showCancelButton: false,
+      title: "Everything is fine",
+      subtitle: "your new personal updates has been saved",
+      style: SweetAlertStyle.success,
+    );
   }
 
   updatePhotoInStoriesRef() async {
@@ -579,10 +586,15 @@ class _EditProfileState extends State<EditProfile> {
             color: Colors.white,
             onPressed: () => goBack(context),
           ),
-          title: Text(
-            'Edit profile',
-            style: TextStyle(color: Colors.white),
-          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              onPressed: () => confirmSignOut(context),
+            ),
+          ],
           backgroundColor: Color(0xff09031D),
           elevation: 1,
         ),
@@ -600,21 +612,12 @@ class _EditProfileState extends State<EditProfile> {
           overlayOpacity: 0.7,
           children: [
             MenuItem(
-              child: Icon(Icons.logout, color: Colors.white),
-              title: "Logout",
-              titleColor: Colors.white,
-              subtitle: "Click here to exit",
-              subTitleColor: Colors.white,
-              backgroundColor: Colors.blue,
-              onTap: () => confirmSignOut(context),
-            ),
-            MenuItem(
               child: Icon(Icons.verified_user, color: Colors.white),
               title: "Save",
               titleColor: Colors.white,
-              subtitle: "Save the changes",
+              subtitle: " Pres me to Save the changes",
               subTitleColor: Colors.white,
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.grey,
               onTap: () => updateProfileData(),
             ),
           ],

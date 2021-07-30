@@ -37,7 +37,11 @@ dependencies:
   readmore: ^2.0.0
   avatar_view: ^1.0.0
   flutter_boom_menu: ^1.0.2
+  sweetalert: ^0.0.1
   share: ^2.0.4
+  flutter_animated_button: ^2.0.0
+  edge_alert: ^0.0.1
+  giffy_dialog: ^1.8.0
 
 dev_dependencies:
   flutter_test:
