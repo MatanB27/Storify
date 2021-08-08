@@ -135,9 +135,9 @@ class _ReadStoryState extends State<ReadStory> {
             backgroundColor: Color(0xff09031D),
             appBar: AppBar(
               iconTheme: IconThemeData(
-                color: Colors.black,
-              ),
-              backgroundColor: Colors.white,
+                color: Colors.white,
+              ), //Color(0xff1C1A32)
+              backgroundColor: Color(0xff09031D),
               actions: <Widget>[
                 Column(
                   children: [
@@ -152,7 +152,7 @@ class _ReadStoryState extends State<ReadStory> {
                         child: Text(
                           displayName,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),

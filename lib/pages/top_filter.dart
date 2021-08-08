@@ -79,6 +79,7 @@ class _TopFilterState extends State<TopFilter> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
+        backgroundColor: Color(0xff09031D),
         body: RefreshIndicator(
           onRefresh: pullToRefresh,
           child: topFilter(),

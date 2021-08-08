@@ -73,6 +73,7 @@ class _FeedFilterState extends State<FeedFilter> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
+        backgroundColor: Color(0xff09031D),
         body: RefreshIndicator(
           onRefresh: pullToRefresh,
           child: // Will show it loading if the list is empty

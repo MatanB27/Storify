@@ -69,17 +69,11 @@ class _AllFilterState extends State<AllFilter> {
   }
 
   @override
-  void initState() {
-    // TODO: delete
-    super.initState();
-    print(widget.categoriesFilter);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
+        backgroundColor: Color(0xff09031D),
         body: RefreshIndicator(
           onRefresh: pullToRefresh,
           child: allFilter(),

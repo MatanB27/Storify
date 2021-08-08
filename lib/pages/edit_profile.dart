@@ -221,8 +221,8 @@ class _EditProfileState extends State<EditProfile> {
     SweetAlert.show(
       context,
       showCancelButton: false,
-      title: "Everything is fine",
-      subtitle: "your new personal updates has been saved",
+      title: "Success!",
+      subtitle: "Your new personal updates\n has been saved",
       style: SweetAlertStyle.success,
     );
   }
@@ -615,7 +615,7 @@ class _EditProfileState extends State<EditProfile> {
               child: Icon(Icons.verified_user, color: Colors.white),
               title: "Save",
               titleColor: Colors.white,
-              subtitle: " Pres me to Save the changes",
+              subtitle: " Press here to save the changes",
               subTitleColor: Colors.white,
               backgroundColor: Colors.grey,
               onTap: () => updateProfileData(),

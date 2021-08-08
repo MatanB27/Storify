@@ -32,7 +32,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       child: Text('Top'),
     ),
     Tab(
-      child: Text('Categories'),
+      child: Text('Category'),
     ),
   ];
 
@@ -116,28 +116,27 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
         //the app bar code with the title, the tab menu and the chat button
         appBar: AppBar(
           toolbarHeight: 110.0,
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xff09031D),
           centerTitle: true,
           title: Text(
             'storify',
             style: TextStyle(
               fontFamily: 'Pacifico',
               fontSize: 30,
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(30.0),
             child: TabBar(
-              indicatorColor: Colors.black,
-              isScrollable: true,
+              indicatorColor: Colors.white,
+              isScrollable: false,
               controller: tabController,
               tabs: tabList,
-              labelColor: Colors.black,
+              labelColor: Colors.white,
             ),
           ),
-          actions: [Icon(Icons.list)],
         ),
         //-------------------The end of the app bar----------//
         // Now we use the lists to show them
@@ -174,8 +173,15 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                 itemCount: allCategories.length,
                 itemBuilder: (context, index) {
                   return CheckboxListTile(
+                    tileColor: Color(0xff09031D),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    checkColor: Colors.white,
+                    activeColor: Colors.green,
                     value: isChecked[index],
-                    title: Text(allCategories[index]),
+                    title: Text(
+                      allCategories[index],
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onChanged: (newValue) {
                       setState(
                         () {

@@ -55,6 +55,10 @@ class _PrivateMessageState extends State<PrivateMessage> {
     thisUserPhotoUrl = thisDoc.get('photoUrl');
   }
 
+  /*
+  We built an header just for this page, we didn't use the other Header component
+  Because its not fit.
+   */
   header() {
     return FutureBuilder(
       future: userRef.doc(widget.privateId).get(),
@@ -64,11 +68,11 @@ class _PrivateMessageState extends State<PrivateMessage> {
         }
         UserClass user = UserClass.fromDocuments(snapshot.data);
         return AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xff09031D),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
             ),
             onPressed: () => goBack(context),
           ),
@@ -88,7 +92,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
                   flex: 1,
                   child: Text(
                     user.displayName,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
               ],
@@ -217,7 +221,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
-        backgroundColor: Color(0xff09031D),
+        backgroundColor: Color(0xff1C1A32),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(55.0),
           child: header(),

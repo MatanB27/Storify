@@ -84,6 +84,8 @@ class _CommentsState extends State<Comments> {
       } else {
         showMessage(context, "You can't rate your own story!");
       }
+    } else {
+      showMessage(context, "Comment must have at least 3 characters.");
     }
   }
 

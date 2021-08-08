@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     // Change the color of the status bar
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Colors.grey[300],
+        statusBarColor: Colors.white70,
       ),
     );
     return Provider<AuthService>(

@@ -51,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff09031D),
       body: PageView(
         children: [
           Feed(),
@@ -72,6 +73,7 @@ class _HomePageState extends State<HomePage> {
           /// Home
           SalomonBottomBarItem(
             icon: Icon(Icons.home),
+            unselectedColor: Colors.white,
             title: Text("Home"),
             selectedColor: Colors.purple,
           ),
@@ -79,6 +81,7 @@ class _HomePageState extends State<HomePage> {
           /// Search
           SalomonBottomBarItem(
             icon: Icon(Icons.search),
+            unselectedColor: Colors.white,
             title: Text("Search"),
             selectedColor: Colors.pink,
           ),
@@ -86,6 +89,7 @@ class _HomePageState extends State<HomePage> {
           /// Add
           SalomonBottomBarItem(
             icon: Icon(Icons.add),
+            unselectedColor: Colors.white,
             title: Text("Add"),
             selectedColor: Colors.orange,
           ),
@@ -93,6 +97,7 @@ class _HomePageState extends State<HomePage> {
           /// Chat
           SalomonBottomBarItem(
             icon: Icon(Icons.chat),
+            unselectedColor: Colors.white,
             title: Text("Chat"),
             selectedColor: Colors.teal,
           ),
@@ -100,8 +105,9 @@ class _HomePageState extends State<HomePage> {
           ///Profile
           SalomonBottomBarItem(
             icon: Icon(Icons.person),
+            unselectedColor: Colors.white,
             title: Text("Profile"),
-            selectedColor: Color(0xff09031D),
+            selectedColor: Colors.lightBlueAccent,
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,7 +26,6 @@ class UploadStory extends StatefulWidget {
   _UploadStoryState createState() => _UploadStoryState();
 }
 
-//TODO: clicking on upload image will make it overflow for 1 sec on a real phone
 // The implement it too keep the state of the app when we are moving to another page
 class _UploadStoryState extends State<UploadStory> {
   // Text fields variables
@@ -42,7 +42,7 @@ class _UploadStoryState extends State<UploadStory> {
   List<String> copyCategories = List.from(allCategories);
   // Variable for uploading an image
   File file;
-  String _uploadedFileURL;
+  String _uploadedFileURL = 'assets/images/upload_photo.png';
   bool isUploading = false;
 
   // Getting doc id for the storyID
@@ -110,11 +110,11 @@ class _UploadStoryState extends State<UploadStory> {
     if (storyController.text.toString().trim().length < 20 ||
         titleStoryController.text.toString().trim().length < 3 ||
         chosenCategories.length == 0 ||
-        _uploadedFileURL == null) {
+        _uploadedFileURL == 'assets/images/upload_photo.png') {
       SweetAlert.show(context,
-          title: "Ops",
+          title: "Oops",
           subtitle:
-              "pleas make sure you pick a photo\n ,or all the fields are full",
+              "Please make sure you pick a photo\n or all the fields are full",
           style: SweetAlertStyle.error);
     } else {
       /*
@@ -144,8 +144,8 @@ class _UploadStoryState extends State<UploadStory> {
         // According to the users rating
       });
       SweetAlert.show(context,
-          title: "Just show a message",
-          subtitle: "Sweet alert is pretty",
+          title: "Succeed",
+          subtitle: "Your story has been successfully published",
           style: SweetAlertStyle.success);
 
       await showReadStory(context, storyId: storyId, ownerId: widget.userId);
@@ -153,7 +153,7 @@ class _UploadStoryState extends State<UploadStory> {
       // We are resetting everything after we finish to upload the story.
       setState(() {
         storyId = Uuid().v4();
-        _uploadedFileURL = null;
+        _uploadedFileURL = 'assets/images/upload_photo.png';
         isUploading = false;
         file = null;
         storyController.clear();
@@ -175,7 +175,7 @@ class _UploadStoryState extends State<UploadStory> {
         child: Column(
           children: [
             Text(
-              'upload your own photo',
+              'Upload your own photo',
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -288,9 +288,12 @@ class _UploadStoryState extends State<UploadStory> {
                                 ],
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://www.publicdomainpictures.net/pictures/320000/velka/background-image.png'),
-                                  fit: BoxFit.cover,
+                                  image: _uploadedFileURL ==
+                                          'assets/images/upload_photo.png'
+                                      ? AssetImage(_uploadedFileURL)
+                                      : CachedNetworkImageProvider(
+                                          _uploadedFileURL),
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                             ),
@@ -389,7 +392,7 @@ class _UploadStoryState extends State<UploadStory> {
                           EdgeAlert.show(
                             context,
                             title: 'Genres',
-                            description: 'pleas choose three',
+                            description: 'Please choose three',
                             gravity: EdgeAlert.TOP,
                             icon: Icons.info,
                             backgroundColor: Colors.grey,
@@ -489,7 +492,7 @@ class _UploadStoryState extends State<UploadStory> {
                       Row(
                         children: [
                           Text(
-                            "your story",
+                            "Your story",
                             style: TextStyle(color: Colors.white),
                           ),
                         ],

@@ -55,6 +55,7 @@ flutter:
     - assets/images/test11.png
     - assets/images/search_background.jpg
     - assets/images/signin.jpg
+    - assets/images/upload_photo.png
 
   fonts:
   - family: Pacifico

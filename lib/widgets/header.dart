@@ -12,12 +12,12 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
       iconTheme: IconThemeData(
-        color: Colors.black, //change your color here
+        color: Colors.white, //change your color here
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xff09031D),
       title: Text(
         title,
-        style: TextStyle(color: Colors.black),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
