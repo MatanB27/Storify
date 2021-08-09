@@ -43,7 +43,7 @@ class _ReadStoryState extends State<ReadStory> {
   @override
   void initState() {
     super.initState();
-    // print(widget.storyId);
+    print(widget.storyId);
     // print(widget.commentsId);
     // print(widget.ownerId);
 
@@ -76,7 +76,6 @@ class _ReadStoryState extends State<ReadStory> {
            (Each story have maximum of 7500 chars)
   */
   Future speak(String story) async {
-    //TODO: add stop button
     await FlutterTts().setLanguage("en-US");
     if (story.length >= 3000) {
       List<String> temp = [
@@ -97,16 +96,68 @@ class _ReadStoryState extends State<ReadStory> {
     }
   }
 
+  /*
+  Stopping the reader sound
+   */
   Future stop() async {
-    //TODO:
     await FlutterTts().stop();
   }
 
+  /*
+  Sharing across other social media apps
+   */
   share() {
     Share.share(story +
         "\n This story was written by " +
         displayName +
         ".\n © By Storify app");
+  }
+
+  /*
+  Deleting the story from storiesRef, userRef and commentRef database
+   */
+  deleteStory() async {
+    storiesRef.doc(widget.storyId).delete();
+    DocumentSnapshot dc = await commentsRef.doc(widget.storyId).get();
+    if (dc.exists) {
+      // Check if exists and then delete
+      commentsRef.doc(widget.storyId).delete();
+    }
+
+    userRef.doc(widget.ownerId).update({
+      'stories': FieldValue.arrayRemove([widget.storyId])
+    });
+  }
+
+  /*
+  Alert dialog that will ask us if we want to delete the story
+ */
+  Future<void> confirmDelete(BuildContext context) async {
+    try {
+      final didRequestSignOut = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Delete story'),
+          content: Text('Are you sure you want to delete?'),
+          actions: [
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'),
+            ),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('Accept'),
+            ),
+          ],
+        ),
+      );
+      if (didRequestSignOut == true) {
+        deleteStory(); // Deleting story
+        Navigator.pop(context); // Going back
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -258,6 +309,14 @@ class _ReadStoryState extends State<ReadStory> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          currentUserId == this.ownerUserId
+                              ? BuildIcon(
+                                  icon: Icons.delete,
+                                  onPressed: () {
+                                    confirmDelete(context);
+                                  },
+                                )
+                              : Container(),
                           BuildIcon(
                             icon: Icons.share,
                             onPressed: () {

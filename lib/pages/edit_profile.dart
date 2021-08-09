@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/keywords.dart';
 import 'package:storify/services/navigator_to_pages.dart';
-import 'package:storify/services/scaffold_message.dart';
 import 'package:storify/user.dart';
 import 'package:storify/services/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
