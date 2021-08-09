@@ -118,9 +118,9 @@ class _ReadStoryState extends State<ReadStory> {
    */
   deleteStory() async {
     storiesRef.doc(widget.storyId).delete();
+    // Check if exists in commentsRef and then delete
     DocumentSnapshot dc = await commentsRef.doc(widget.storyId).get();
     if (dc.exists) {
-      // Check if exists and then delete
       commentsRef.doc(widget.storyId).delete();
     }
 

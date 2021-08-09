@@ -523,7 +523,7 @@ class _UploadStoryState extends State<UploadStory> {
                       AnimatedButton(
                         height: 40,
                         width: 200,
-                        text: 'Add',
+                        text: 'Publish story',
                         isReverse: true,
                         selectedTextColor: Colors.black,
                         transitionType: TransitionType.LEFT_TO_RIGHT,
