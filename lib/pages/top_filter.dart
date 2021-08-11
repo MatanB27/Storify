@@ -56,6 +56,7 @@ class _TopFilterState extends State<TopFilter> {
             storyPhoto: story.data()['storyPhoto'],
             timestamp: story.data()['timeStamp'],
             title: story.data()['title'],
+            countRating: story.data()['countRating'],
           );
           tickets.add(ticket);
         }

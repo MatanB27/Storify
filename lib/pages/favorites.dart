@@ -1,43 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/story_ticket.dart';
 
-/*
-  The main page, the user can read the stories of the users he follow
-
-*/
-class FeedFilter extends StatefulWidget {
-  final String userId;
-  final List<String> categoriesFilter;
-  FeedFilter({this.userId, this.categoriesFilter});
-
+class Favorites extends StatefulWidget {
+  final String currentUserId;
+  Favorites({this.currentUserId});
   @override
-  _FeedFilterState createState() => _FeedFilterState();
+  _FavoritesState createState() => _FavoritesState();
 }
 
-class _FeedFilterState extends State<FeedFilter> {
-  // When we pull the page, it will refresh it and fetch the new data.
-  Future<Null> pullToRefresh() async {
-    await Future.delayed(Duration(seconds: 1));
-
-    setState(() {
-      buildFeed();
-    });
-    return null;
+class _FavoritesState extends State<Favorites> {
+  @override
+  void initState() {
+    super.initState();
+    print(widget.currentUserId);
   }
 
-  /*
-    The body of the Feed tab - will show us only the stories of the users
-    we are following
-  */
-  buildFeed() {
+  buildFavorites() {
     return FutureBuilder(
       future: storiesRef
-          .where('followers', arrayContains: widget.userId)
-          .orderBy('timeStamp', descending: true)
+          .where('favorites', arrayContains: widget.currentUserId)
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -71,16 +54,36 @@ class _FeedFilterState extends State<FeedFilter> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<AuthService>(
-      create: (context) => AuthService(),
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Color(0xff09031D),
-        body: RefreshIndicator(
-          onRefresh: pullToRefresh,
-          child: // Will show it loading if the list is empty
-              buildFeed(),
+        appBar: AppBar(
+          toolbarHeight: 120.0,
+          flexibleSpace: SafeArea(
+            child: Container(
+              height: 120,
+              color: Color(0xff09031D),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  Text(
+                    'Favorites',
+                    style: TextStyle(color: Colors.white, fontSize: 30.0),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    'All of your favorites stories in one place.',
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic, color: Colors.white),
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
-    );
+        body: buildFavorites());
   }
 }

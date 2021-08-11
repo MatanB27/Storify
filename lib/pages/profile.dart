@@ -572,6 +572,7 @@ class _ProfileState extends State<Profile> {
             storyPhoto: doc.data()['storyPhoto'],
             timestamp: doc.data()['timeStamp'],
             title: doc.data()['title'],
+            countRating: doc.data()['countRating'],
           );
           tickets.add(ticket);
           storyCount = tickets.length;
@@ -641,7 +642,12 @@ class _ProfileState extends State<Profile> {
               color: Colors.white,
             ),
           ),
-          actions: <Widget>[
+          actions: [
+            IconButton(
+                icon: Icon(Icons.book_sharp),
+                onPressed: () {
+                  showFavorites(context, currentUserId);
+                }),
             Padding(
               padding: const EdgeInsets.all(8),
             ),

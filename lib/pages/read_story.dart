@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,29 +46,10 @@ class _ReadStoryState extends State<ReadStory> {
   void initState() {
     super.initState();
     print(widget.storyId);
+    checkIfFavorite();
     // print(widget.commentsId);
     // print(widget.ownerId);
-
-    // getInfo();
   }
-
-  // getInfo() async { //TODO: maybe delete
-  //   DocumentSnapshot doc = await storiesRef
-  //       .doc(widget.ownerId)
-  //       .collection('storyId')
-  //       .doc(widget.storyId)
-  //       .get();
-  //   if (!doc.exists) {
-  //     return loading();
-  //   }
-  //   photoUrl = doc.get('photoUrl');
-  //   displayName = doc.get('displayName');
-  //   title = doc.get('title');
-  //   categories = doc.get('categories');
-  //   storyPhoto = doc.get('storyPhoto');
-  //   story = doc.get('story');
-  //   print(story.length);
-  // }
 
   /*
     This method will used when we click on the play button.
@@ -158,6 +141,66 @@ class _ReadStoryState extends State<ReadStory> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  /*
+  Add or remove from user's favorite!
+   */
+  addOrRemoveFromFavorites() {
+    if (isFavorite) {
+      // Removing from favorites
+      removeFromFavorites();
+      setState(() {
+        isFavorite = false;
+      });
+    } else {
+      // Adding from favorites
+      addToFavorites();
+      setState(() {
+        isFavorite = true;
+      });
+    }
+  }
+
+  /*
+  Remove from favorites
+   */
+  removeFromFavorites() {
+    storiesRef.doc(widget.storyId).update({
+      "favorites": FieldValue.arrayRemove([currentUserId])
+    });
+  }
+
+  /*
+  Adding to favorites
+   */
+  addToFavorites() {
+    storiesRef.doc(widget.storyId).update({
+      "favorites": FieldValue.arrayUnion([currentUserId]),
+    });
+  }
+
+  /*
+  Check if the story is favorite or not
+  We are using it in init state
+   */
+  bool isFavorite = false;
+  checkIfFavorite() {
+    List<String> favorites;
+    storiesRef.doc(widget.storyId).get().then((value) => {
+          value.data().forEach((key, value) {
+            if (key == 'favorites') {
+              favorites = List.from(value);
+              if (favorites != null) {
+                if (favorites.contains(currentUserId)) {
+                  isFavorite = true;
+                } else {
+                  isFavorite = false;
+                }
+              }
+            }
+          })
+        });
   }
 
   @override
@@ -343,6 +386,16 @@ class _ReadStoryState extends State<ReadStory> {
                                       "You can't report your own story!")
                                   : showReport(
                                       context, currentUserId, widget.storyId);
+                            },
+                          ),
+                          BuildIcon(
+                            icon: isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            onPressed: () {
+                              setState(() {
+                                addOrRemoveFromFavorites();
+                              });
                             },
                           ),
                         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:storify/pages/comments.dart';
 import 'package:storify/pages/edit_profile.dart';
+import 'package:storify/pages/favorites.dart';
 import 'package:storify/pages/feed_filter.dart';
 import 'package:storify/pages/followers.dart';
 import 'package:storify/pages/following.dart';
@@ -155,6 +156,9 @@ showFilterFeed(BuildContext context, String currentUser) async {
   );
 }
 
+/*
+  Navigate to report page
+ */
 showReport(BuildContext context, String currentUser, String storyId) async {
   await Navigator.push(
     context,
@@ -162,6 +166,20 @@ showReport(BuildContext context, String currentUser, String storyId) async {
       builder: (context) => Report(
         currentUserId: currentUser,
         storyId: storyId,
+      ),
+    ),
+  );
+}
+
+/*
+  Navigate to favorites page
+ */
+showFavorites(BuildContext context, String currentUserId) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Favorites(
+        currentUserId: currentUserId,
       ),
     ),
   );

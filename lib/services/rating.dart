@@ -23,8 +23,8 @@ Widget ratingStars(dynamic rating, double size, bool isStory) {
 
   if (rating == 0 || rating == null) {
     return Text(
-      ' No rating yet! ',
-      style: TextStyle(color: Colors.grey[500], fontSize: 30),
+      ' No rating yet ',
+      style: TextStyle(color: Colors.grey[500], fontSize: 27),
     );
   } else if (rating > 0 && rating < 20) {
     return Row(
