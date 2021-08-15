@@ -25,7 +25,7 @@ class MessageStream extends StatelessWidget {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         final messages = snapshot.data.docs;
         var currentUser; //TODO: maybe delete
