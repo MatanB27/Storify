@@ -2,7 +2,7 @@
 
   <h3>Storify</h3>
   <br>
-    Storify is a beutiful social media app where users can share their own stories with other users.
+    Storify is a beautiful social media app where users can share their own stories with other users.
     <br>
     You can follow other users, chat, reading and writing stories and even more!
     <br>
