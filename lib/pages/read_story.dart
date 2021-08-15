@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,9 +11,10 @@ import 'package:storify/services/auth_service.dart';
 import 'package:readmore/readmore.dart';
 import 'package:storify/services/build_icon.dart';
 import 'package:storify/services/database.dart';
+import 'package:storify/services/favorite.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
-import 'package:storify/services/rating.dart';
+import 'package:storify/widgets/rating.dart';
 import 'package:storify/services/scaffold_message.dart';
 
 class ReadStory extends StatefulWidget {
@@ -40,15 +39,41 @@ class _ReadStoryState extends State<ReadStory> {
   String ownerUserId; // The story teller ID
   final String currentUserId = auth.currentUser?.uid; // the current user ID
 
+  // if user made the story his favorite
+  Favorite favorite = new Favorite();
   // The init state of the app, we are getting the info
   // of the story from here
   @override
   void initState() {
     super.initState();
     print(widget.storyId);
-    checkIfFavorite();
-    // print(widget.commentsId);
-    // print(widget.ownerId);
+    favorite.checkIfFavorite(widget.storyId, currentUserId);
+  }
+  //
+  // checkIfFavorite2() {
+  //   List<String> favorites;
+  //   storiesRef.doc(widget.storyId).get().then((value) => {
+  //         value.data().forEach((key, value) {
+  //           if (key == 'favorites') {
+  //             favorites = List.from(value);
+  //             if (favorites != null) {
+  //               if (favorites.contains(currentUserId)) {
+  //                 isFavorite = true;
+  //               } else {
+  //                 isFavorite = false;
+  //               }
+  //             }
+  //           }
+  //         })
+  //       });
+  // }
+
+  // When we quit the page its disposing it
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    stop();
+    super.dispose();
   }
 
   /*
@@ -143,66 +168,6 @@ class _ReadStoryState extends State<ReadStory> {
     }
   }
 
-  /*
-  Add or remove from user's favorite!
-   */
-  addOrRemoveFromFavorites() {
-    if (isFavorite) {
-      // Removing from favorites
-      removeFromFavorites();
-      setState(() {
-        isFavorite = false;
-      });
-    } else {
-      // Adding from favorites
-      addToFavorites();
-      setState(() {
-        isFavorite = true;
-      });
-    }
-  }
-
-  /*
-  Remove from favorites
-   */
-  removeFromFavorites() {
-    storiesRef.doc(widget.storyId).update({
-      "favorites": FieldValue.arrayRemove([currentUserId])
-    });
-  }
-
-  /*
-  Adding to favorites
-   */
-  addToFavorites() {
-    storiesRef.doc(widget.storyId).update({
-      "favorites": FieldValue.arrayUnion([currentUserId]),
-    });
-  }
-
-  /*
-  Check if the story is favorite or not
-  We are using it in init state
-   */
-  bool isFavorite = false;
-  checkIfFavorite() {
-    List<String> favorites;
-    storiesRef.doc(widget.storyId).get().then((value) => {
-          value.data().forEach((key, value) {
-            if (key == 'favorites') {
-              favorites = List.from(value);
-              if (favorites != null) {
-                if (favorites.contains(currentUserId)) {
-                  isFavorite = true;
-                } else {
-                  isFavorite = false;
-                }
-              }
-            }
-          })
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
@@ -211,7 +176,7 @@ class _ReadStoryState extends State<ReadStory> {
         future: storiesRef.where('sid', isEqualTo: widget.storyId).get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return loading();
+            return loadingCircular();
           }
           // Taking the data in inserting them in the page
           snapshot.data.docs.forEach((doc) {
@@ -389,12 +354,13 @@ class _ReadStoryState extends State<ReadStory> {
                             },
                           ),
                           BuildIcon(
-                            icon: isFavorite
+                            icon: favorite.isFavorite
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             onPressed: () {
                               setState(() {
-                                addOrRemoveFromFavorites();
+                                favorite.addOrRemoveFromFavorites(
+                                    widget.storyId, currentUserId);
                               });
                             },
                           ),

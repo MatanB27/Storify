@@ -41,7 +41,7 @@ class _FeedFilterState extends State<FeedFilter> {
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         final stories = snapshot.data.docs;
         List<StoryTickets> tickets = [];

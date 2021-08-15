@@ -30,7 +30,7 @@ class _LandingState extends State<Landing> {
           }
           return HomePage();
         }
-        return loading();
+        return loadingCircular();
       },
     );
   }

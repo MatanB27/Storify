@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
-import 'package:storify/services/rating.dart';
+import 'package:storify/widgets/rating.dart';
 import 'package:storify/widgets/comment_ticket.dart';
 import 'package:storify/services/scaffold_message.dart';
 
@@ -99,7 +99,7 @@ class _CommentsState extends State<Comments> {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         final comments = snapshot.data.docs;
         List<CommentTicket> tickets = [];

@@ -64,7 +64,7 @@ class _PrivateMessageState extends State<PrivateMessage> {
       future: userRef.doc(widget.privateId).get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         UserClass user = UserClass.fromDocuments(snapshot.data);
         return AppBar(

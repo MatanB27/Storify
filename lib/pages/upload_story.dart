@@ -27,7 +27,8 @@ class UploadStory extends StatefulWidget {
 }
 
 // The implement it too keep the state of the app when we are moving to another page
-class _UploadStoryState extends State<UploadStory> {
+class _UploadStoryState extends State<UploadStory>
+    with AutomaticKeepAliveClientMixin<UploadStory> {
   // Text fields variables
   TextEditingController titleStoryController = TextEditingController();
   TextEditingController storyController = TextEditingController();
@@ -252,8 +253,11 @@ class _UploadStoryState extends State<UploadStory> {
     return _uploadedFileURL;
   }
 
+  // Help us save he state of this page when we move to another page
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Provider<AuthService>(
       create: (context) => AuthService(),
       child: Scaffold(
@@ -270,7 +274,7 @@ class _UploadStoryState extends State<UploadStory> {
                   children: [
                     Center(
                       child: isUploading
-                          ? loading()
+                          ? loadingCircular()
                           : Container(
                               width: 130,
                               height: 130,

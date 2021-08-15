@@ -32,7 +32,7 @@ class _EditProfileState extends State<EditProfile> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Values for uploading the image
-  File file;
+  File currentFile;
   String _uploadedFileURL;
   bool isUploading = false;
 
@@ -293,7 +293,7 @@ class _EditProfileState extends State<EditProfile> {
       if (isGallery) {
         File file = await ImagePicker.pickImage(source: ImageSource.gallery);
         setState(
-          () => this.file = file,
+          () => this.currentFile = file,
         );
       } else {
         File file = await ImagePicker.pickImage(
@@ -301,12 +301,12 @@ class _EditProfileState extends State<EditProfile> {
           maxHeight: 675,
           maxWidth: 960,
         );
-        setState(() => this.file = file);
+        setState(() => this.currentFile = file);
       }
       setState(() {
         isUploading = true;
       });
-      await uploadImage(this.file);
+      await uploadImage(this.currentFile);
       setState(() {
         isUploading = false;
       });
@@ -381,7 +381,7 @@ class _EditProfileState extends State<EditProfile> {
         builder: (context, snapshot) {
           // Reload until all the data will gather up
           if (!snapshot.hasData) {
-            return loading();
+            return loadingCircular();
           }
           UserClass user = UserClass.fromDocuments(snapshot.data);
           return Container(
@@ -396,7 +396,7 @@ class _EditProfileState extends State<EditProfile> {
                     children: [
                       Center(
                         child: isUploading
-                            ? loading()
+                            ? loadingCircular()
                             : Container(
                                 width: 130,
                                 height: 130,

@@ -45,7 +45,7 @@ class _ChatState extends State<Chat> {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         List<ChatHistory> tickets = [];
         snapshot.data.docs.forEach((doc) {

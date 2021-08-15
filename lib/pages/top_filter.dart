@@ -40,7 +40,7 @@ class _TopFilterState extends State<TopFilter> {
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         final stories = snapshot.data.docs;
         List<StoryTickets> tickets = [];

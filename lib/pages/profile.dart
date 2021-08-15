@@ -235,7 +235,7 @@ class _ProfileState extends State<Profile> {
       builder: (context, snapshot) {
         // Reload until all the data will gather up
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         UserClass user = UserClass.fromDocuments(snapshot.data);
 
@@ -557,7 +557,7 @@ class _ProfileState extends State<Profile> {
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         List<StoryTickets> tickets = [];
         snapshot.data.docs.forEach((doc) {

@@ -46,7 +46,7 @@ class _FollowingState extends State<Following> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return loading();
+            return loadingCircular();
           }
 
           List<UserTicket> userFollowing = [];

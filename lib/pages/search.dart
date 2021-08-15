@@ -123,7 +123,7 @@ class _SearchState extends State<Search>
       future: searchResults,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return loading();
+          return loadingCircular();
         }
         List<UserTicket> searchResults = [];
         snapshot.data.docs.forEach((doc) {
