@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:storify/pages/top_filter.dart';
+import 'package:storify/services/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
-import 'package:storify/services/rating.dart';
+import 'package:storify/widgets/rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:storify/services/database.dart';
 
@@ -63,12 +65,13 @@ class StoryTickets extends StatelessWidget {
             Container(
               height: 300,
               width: 500,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(this.storyPhoto),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(5.0),
+              child: CachedNetworkImage(
+                width: 330,
+                height: 450,
+                fit: BoxFit.cover,
+                imageUrl: this.storyPhoto,
+                placeholder: (context, url) => loadingCircular(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
             Positioned(
