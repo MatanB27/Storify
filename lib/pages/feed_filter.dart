@@ -62,7 +62,7 @@ class _FeedFilterState extends State<FeedFilter> {
           tickets.add(ticket);
         }
         return ListView(
-          scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
           children: tickets,
         );
       },

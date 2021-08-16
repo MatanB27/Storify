@@ -6,7 +6,8 @@ import 'package:storify/services/database.dart';
   Check if the story is favorite or not
    */
 class Favorite {
-  bool isFavorite;
+  // I had to init it here so it won't have bugs
+  bool isFavorite = false;
 
   checkIfFavorite(String storyId, String currentUserId) {
     List<String> favorites;

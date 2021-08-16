@@ -577,12 +577,10 @@ class _ProfileState extends State<Profile> {
           tickets.add(ticket);
           storyCount = tickets.length;
         });
-        return SizedBox(
-          height: 500.0,
+        return Flexible(
           child: ListView(
-            physics: ClampingScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
             children: tickets,
           ),
         );

@@ -61,7 +61,7 @@ class _TopFilterState extends State<TopFilter> {
           tickets.add(ticket);
         }
         return ListView(
-          scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
           children: tickets,
         );
       },

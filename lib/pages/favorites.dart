@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/story_ticket.dart';
@@ -45,7 +46,8 @@ class _FavoritesState extends State<Favorites> {
           tickets.add(ticket);
         }
         return ListView(
-          scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
+          shrinkWrap: true,
           children: tickets,
         );
       },

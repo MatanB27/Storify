@@ -52,7 +52,7 @@ class _AllFilterState extends State<AllFilter> {
           tickets.add(ticket);
         }
         return ListView(
-          scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
           children: tickets,
         );
       },

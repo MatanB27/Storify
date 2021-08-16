@@ -49,24 +49,6 @@ class _ReadStoryState extends State<ReadStory> {
     print(widget.storyId);
     favorite.checkIfFavorite(widget.storyId, currentUserId);
   }
-  //
-  // checkIfFavorite2() {
-  //   List<String> favorites;
-  //   storiesRef.doc(widget.storyId).get().then((value) => {
-  //         value.data().forEach((key, value) {
-  //           if (key == 'favorites') {
-  //             favorites = List.from(value);
-  //             if (favorites != null) {
-  //               if (favorites.contains(currentUserId)) {
-  //                 isFavorite = true;
-  //               } else {
-  //                 isFavorite = false;
-  //               }
-  //             }
-  //           }
-  //         })
-  //       });
-  // }
 
   // When we quit the page its disposing it
   @override
@@ -355,8 +337,8 @@ class _ReadStoryState extends State<ReadStory> {
                           ),
                           BuildIcon(
                             icon: favorite.isFavorite
-                                ? Icons.favorite
-                                : Icons.favorite_border,
+                                ? Icons.bookmark
+                                : Icons.bookmark_border,
                             onPressed: () {
                               setState(() {
                                 favorite.addOrRemoveFromFavorites(

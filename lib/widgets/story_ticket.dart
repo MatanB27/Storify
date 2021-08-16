@@ -2,8 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:storify/pages/top_filter.dart';
+import 'package:storify/pages/favorites.dart';
+import 'package:storify/pages/home.dart';
+import 'package:storify/services/favorite.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/widgets/rating.dart';
@@ -46,160 +47,143 @@ class StoryTickets extends StatelessWidget {
       );
     }
   }
+  //TODO: delete
+  // Favorite favorite = new Favorite(); // Favorite object
+  // final String currentUserId = auth.currentUser?.uid; // The current user ID
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      onPressed: () async {
-        await getAverageRatingFromStoriesRef(storyId);
-        showReadStory(context,
-            storyId: this.storyId, commentId: this.commentId, ownerId: ownerId);
-      },
-      child: Container(
-        width: 330,
-        height: 450,
-        margin: EdgeInsets.all(12.0),
-        child: Stack(
-          fit: StackFit.loose,
-          children: [
-            Container(
-              height: 300,
-              width: 500,
-              child: CachedNetworkImage(
-                width: 330,
-                height: 450,
-                fit: BoxFit.cover,
-                imageUrl: this.storyPhoto,
-                placeholder: (context, url) => loadingCircular(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
-            ),
-            Positioned(
-              bottom: 25,
-              child: Container(
-                //alignment: Alignment.topCenter,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 35.0),
+      child: FlatButton(
+        onPressed: () async {
+          await getAverageRatingFromStoriesRef(storyId);
+          showReadStory(context,
+              storyId: this.storyId,
+              commentId: this.commentId,
+              ownerId: ownerId);
+        },
+        child: Container(
+          width: double.infinity,
+          height: 150,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 8.0, right: 8.0),
+                padding: EdgeInsets.only(right: 2.0),
+                height: 128,
+                width: 100,
+                // decoration: BoxDecoration(
+                //   borderRadius: BorderRadius.circular(50),
+                // ),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: this.storyPhoto,
+                  placeholder: (context, url) => loadingCircular(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
-                child: Container(
-                  height: 170,
-                  width: 330,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        this.title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26,
-                            color: Colors.black),
+              ),
+              SizedBox(
+                width: 8.0,
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      this.title,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      Container(
-                        child: Row(
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Text(
+                      this.displayName,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // This code is fine, its not a bug!
-                            for (var category in categories)
-                              Text(
-                                category + '  ',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18.0,
-                                    color: Colors.grey,
-                                    fontStyle: FontStyle.italic),
-                              )
+                            ratingStars(rating, 15, false),
+                            this.countRating > 0
+                                ? Text(
+                                    ' (' + this.countRating.toString() + ')',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.italic),
+                                  )
+                                : Text(''),
                           ],
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      child: Row(
                         children: [
-                          ratingStars(rating, 38.0, false),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.person,
-                            size: 18.0,
-                            color: Colors.black,
-                          ),
-                          Text(
-                            ' ' + this.displayName + ' ',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.black,
+                          // This code is fine, its not a bug!
+                          for (var category in categories)
+                            Text(
+                              category + '  ',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic),
                             ),
-                          ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.date_range,
-                            color: Colors.black,
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.date_range,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          timeago.format(this.timestamp.toDate()),
+                          style: TextStyle(
+                            color: Colors.grey,
                           ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            timeago.format(this.timestamp.toDate()),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          countRating == 1
-                              ? Text(
-                                  " " +
-                                      countRating.toString() +
-                                      " user rated this story",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 16.0),
-                                )
-                              : Text(
-                                  " " +
-                                      countRating.toString() +
-                                      " users rated this story",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 16.0),
-                                ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              // Icon(
+              //   Icons.bookmark_border,
+              //   color: Colors.grey,
+              // ),
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  /*
-    Building containers for all the widgets on the stack
-  */
-  Container buildContainer(Widget widget) {
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        child: widget);
   }
 }
