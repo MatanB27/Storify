@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storify/pages/favorites.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
+import 'package:storify/services/favorite.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/widgets/story_ticket.dart';
 
@@ -33,6 +35,7 @@ class _FeedFilterState extends State<FeedFilter> {
     The body of the Feed tab - will show us only the stories of the users
     we are following
   */
+  Favorite favorite = new Favorite(); // favorite object
   buildFeed() {
     return FutureBuilder(
       future: storiesRef

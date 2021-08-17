@@ -367,7 +367,7 @@ class _UploadStoryState extends State<UploadStory>
                         child: TextField(
                           controller: titleStoryController,
                           textCapitalization: TextCapitalization.sentences,
-                          maxLength: 30,
+                          maxLength: 25,
                           decoration: InputDecoration(
                             // hintText: "title here",
                             fillColor: Colors.white,

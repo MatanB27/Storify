@@ -2,13 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:storify/pages/favorites.dart';
-import 'package:storify/pages/home.dart';
-import 'package:storify/services/favorite.dart';
 import 'package:storify/services/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/widgets/rating.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:storify/services/database.dart';
 
 // Here we are building all of the story tickets.
@@ -47,9 +43,6 @@ class StoryTickets extends StatelessWidget {
       );
     }
   }
-  //TODO: delete
-  // Favorite favorite = new Favorite(); // Favorite object
-  // final String currentUserId = auth.currentUser?.uid; // The current user ID
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +71,10 @@ class StoryTickets extends StatelessWidget {
                 // decoration: BoxDecoration(
                 //   borderRadius: BorderRadius.circular(50),
                 // ),
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: this.storyPhoto,
-                  placeholder: (context, url) => loadingCircular(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                child: Image(
+                  image: CachedNetworkImageProvider(
+                    this.storyPhoto,
+                  ),
                 ),
               ),
               SizedBox(
@@ -93,13 +85,25 @@ class StoryTickets extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      this.title,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          this.title,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        // GestureDetector( TODO: delete
+                        //   onTap: () {},
+                        //   child: Icon(
+                        //     Icons.bookmark_border,
+                        //     color: Colors.grey,
+                        //   ),
+                        // ),
+                      ],
                     ),
                     SizedBox(
                       height: 8.0,
@@ -161,12 +165,17 @@ class StoryTickets extends StatelessWidget {
                         Icon(
                           Icons.date_range,
                           color: Colors.grey,
+                          size: 22.0,
                         ),
                         SizedBox(
                           width: 3,
                         ),
                         Text(
-                          timeago.format(this.timestamp.toDate()),
+                          this.timestamp.toDate().day.toString() +
+                              '.' +
+                              this.timestamp.toDate().month.toString() +
+                              '.' +
+                              this.timestamp.toDate().year.toString(),
                           style: TextStyle(
                             color: Colors.grey,
                           ),
@@ -176,10 +185,6 @@ class StoryTickets extends StatelessWidget {
                   ],
                 ),
               ),
-              // Icon(
-              //   Icons.bookmark_border,
-              //   color: Colors.grey,
-              // ),
             ],
           ),
         ),

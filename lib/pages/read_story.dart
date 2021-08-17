@@ -308,24 +308,36 @@ class _ReadStoryState extends State<ReadStory> {
                                 )
                               : Container(),
                           BuildIcon(
+                            color: Colors.grey,
+                            padding: 8.0,
+                            size: 27.0,
                             icon: Icons.share,
                             onPressed: () {
                               share();
                             },
                           ),
                           BuildIcon(
+                            color: Colors.grey,
+                            padding: 8.0,
+                            size: 27.0,
                             icon: Icons.headset,
                             onPressed: () {
                               speak(story);
                             },
                           ),
                           BuildIcon(
+                            color: Colors.grey,
+                            padding: 8.0,
+                            size: 27.0,
                             icon: Icons.stop,
                             onPressed: () {
                               stop();
                             },
                           ),
                           BuildIcon(
+                            color: Colors.grey,
+                            padding: 8.0,
+                            size: 27.0,
                             icon: Icons.report_problem,
                             onPressed: () {
                               currentUserId == ownerUserId
@@ -336,6 +348,9 @@ class _ReadStoryState extends State<ReadStory> {
                             },
                           ),
                           BuildIcon(
+                            color: Colors.grey,
+                            padding: 8.0,
+                            size: 27.0,
                             icon: favorite.isFavorite
                                 ? Icons.bookmark
                                 : Icons.bookmark_border,
@@ -349,14 +364,17 @@ class _ReadStoryState extends State<ReadStory> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ratingStars(average, 20.0, true),
+                        ratingStars(average, 30.0, true),
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 30.0,
                     ),
                     SizedBox(
                       height: 8.0,

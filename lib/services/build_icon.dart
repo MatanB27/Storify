@@ -6,30 +6,21 @@ import 'package:flutter/material.dart';
 class BuildIcon extends StatelessWidget {
   final IconData icon;
   final Function onPressed;
-
-  BuildIcon({this.icon, this.onPressed});
+  final double size;
+  final double padding;
+  final Color color; // Color is optional
+  BuildIcon({this.icon, this.onPressed, this.size, this.padding, this.color});
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      padding: EdgeInsets.all(this.padding),
+      constraints: BoxConstraints(),
       icon: Icon(
         this.icon,
-        color: Colors.grey,
-        size: 27,
+        color: this.color,
+        size: this.size,
       ),
       onPressed: this.onPressed,
     );
   }
 }
-// GestureDetector BuildIcon(Icon icon, Function onTap) {
-//   return GestureDetector(
-//     child: Icon(
-//       Icons.play_arrow,
-//       color: Colors.grey,
-//       size: 28,
-//     ),
-//     onTap: () {
-//       speak(story);
-//     },
-//   );
-// }
-// }
