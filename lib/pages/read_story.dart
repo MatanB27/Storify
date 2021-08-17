@@ -43,10 +43,10 @@ class _ReadStoryState extends State<ReadStory> {
   Favorite favorite = new Favorite();
   // The init state of the app, we are getting the info
   // of the story from here
+
   @override
   void initState() {
     super.initState();
-    print(widget.storyId);
     favorite.checkIfFavorite(widget.storyId, currentUserId);
   }
 
@@ -265,9 +265,9 @@ class _ReadStoryState extends State<ReadStory> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             timeStamp.toDate().day.toString() +
-                                '/' +
+                                '.' +
                                 timeStamp.toDate().month.toString() +
-                                '/' +
+                                '.' +
                                 timeStamp.toDate().year.toString(),
                             style: TextStyle(
                               fontSize: 16,
@@ -301,6 +301,9 @@ class _ReadStoryState extends State<ReadStory> {
                         children: [
                           currentUserId == this.ownerUserId
                               ? BuildIcon(
+                                  color: Colors.grey,
+                                  padding: 8.0,
+                                  size: 27.0,
                                   icon: Icons.delete,
                                   onPressed: () {
                                     confirmDelete(context);
@@ -365,7 +368,7 @@ class _ReadStoryState extends State<ReadStory> {
                       ),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 10.0,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -374,7 +377,7 @@ class _ReadStoryState extends State<ReadStory> {
                       ],
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: 10.0,
                     ),
                     SizedBox(
                       height: 8.0,
