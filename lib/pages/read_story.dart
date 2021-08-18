@@ -6,6 +6,7 @@ import 'package:animated_button/animated_button.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:storify/pages/error.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:readmore/readmore.dart';
@@ -150,6 +151,22 @@ class _ReadStoryState extends State<ReadStory> {
     }
   }
 
+  /*
+    Will show us all the icons if we click on the main icon
+  */
+  bool isVisible = false;
+  visibility() {
+    if (isVisible) {
+      setState(() {
+        isVisible = false;
+      });
+    } else {
+      setState(() {
+        isVisible = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider<AuthService>(
@@ -172,282 +189,311 @@ class _ReadStoryState extends State<ReadStory> {
             ownerUserId = doc.data()['uid'];
             average = doc.data()['average'];
           });
-          return Scaffold(
-            backgroundColor: Color(0xff09031D),
-            appBar: AppBar(
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              ), //Color(0xff1C1A32)
-              backgroundColor: Color(0xff09031D),
-              actions: <Widget>[
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        showProfile(context, profileId: ownerUserId);
-                      },
-                      child: Center(
-                        child: Text(
-                          displayName,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    showProfile(context, profileId: ownerUserId);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 27,
-                      backgroundImage: CachedNetworkImageProvider(photoUrl),
-                    ),
-                  ),
-                ),
-              ],
-              toolbarHeight: 60,
-              elevation: 0,
-            ),
-            body: ListView(
-              children: [
-                Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.white,
-                          fontFamily: 'Pacifico',
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Container(
-                      height: 250,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(storyPhoto),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.date_range_rounded,
-                          color: Colors.grey[700],
-                          size: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            timeStamp.toDate().day.toString() +
-                                '.' +
-                                timeStamp.toDate().month.toString() +
-                                '.' +
-                                timeStamp.toDate().year.toString(),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+          return timeStamp == null
+              ? ErrorPage()
+              : Scaffold(
+                  backgroundColor: Color(0xff09031D),
+                  appBar: AppBar(
+                    iconTheme: IconThemeData(
+                      color: Colors.white,
+                    ), //Color(0xff1C1A32)
+                    backgroundColor: Color(0xff09031D),
+                    actions: <Widget>[
+                      Column(
                         children: [
-                          for (var category in categories)
-                            Text(
-                              category + '  ',
-                              style: TextStyle(
-                                  color: Colors.grey[700], fontSize: 15),
-                            ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          currentUserId == this.ownerUserId
-                              ? BuildIcon(
-                                  color: Colors.grey,
-                                  padding: 8.0,
-                                  size: 27.0,
-                                  icon: Icons.delete,
-                                  onPressed: () {
-                                    confirmDelete(context);
-                                  },
-                                )
-                              : Container(),
-                          BuildIcon(
-                            color: Colors.grey,
-                            padding: 8.0,
-                            size: 27.0,
-                            icon: Icons.share,
-                            onPressed: () {
-                              share();
-                            },
+                          SizedBox(
+                            height: 20,
                           ),
-                          BuildIcon(
-                            color: Colors.grey,
-                            padding: 8.0,
-                            size: 27.0,
-                            icon: Icons.headset,
-                            onPressed: () {
-                              speak(story);
+                          GestureDetector(
+                            onTap: () {
+                              showProfile(context, profileId: ownerUserId);
                             },
-                          ),
-                          BuildIcon(
-                            color: Colors.grey,
-                            padding: 8.0,
-                            size: 27.0,
-                            icon: Icons.stop,
-                            onPressed: () {
-                              stop();
-                            },
-                          ),
-                          BuildIcon(
-                            color: Colors.grey,
-                            padding: 8.0,
-                            size: 27.0,
-                            icon: Icons.report_problem,
-                            onPressed: () {
-                              currentUserId == ownerUserId
-                                  ? showMessage(context,
-                                      "You can't report your own story!")
-                                  : showReport(
-                                      context, currentUserId, widget.storyId);
-                            },
-                          ),
-                          BuildIcon(
-                            color: Colors.grey,
-                            padding: 8.0,
-                            size: 27.0,
-                            icon: favorite.isFavorite
-                                ? Icons.bookmark
-                                : Icons.bookmark_border,
-                            onPressed: () {
-                              setState(() {
-                                favorite.addOrRemoveFromFavorites(
-                                    widget.storyId, currentUserId);
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ratingStars(average, 30.0, true),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ReadMoreText(
-                        story,
-                        delimiter: ' ',
-                        trimCollapsedText: ' read more',
-                        trimExpandedText: ' show less',
-                        trimLength: 300,
-                        colorClickableText: Colors.grey,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: 100,
-                    ),
-                    AnimatedButton(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Comments',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
+                            child: Center(
+                              child: Text(
+                                displayName,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                ),
                               ),
                             ),
                           ),
                           SizedBox(
-                            width: 50,
+                            height: 5,
                           ),
-                          CircleAvatar(
-                            backgroundColor: Colors.black,
-                            child: Icon(
-                              Icons.chat_outlined,
-                              color: Colors.white,
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showProfile(context, profileId: ownerUserId);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 27,
+                            backgroundImage:
+                                CachedNetworkImageProvider(photoUrl),
+                          ),
+                        ),
+                      ),
+                    ],
+                    toolbarHeight: 60,
+                    elevation: 0,
+                  ),
+                  body: ListView(
+                    children: [
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: 35,
+                                color: Colors.white,
+                                fontFamily: 'Pacifico',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          Container(
+                            height: 250,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: CachedNetworkImageProvider(storyPhoto),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.date_range_rounded,
+                                color: Colors.grey[700],
+                                size: 20,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  timeStamp.toDate().day.toString() +
+                                      '.' +
+                                      timeStamp.toDate().month.toString() +
+                                      '.' +
+                                      timeStamp.toDate().year.toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                for (var category in categories)
+                                  Text(
+                                    category + '  ',
+                                    style: TextStyle(
+                                        color: Colors.grey[700], fontSize: 15),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                BuildIcon(
+                                  color: Colors.grey,
+                                  padding: 8.0,
+                                  size: 27.0,
+                                  icon: isVisible
+                                      ? Icons.arrow_forward
+                                      : Icons.arrow_downward,
+                                  onPressed: () {
+                                    visibility();
+                                    print(isVisible);
+                                  },
+                                ),
+                                currentUserId == this.ownerUserId
+                                    ? !isVisible
+                                        ? Container()
+                                        : BuildIcon(
+                                            color: Colors.grey,
+                                            padding: 8.0,
+                                            size: 27.0,
+                                            icon: Icons.delete,
+                                            onPressed: () {
+                                              confirmDelete(context);
+                                            },
+                                          )
+                                    : Container(),
+                                !isVisible
+                                    ? Container()
+                                    : BuildIcon(
+                                        color: Colors.grey,
+                                        padding: 8.0,
+                                        size: 27.0,
+                                        icon: Icons.share,
+                                        onPressed: () {
+                                          share();
+                                        },
+                                      ),
+                                !isVisible
+                                    ? Container()
+                                    : BuildIcon(
+                                        color: Colors.grey,
+                                        padding: 8.0,
+                                        size: 27.0,
+                                        icon: Icons.headset,
+                                        onPressed: () {
+                                          speak(story);
+                                        },
+                                      ),
+                                !isVisible
+                                    ? Container()
+                                    : BuildIcon(
+                                        color: Colors.grey,
+                                        padding: 8.0,
+                                        size: 27.0,
+                                        icon: Icons.stop,
+                                        onPressed: () {
+                                          stop();
+                                        },
+                                      ),
+                                !isVisible
+                                    ? Container()
+                                    : BuildIcon(
+                                        color: Colors.grey,
+                                        padding: 8.0,
+                                        size: 27.0,
+                                        icon: Icons.report_problem,
+                                        onPressed: () {
+                                          currentUserId == ownerUserId
+                                              ? showMessage(context,
+                                                  "You can't report your own story!")
+                                              : showReport(
+                                                  context,
+                                                  currentUserId,
+                                                  widget.storyId);
+                                        },
+                                      ),
+                                !isVisible
+                                    ? Container()
+                                    : BuildIcon(
+                                        color: Colors.grey,
+                                        padding: 8.0,
+                                        size: 27.0,
+                                        icon: favorite.isFavorite
+                                            ? Icons.bookmark
+                                            : Icons.bookmark_border,
+                                        onPressed: () {
+                                          setState(() {
+                                            favorite.addOrRemoveFromFavorites(
+                                                widget.storyId, currentUserId);
+                                          });
+                                        },
+                                      ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ratingStars(average, 30.0, true),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ReadMoreText(
+                              story,
+                              delimiter: ' ',
+                              trimCollapsedText: ' read more',
+                              trimExpandedText: ' show less',
+                              trimLength: 300,
+                              colorClickableText: Colors.grey,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      onPressed: () {
-                        showComments(
-                          context,
-                          storyId: widget.storyId,
-                          currentUserId: currentUserId,
-                          ownerUserId: widget.ownerId,
-                        );
-                      },
-                      height: 40,
-                      shadowDegree: ShadowDegree.dark,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            height: 100,
+                          ),
+                          AnimatedButton(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Comments',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 50,
+                                ),
+                                CircleAvatar(
+                                  backgroundColor: Colors.black,
+                                  child: Icon(
+                                    Icons.chat_outlined,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onPressed: () {
+                              showComments(
+                                context,
+                                storyId: widget.storyId,
+                                currentUserId: currentUserId,
+                                ownerUserId: widget.ownerId,
+                              );
+                            },
+                            height: 40,
+                            shadowDegree: ShadowDegree.dark,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
         },
       ),
     );

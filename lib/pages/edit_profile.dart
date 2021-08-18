@@ -14,7 +14,6 @@ import 'package:storify/services/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../services/auth_service.dart';
 import 'home.dart';
-import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:sweetalert/sweetalert.dart';
 
 class EditProfile extends StatefulWidget {
@@ -203,9 +202,27 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
+  /*
+    If updating it will show loading spinner
+   */
+  bool isUpdating = false;
+  isLoading(bool isLoading) {
+    if (isLoading) {
+      setState(() {
+        isUpdating = false;
+      });
+    } else {
+      setState(() {
+        isUpdating = true;
+      });
+    }
+  }
   // Will update the profile photo in the user database, chat database,
   // Story database and comment database
+
   updateProfileData() async {
+    isLoading(isUpdating);
+
     await updateNameInCommentRef();
     await updateNameInChatRef();
     await updateNameInStoriesRef();
@@ -217,6 +234,9 @@ class _EditProfileState extends State<EditProfile> {
       "bio": bioController.text,
       "keywords": setSearchParam(displayNameController.text.toString()),
     });
+
+    isLoading(isUpdating);
+
     SweetAlert.show(
       context,
       showCancelButton: false,
@@ -600,26 +620,14 @@ class _EditProfileState extends State<EditProfile> {
         body: Container(
           child: profileEditPage(),
         ),
-        floatingActionButton: BoomMenu(
-          backgroundColor: Colors.blueAccent,
-          animatedIcon: AnimatedIcons.menu_close,
-          animatedIconTheme: IconThemeData(size: 22.0),
-          //child: Icon(Icons.add),
-
-          scrollVisible: true,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.7,
-          children: [
-            MenuItem(
-              child: Icon(Icons.verified_user, color: Colors.white),
-              title: "Save",
-              titleColor: Colors.white,
-              subtitle: " Press here to save the changes",
-              subTitleColor: Colors.white,
-              backgroundColor: Colors.grey,
-              onTap: () => updateProfileData(),
-            ),
-          ],
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          child: isUpdating
+              ? CircularProgressIndicator()
+              : Icon(Icons.verified_user, color: Colors.white),
+          onPressed: () {
+            updateProfileData();
+          },
         ),
       ),
     );

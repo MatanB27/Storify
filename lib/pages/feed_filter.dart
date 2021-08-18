@@ -9,7 +9,6 @@ import 'package:storify/widgets/story_ticket.dart';
 
 /*
   The main page, the user can read the stories of the users he follow
-
 */
 class FeedFilter extends StatefulWidget {
   final String userId;

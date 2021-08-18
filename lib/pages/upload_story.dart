@@ -127,7 +127,6 @@ class _UploadStoryState extends State<UploadStory>
         'stories': FieldValue.arrayUnion([storyId]),
       });
 
-      print(getFollowers(currentUserId));
       await storiesRef.doc(storyId).set({
         'uid': widget.userId,
         'sid': storyId,
@@ -144,10 +143,10 @@ class _UploadStoryState extends State<UploadStory>
         'story': storyController.text.toString(),
         // According to the users rating
       });
-      SweetAlert.show(context,
-          title: "Succeed",
-          subtitle: "Your story has been successfully published",
-          style: SweetAlertStyle.success);
+      // SweetAlert.show(context, //TODO
+      //     title: "Succeed",
+      //     subtitle: " Your story has been successfully published ",
+      //     style: SweetAlertStyle.success);
 
       await showReadStory(context, storyId: storyId, ownerId: widget.userId);
 

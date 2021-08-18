@@ -43,7 +43,7 @@ class CommentTicket extends StatelessWidget {
                   bottomLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
-                color: Color(0xff6F61E8),
+                color: Colors.blueAccent,
                 child: Column(
                   children: [
                     Padding(

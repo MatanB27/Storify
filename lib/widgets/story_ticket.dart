@@ -64,6 +64,7 @@ class StoryTickets extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                // decoration: BoxDecoration(borderRadius: BorderRadius()),
                 margin: EdgeInsets.only(top: 8.0, right: 8.0),
                 padding: EdgeInsets.only(right: 2.0),
                 height: 128,
@@ -72,6 +73,7 @@ class StoryTickets extends StatelessWidget {
                 //   borderRadius: BorderRadius.circular(50),
                 // ),
                 child: Image(
+                  fit: BoxFit.cover,
                   image: CachedNetworkImageProvider(
                     this.storyPhoto,
                   ),
@@ -111,7 +113,7 @@ class StoryTickets extends StatelessWidget {
                     Text(
                       this.displayName,
                       style: TextStyle(
-                        fontSize: 18.0,
+                        fontSize: 16.0,
                         color: Colors.grey,
                       ),
                     ),

@@ -176,18 +176,21 @@ class _PrivateMessageState extends State<PrivateMessage> {
                     ),
                   ),
                   SizedBox(width: 15),
-                  Container(
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                        color: Colors.blueAccent, shape: BoxShape.circle),
-                    child: InkWell(
-                      child: Icon(
-                        Icons.send,
-                        color: Colors.white,
-                      ),
-                      onTap: () {
-                        sendMessage();
-                      },
+                  InkWell(
+                    onTap: () {
+                      sendMessage();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                          color: Colors.blueAccent, shape: BoxShape.circle),
+
+                        child: Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        ),
+
+
                     ),
                   ),
                 ],

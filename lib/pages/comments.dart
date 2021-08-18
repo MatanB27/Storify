@@ -188,18 +188,19 @@ class _CommentsState extends State<Comments> {
                                   border: InputBorder.none)),
                         ),
                         SizedBox(width: 15),
-                        Container(
-                          padding: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                              color: Colors.blueAccent, shape: BoxShape.circle),
-                          child: InkWell(
+                        InkWell(
+                          onTap: () async {
+                            await sendCommentToFirebase();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(15.0),
+                            decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                shape: BoxShape.circle),
                             child: Icon(
                               Icons.send,
                               color: Colors.white,
                             ),
-                            onTap: () async {
-                              await sendCommentToFirebase();
-                            },
                           ),
                         ),
                       ],
