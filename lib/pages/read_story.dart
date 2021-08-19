@@ -10,13 +10,13 @@ import 'package:storify/pages/error.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:readmore/readmore.dart';
-import 'package:storify/services/build_icon.dart';
+import 'package:storify/widgets/build_icon.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/favorite.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/widgets/rating.dart';
-import 'package:storify/services/scaffold_message.dart';
+import 'package:storify/widgets/scaffold_message.dart';
 
 class ReadStory extends StatefulWidget {
   final String storyId;

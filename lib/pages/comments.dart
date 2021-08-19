@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'package:storify/widgets/rating.dart';
 import 'package:storify/widgets/comment_ticket.dart';
-import 'package:storify/services/scaffold_message.dart';
+import 'package:storify/widgets/scaffold_message.dart';
 
 class Comments extends StatefulWidget {
   final String storyId;

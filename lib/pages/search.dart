@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/user.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'package:storify/widgets/user_ticket.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 

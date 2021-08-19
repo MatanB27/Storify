@@ -6,7 +6,7 @@ import 'package:storify/pages/home.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/widgets/chat_history.dart';
 import 'package:storify/widgets/header.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'home.dart';
 
 class Chat extends StatefulWidget {

@@ -9,8 +9,8 @@ import 'package:storify/services/database.dart';
 import 'package:storify/services/message_stream.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/user.dart';
-import 'package:storify/services/loading.dart';
-import '../services/loading.dart';
+import 'package:storify/widgets/loading.dart';
+import '../widgets/loading.dart';
 import 'home.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -184,13 +184,10 @@ class _PrivateMessageState extends State<PrivateMessage> {
                       padding: const EdgeInsets.all(15.0),
                       decoration: BoxDecoration(
                           color: Colors.blueAccent, shape: BoxShape.circle),
-
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.white,
-                        ),
-
-
+                      child: Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],

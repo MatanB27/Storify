@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:storify/pages/home.dart';
 import 'package:storify/pages/signin.dart';
 import 'package:storify/services/database.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 
 import '../services/auth_service.dart';
 

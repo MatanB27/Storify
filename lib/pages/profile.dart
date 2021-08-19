@@ -6,7 +6,7 @@ import 'package:storify/pages/home.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/user.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../services/auth_service.dart';
 import 'package:storify/widgets/story_ticket.dart';

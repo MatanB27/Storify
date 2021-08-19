@@ -9,6 +9,9 @@ class Favorite {
   // I had to init it here so it won't have bugs
   bool isFavorite = false;
 
+  /*
+    Check if the current story is favorite or not
+  */
   checkIfFavorite(String storyId, String currentUserId) {
     List<String> favorites;
     storiesRef.doc(storyId).get().then((value) => {

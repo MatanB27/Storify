@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'package:storify/services/navigator_to_pages.dart';
 import 'package:storify/widgets/rating.dart';
 import 'package:storify/services/database.dart';
@@ -64,7 +64,6 @@ class StoryTickets extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                // decoration: BoxDecoration(borderRadius: BorderRadius()),
                 margin: EdgeInsets.only(top: 8.0, right: 8.0),
                 padding: EdgeInsets.only(right: 2.0),
                 height: 128,

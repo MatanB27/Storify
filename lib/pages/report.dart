@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storify/services/database.dart';
-import 'package:storify/services/scaffold_message.dart';
+import 'package:storify/widgets/scaffold_message.dart';
 import 'package:storify/widgets/header.dart';
 
 class Report extends StatefulWidget {

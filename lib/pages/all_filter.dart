@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'package:storify/widgets/story_ticket.dart';
 
 /*

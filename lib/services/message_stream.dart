@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:storify/pages/private_message.dart';
 import 'package:storify/services/database.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 
 /*
   The code where we are getting the messages in the room between the two

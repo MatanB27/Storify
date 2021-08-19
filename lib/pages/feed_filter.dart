@@ -4,7 +4,7 @@ import 'package:storify/pages/favorites.dart';
 import 'package:storify/services/auth_service.dart';
 import 'package:storify/services/database.dart';
 import 'package:storify/services/favorite.dart';
-import 'package:storify/services/loading.dart';
+import 'package:storify/widgets/loading.dart';
 import 'package:storify/widgets/story_ticket.dart';
 
 /*
